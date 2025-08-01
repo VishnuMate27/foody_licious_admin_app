@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/view/post_auth/add_menu.dart';
 import 'package:foody_licious_admin_app/view/post_auth/dashboard.dart';
 import 'package:foody_licious_admin_app/view/pre_auth/login_view.dart';
 import 'package:foody_licious_admin_app/view/pre_auth/set_location_view.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: DashboardView(),
+        home: AddMenuView(),
       ),
     );
   }
