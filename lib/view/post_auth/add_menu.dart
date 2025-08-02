@@ -31,6 +31,7 @@ class _AddMenuViewState extends State<AddMenuView> {
           "Add Item",
           style: GoogleFonts.yeonSung(color: Color(0xFFE85353), fontSize: 40),
         ),
+        centerTitle: true,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

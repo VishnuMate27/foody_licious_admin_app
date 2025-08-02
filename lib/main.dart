@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious_admin_app/view/post_auth/add_menu.dart';
+import 'package:foody_licious_admin_app/view/post_auth/all_menu_view.dart';
+import 'package:foody_licious_admin_app/view/post_auth/create_new_admin_view.dart';
 import 'package:foody_licious_admin_app/view/post_auth/dashboard.dart';
+import 'package:foody_licious_admin_app/view/post_auth/delivery_view.dart';
+import 'package:foody_licious_admin_app/view/post_auth/feedback_view.dart';
+import 'package:foody_licious_admin_app/view/post_auth/profile_view.dart';
 import 'package:foody_licious_admin_app/view/pre_auth/login_view.dart';
 import 'package:foody_licious_admin_app/view/pre_auth/set_location_view.dart';
 import 'package:foody_licious_admin_app/view/pre_auth/signup_view.dart';
@@ -27,7 +32,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: AddMenuView(),
+        home: CreateNewAdminView(),
       ),
     );
   }
