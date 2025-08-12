@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/constants/images.dart';
+import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dart';
+import 'package:foody_licious_admin_app/presentation/widgets/input_text_form_field.dart';
 import 'package:foody_licious_admin_app/utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,6 +14,8 @@ class SetLocationView extends StatefulWidget {
 }
 
 class _SetLocationViewState extends State<SetLocationView> {
+  final TextEditingController _restaurantNameController =
+      TextEditingController();
   String dropdownValue = availableCitiesList.first;
   @override
   Widget build(BuildContext context) {
@@ -23,13 +28,7 @@ class _SetLocationViewState extends State<SetLocationView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 32.h),
-              Center(
-                child: Image.asset(
-                  "assets/images/logo.png",
-                  width: 90.w,
-                  height: 90.h,
-                ),
-              ),
+              Center(child: Image.asset(kLogo, width: 90.w, height: 90.h)),
               Center(
                 child: Text(
                   "Foody Licious",
@@ -62,73 +61,13 @@ class _SetLocationViewState extends State<SetLocationView> {
                 textAlign: TextAlign.start,
               ),
               SizedBox(height: 4.h),
-              TextFormField(
+              InputTextFormField(
+                textController: _restaurantNameController,
+                labelText: "Name of Restaurant",
+                hintText: "Enter Name of Restaurant",
+                prefixIconData: Icons.person_2_outlined,
                 keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  fillColor: Color(0xFFF4F4F4),
-                  labelText: 'Name of Restaurant',
-                  labelStyle: GoogleFonts.lato(
-                    color: Color(0xFF3B3B3B),
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    letterSpacing: 0.5,
-                  ),
-                  hintText: 'Enter Name of Restaurant',
-                  prefixIcon: Icon(
-                    Icons.person_2_outlined,
-                    color: Colors.black,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: Color(0x80F4F4F4), // Make the border transparent
-                      width: 1, // Set the border width to 0
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when not focused
-                      width: 1.sp,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when focused
-                      width: 1,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: Color(
-                        0xCCFF0000,
-                      ), // Transparent border for error state
-                      width: 1,
-                    ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when disabled
-                      width: 1,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {},
+                validatorText: "Please enter your Restaurant Name",
               ),
               SizedBox(height: 16.h),
               Text(
@@ -211,28 +150,9 @@ class _SetLocationViewState extends State<SetLocationView> {
               ),
               SizedBox(height: 32.h),
               Center(
-                child: GestureDetector(
+                child: GradientButton(
+                  buttonText: "Create Account",
                   onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      gradient: LinearGradient(
-                        colors: [Color(0xFFE85353), Color(0xFFBE1515)],
-                        stops: [0.0, 1.0],
-                      ),
-                    ),
-                    width: 157.w,
-                    height: 57.h,
-                    child: Center(
-                      child: Text(
-                        "Create Account",
-                        style: GoogleFonts.yeonSung(
-                          color: Color(0xFFFFFFFF),
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
               SizedBox(height: 20.h),
