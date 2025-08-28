@@ -8,42 +8,49 @@ on:
       - main
       - master
       - develop
+
 name: "Build & Release"
+
 jobs:
   build:
     name: Build & Release
-    runs-on: macos-latest
+    runs-on: macos-13   # stable macOS image for Xcode + Flutter
     steps:
       - uses: actions/checkout@v3
+
+      # ✅ Use JDK 17 (LTS, supported by Gradle + Flutter)
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
+
+      # ✅ Install Flutter stable
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           architecture: x64
 
+      # ✅ Pin Xcode 15.4 (avoid simulator mismatch issues)
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+
+      # Build Android APK
       - run: flutter build apk --release --split-per-abi
+
+      # Build iOS .ipa (no codesign, for device distribution)
+      - run: flutter build ios --no-codesign
       - run: |
-          flutter build ios --no-codesign
           cd build/ios/iphoneos
           mkdir Payload
           cd Payload
           ln -s ../Runner.app
           cd ..
           zip -r app.ipa Payload
+
+      # Push artifacts to GitHub Releases
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/apk/release/*,build/ios/iphoneos/app.ipa"
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
-
-
-
-
-
-
-# push to master, main, develop
-# pull request on main master
