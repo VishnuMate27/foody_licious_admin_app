@@ -18,6 +18,7 @@ const Color kError = Color(0xCCFF0000);                   // Error (same as text
 const Color kRed = Color(0xFF9F4040);                     // Error/alert surface
 const Color kGreen = Color(0xFF6CCB94);                   // Success/icon green
 const Color kYellow = Color(0xFFFEAD1D);                  // Warning/accent
+const Color kPrimaryRed = Color(0xFFE85353);              // Primary Red
 
 /// === Border Colors ===
 const Color kBorder = Color(0x51FF8080);                  // Semi-transparent red border
@@ -26,8 +27,9 @@ const Color kBorderLight = Color(0x80F4F4F4);             // Light border grey
 /// === Gradient Colors ===
 const Color kGradientStart = Color(0xFFE85353);           // Gradient red start
 const Color kGradientEnd = Color(0xFFBE1515);             // Gradient red end
+const Color kInActiveGradientStart = Color(0xFFF2B8B8); // Muted light red/pink
+const Color kInActiveGradientEnd = Color(0xFFD6A1A1);   // Softer dull red
 
 /// === Material Utility Colors ===
 const Color kTeal = Colors.teal;
 const Color kGrey = Colors.grey;
-
