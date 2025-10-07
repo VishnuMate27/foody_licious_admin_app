@@ -15,6 +15,8 @@ abstract class AuthRemoteDataSource {
   Future<AuthenticationResponseModel> signUpWithEmail(
     SignUpWithEmailParams params,
   );
+  Future<AuthenticationResponseModel> signUpWithGoogle();
+  Future<AuthenticationResponseModel> signUpWithFacebook();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -22,7 +24,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignIn;
   final FacebookAuth facebookAuth;
-  Restaurant? restaurant;
+  User? user;
   AuthRemoteDataSourceImpl({
     required this.firebaseAuth,
     required this.client,
@@ -34,7 +36,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<AuthenticationResponseModel> signUpWithEmail(
     SignUpWithEmailParams params,
   ) async {
-    User? user;
     // Create user
     final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
       email: params.email!,
@@ -42,6 +43,55 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     );
     user = userCredential.user;
     return await _sendRegisterRequest(user!, params: params);
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signUpWithGoogle() async {
+    try {
+      googleSignIn.initialize(serverClientId: kServerClientId);
+      final GoogleSignInAccount? googleUser = await googleSignIn.authenticate();
+      if (googleUser == null) {
+        throw ExceptionFailure("Google authentication cancelled.");
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential =
+          await firebaseAuth.signInWithCredential(credential);
+      user = userCredential.user;
+
+      if (user == null) throw ExceptionFailure("Google sign-in failed.");
+    } catch (e) {
+      throw ExceptionFailure(e.toString());
+    }
+    return await _sendRegisterRequest(user!, authProvider: "google");
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signUpWithFacebook() async {
+    try {
+      final LoginResult loginResult = await facebookAuth.login();
+      if (loginResult.status != LoginStatus.success) {
+        throw ExceptionFailure("Facebook login failed.");
+      }
+
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
+
+      final userCredential =
+          await firebaseAuth.signInWithCredential(facebookAuthCredential);
+      user = userCredential.user;
+
+      if (user == null) throw ExceptionFailure("Facebook sign-in failed.");
+    } catch (e) {
+      throw ExceptionFailure(e.toString());
+    }
+    return await _sendRegisterRequest(user!, authProvider: "facebook");
   }
 
   Future<AuthenticationResponseModel> _sendRegisterRequest(
@@ -70,7 +120,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     try {
       final response = await client.post(
-        Uri.parse('$kBaseUrl/api/auth/register'),
+        Uri.parse('$kBaseUrl/api/restaurant/auth/register'),
         headers: {'Content-Type': 'application/json'},
         body: requestBody,
       );

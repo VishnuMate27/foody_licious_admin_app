@@ -1,4 +1,4 @@
-package com.example.foody_licious_admin_app
+package com.vamate.foody_licious_admin_app
 
 import io.flutter.embedding.android.FlutterActivity
 

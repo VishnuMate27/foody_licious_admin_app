@@ -8,20 +8,20 @@
             "name": "foody_licious_admin_app",
             "request": "launch",
             "type": "dart",
-            // "preLaunchTask": "update-env",
+            "preLaunchTask": "update-env",
         },
         {
             "name": "foody_licious_admin_app (profile mode)",
             "request": "launch",
             "type": "dart",
-            // "preLaunchTask": "update-env",
+            "preLaunchTask": "update-env",
             "flutterMode": "profile"
         },
         {
             "name": "foody_licious_admin_app (release mode)",
             "request": "launch",
             "type": "dart",
-            // "preLaunchTask": "update-env",
+            "preLaunchTask": "update-env",
             "flutterMode": "release"
         }
     ]

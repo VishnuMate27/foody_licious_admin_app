@@ -6,6 +6,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_facebook_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_google_usecase.dart';
 
 import '../../../core/error/failures.dart';
 
@@ -14,11 +16,17 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
+  final SignUpWithGoogleUseCase _signUpWithGoogleUseCase;
+  final SignUpWithFacebookUseCase _signUpWithFacebookUseCase;
  
   AuthBloc(
     this._signUpWithEmailUseCase,
+    this._signUpWithGoogleUseCase,
+    this._signUpWithFacebookUseCase,
   ) : super(AuthInitial()) {
     on<AuthSignUpWithEmail>(_onSignUpWithEmail);
+    on<AuthSignUpWithGoogle>(_onSignUpWithGoogle);
+    on<AuthSignUpWithFacebook>(_onSignUpWithFacebook);
     on<AuthCheck>(_onCheckAuth);
    }
 
@@ -35,6 +43,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthVerificationEmailRequestFailed(ExceptionFailure(e.toString())));
     }
   }
+
+    FutureOr<void> _onSignUpWithGoogle(
+      AuthSignUpWithGoogle event, Emitter<AuthState> emit) async {
+    try {
+      emit(AuthLoading());
+      final result = await _signUpWithGoogleUseCase(event);
+      result.fold(
+        (failure) => emit(AuthGoogleSignUpFailed(failure)),
+        (user) => emit(AuthGoogleSignUpSuccess(user)),
+      );
+    } catch (e) {
+      emit(AuthGoogleSignUpFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
+  FutureOr<void> _onSignUpWithFacebook(
+      AuthSignUpWithFacebook event, Emitter<AuthState> emit) async {
+    try {
+      emit(AuthLoading());
+      final result = await _signUpWithFacebookUseCase(event);
+      result.fold(
+        (failure) => emit(AuthFacebookSignUpFailed(failure)),
+        (user) => emit(AuthFacebookSignUpSuccess(user)),
+      );
+    } catch (e) {
+      emit(AuthFacebookSignUpFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
 
   void _onCheckAuth(AuthCheck event, Emitter<AuthState> emit) async {
     try {

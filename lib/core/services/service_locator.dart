@@ -5,6 +5,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious_admin_app/core/network/network_info.dart';
 import 'package:foody_licious_admin_app/data/repositories/auth_repository_impl.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_facebook_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_google_usecase.dart';
 import 'package:foody_licious_admin_app/firebase_options.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -29,9 +31,11 @@ Future<void> init() async {
 
   //Features - Auth
   // Bloc
-  sl.registerFactory(() => AuthBloc(sl()));
+  sl.registerFactory(() => AuthBloc(sl(),sl(),sl()));
   // Use cases
   sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
+  sl.registerLazySingleton(() => SignUpWithGoogleUseCase(sl()));
+  sl.registerLazySingleton(() => SignUpWithFacebookUseCase(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(

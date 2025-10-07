@@ -8,4 +8,8 @@ class AuthSignUpWithEmail extends AuthEvent {
   AuthSignUpWithEmail(this.params);
 }
 
+class AuthSignUpWithGoogle extends AuthEvent {}
+
+class AuthSignUpWithFacebook extends AuthEvent {}
+
 class AuthCheck extends AuthEvent {}

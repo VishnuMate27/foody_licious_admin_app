@@ -14,13 +14,41 @@ class AuthRepositoryImpl implements AuthRepository {
     required this.networkInfo,
   });
 
-    @override
+  @override
   Future<Either<Failure, Restaurant>> signUpWithEmail(params) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
     try {
       final remoteResponse = await remoteDataSource.signUpWithEmail(params);
+      // await localDataSource.saveUser(remoteResponse.user);
+      return Right(remoteResponse.restaurant);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+    @override
+  Future<Either<Failure, Restaurant>> signUpWithGoogle() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.signUpWithGoogle();
+      // await localDataSource.saveUser(remoteResponse.user);
+      return Right(remoteResponse.restaurant);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Restaurant>> signUpWithFacebook() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final remoteResponse = await remoteDataSource.signUpWithFacebook();
       // await localDataSource.saveUser(remoteResponse.user);
       return Right(remoteResponse.restaurant);
     } on Failure catch (failure) {

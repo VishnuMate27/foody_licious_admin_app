@@ -146,12 +146,16 @@ class _SignUpViewState extends State<SignUpView> {
                       SocialAuthButton(
                         authProviderName: "Facebook",
                         authProviderlogoImagePath: kFacebookIcon,
-                        onTap: () {},
+                        onTap: () {
+                          context.read<AuthBloc>().add(AuthSignUpWithFacebook());
+                        },
                       ),
                       SocialAuthButton(
                         authProviderName: "Google",
                         authProviderlogoImagePath: kGoogleIcon,
-                        onTap: () {},
+                        onTap: () {
+                           context.read<AuthBloc>().add(AuthSignUpWithGoogle());
+                        },
                       ),
                     ],
                   ),
