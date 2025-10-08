@@ -1,9 +1,16 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/network/network_info.dart';
 import 'package:foody_licious_admin_app/data/repositories/auth_repository_impl.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_facebook_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_google_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_facebook_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_google_usecase.dart';
@@ -21,6 +28,9 @@ import 'package:firebase_core/firebase_core.dart';
 
 final sl = GetIt.instance;
 
+// This global key lets you show dialogs even from here (used by main.dart)
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 Future<void> init() async {
   // Must be first
   await Firebase.initializeApp(
@@ -31,8 +41,11 @@ Future<void> init() async {
 
   //Features - Auth
   // Bloc
-  sl.registerFactory(() => AuthBloc(sl(),sl(),sl()));
+  sl.registerFactory(() => AuthBloc(sl(),sl(),sl(),sl(),sl(),sl()));
   // Use cases
+  sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithGoogleUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithFacebookUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithGoogleUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithFacebookUseCase(sl()));
@@ -67,4 +80,59 @@ Future<void> init() async {
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => SmartAuth.instance);
   sl.registerLazySingleton(() => InternetConnectionChecker());
+
+  // Debug-only Wi-Fi check
+  if (kDebugMode) {
+    _showWifiWarningIfNeeded();
+  }
+}
+
+/// Check for internet and Wi-Fi connection, then show a warning dialog if needed
+Future<void> _showWifiWarningIfNeeded() async {
+  final hasInternet = await sl<InternetConnectionChecker>().hasConnection;
+
+  if (!hasInternet) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: navigatorKey.currentContext!,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('No Wi-Fi Connection'),
+          content: const Text(
+            'Your device is not connected to Wi-Fi. Please connect to Wi-Fi before testing.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    });
+    return;
+  }
+
+  // Verify if connected via Wi-Fi or mobile data
+  final interfaces = await NetworkInterface.list();
+  final wifiConnected = interfaces.any((i) => i.name.toLowerCase().contains('wlan'));
+  if (!wifiConnected) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        barrierDismissible: false,
+        context: navigatorKey.currentContext!,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Not Connected via Wi-Fi', style: TextStyle(color: kError)),
+          content: const Text(
+            'You are connected to the internet, but not through Wi-Fi.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('OK, i Will connect to Wi-Fi now.'),
+            ),
+          ],
+        ),
+      );
+    });
+  }
 }

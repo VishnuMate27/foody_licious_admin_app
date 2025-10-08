@@ -40,12 +40,13 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         child: MaterialApp(
+          navigatorKey: di.navigatorKey,
           title: 'Foody Licious',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: SignUpView(),
+          home: LoginView(),
         ),
       ),
     );

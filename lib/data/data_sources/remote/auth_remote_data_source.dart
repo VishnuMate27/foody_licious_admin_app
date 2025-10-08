@@ -7,16 +7,22 @@ import 'package:foody_licious_admin_app/core/constants/strings.dart';
 import 'package:foody_licious_admin_app/core/error/failures.dart';
 import 'package:foody_licious_admin_app/data/models/restaurant/authentication_reponsse_model.dart';
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 abstract class AuthRemoteDataSource {
+  Future<AuthenticationResponseModel> signInWithEmail(
+      SignInWithEmailParams params);
+  Future<AuthenticationResponseModel> signInWithGoogle();
+  Future<AuthenticationResponseModel> signInWithFacebook();    
   Future<AuthenticationResponseModel> signUpWithEmail(
     SignUpWithEmailParams params,
   );
   Future<AuthenticationResponseModel> signUpWithGoogle();
   Future<AuthenticationResponseModel> signUpWithFacebook();
+
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -31,6 +37,76 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required this.googleSignIn,
     required this.facebookAuth,
   });
+
+  
+  @override
+  Future<AuthenticationResponseModel> signInWithEmail(
+      SignInWithEmailParams params) async {
+    User? user;
+    try {
+      final userCredential = await firebaseAuth.signInWithEmailAndPassword(
+          email: params.email, password: params.password);
+      user = userCredential.user;
+      return await _sendLoginRequest(user!, params: params);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw UserNotExistsFailure();
+      } else if (e.code == 'wrong-password') {
+        throw CredentialFailure();
+      } else {
+        throw AuthenticationFailure(e.message ?? 'Unknown error');
+      }
+    }
+  }
+ 
+  @override
+  Future<AuthenticationResponseModel> signInWithGoogle() async {
+    try {
+      googleSignIn.initialize(serverClientId: kServerClientId);
+      final GoogleSignInAccount? googleUser = await googleSignIn.authenticate();
+      if (googleUser == null) {
+        throw ExceptionFailure("Google authentication cancelled.");
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential =
+          await firebaseAuth.signInWithCredential(credential);
+      user = userCredential.user;
+
+      if (user == null) throw ExceptionFailure("Google sign-in failed.");
+    } catch (e) {
+      throw ExceptionFailure(e.toString());
+    }
+    return await _sendLoginRequest(user!, authProvider: "google");
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signInWithFacebook() async {
+    try {
+      final LoginResult loginResult = await facebookAuth.login();
+      if (loginResult.status != LoginStatus.success) {
+        throw ExceptionFailure("Facebook login failed.");
+      }
+
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
+
+      final userCredential =
+          await firebaseAuth.signInWithCredential(facebookAuthCredential);
+      user = userCredential.user;
+
+      if (user == null) throw ExceptionFailure("Facebook sign-in failed.");
+    } catch (e) {
+      throw ExceptionFailure(e.toString());
+    }
+    return await _sendLoginRequest(user!, authProvider: "facebook");
+  }
 
   @override
   Future<AuthenticationResponseModel> signUpWithEmail(
@@ -61,12 +137,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         idToken: googleAuth.idToken,
       );
 
-      final userCredential =
-          await firebaseAuth.signInWithCredential(credential);
+      final userCredential = await firebaseAuth.signInWithCredential(
+        credential,
+      );
       user = userCredential.user;
 
       if (user == null) throw ExceptionFailure("Google sign-in failed.");
     } catch (e) {
+      print("Exception is: $e");
       throw ExceptionFailure(e.toString());
     }
     return await _sendRegisterRequest(user!, authProvider: "google");
@@ -83,8 +161,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final OAuthCredential facebookAuthCredential =
           FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
 
-      final userCredential =
-          await firebaseAuth.signInWithCredential(facebookAuthCredential);
+      final userCredential = await firebaseAuth.signInWithCredential(
+        facebookAuthCredential,
+      );
       user = userCredential.user;
 
       if (user == null) throw ExceptionFailure("Facebook sign-in failed.");
@@ -94,6 +173,45 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     return await _sendRegisterRequest(user!, authProvider: "facebook");
   }
 
+  Future<AuthenticationResponseModel> _sendLoginRequest(User restaurant,
+      {SignInWithEmailParams? params, String? authProvider}) async {
+    Object? requestBody;
+    if (params != null) {
+      requestBody = json.encode({
+        "email": restaurant.email ?? params.email,
+        "id": restaurant.uid,
+        "phone": restaurant.phoneNumber ?? "",
+        "authProvider": params.authProvider
+      });
+    } else {
+      requestBody = json.encode({
+        "email": restaurant.email,
+        "id": restaurant.uid,
+        "phone": restaurant.phoneNumber ?? "",
+        "authProvider": authProvider
+      });
+    }
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/restaurant/auth/login'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 200) {
+      return authenticationResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400) {
+      throw CredentialFailure();
+    } else if (response.statusCode == 401) {
+      throw AuthProviderMissMatchFailure();
+    } else if (response.statusCode == 404) {
+      throw UserNotExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
   Future<AuthenticationResponseModel> _sendRegisterRequest(
     User restaurant, {
     SignUpWithEmailParams? params,
