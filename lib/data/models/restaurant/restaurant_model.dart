@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
+
+RestaurantModel restaurantModelFromJson(String str) => RestaurantModel.fromJson(json.decode(str));
+
+String restaurantModelToJson(RestaurantModel data) => json.encode(data.toJson());
 
 class RestaurantModel extends Restaurant {
   const RestaurantModel({

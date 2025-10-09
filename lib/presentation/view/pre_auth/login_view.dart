@@ -4,6 +4,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/constants/images.dart';
+import 'package:foody_licious_admin_app/core/extension/failure_extension.dart';
+import 'package:foody_licious_admin_app/core/router/app_router.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dart';
@@ -48,10 +50,68 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        String? errorMessage;
         EasyLoading.dismiss();
         if (state is AuthLoading) {
           EasyLoading.show(status: 'Loading...');
+        } else if (state is AuthSignInWithEmailSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.setLocation,
+            (Route<dynamic> route) => false,
+            arguments: {
+              'previousCity': state.user.address?.city,
+            },
+          );
+        } else if (state is AuthSignInWithEmailFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Email login Failed!",
+            ),
+          );
+        } else if (state is AuthVerificationSMSForLoginSent) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRouter.verification, (Route<dynamic> route) => false,
+              arguments: {
+                'emailOrPhoneController': _emailOrPhoneController,
+                'authProvider': 'phone',
+              });
+        } else if (state is AuthVerificationSMSForLoginSentFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to send verification SMS!",
+            ),
+          );
+        } else if (state is AuthGoogleSignInSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.setLocation,
+            (Route<dynamic> route) => false,
+            arguments: {
+              'previousCity': state.user.address?.city,
+            },
+          );
+        } else if (state is AuthFacebookSignInSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.setLocation,
+            (Route<dynamic> route) => false,
+            arguments: {
+              'previousCity': state.user.address?.city,
+            },
+          );
+        } else if (state is AuthPasswordResetEmailSent) {
+          EasyLoading.showToast("Password Reset Email Sent!");
+        } else if (state is AuthPasswordResetEmailSentFailed) {
+          EasyLoading.show(status: "Failed to send password reset email!");
+        } else if (state is AuthGoogleSignInFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to login with google!",
+            ),
+          );
+        } else if (state is AuthFacebookSignInFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to login with facebook!",
+            ),
+          );
         }
       },
       child: Scaffold(
@@ -59,112 +119,124 @@ class _LoginViewState extends State<LoginView> {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 82.h),
-                Center(child: Image.asset(kLogo, width: 90.w, height: 90.h)),
-                Text(
-                  "Foody Licious",
-                  style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  "Deliever Favorite Food",
-                  style: GoogleFonts.lato(
-                    color: kTextRedDark,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 82.h),
+                  Center(child: Image.asset(kLogo, width: 90.w, height: 90.h)),
+                  Text(
+                    "Foody Licious",
+                    style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
                   ),
-                ),
-                SizedBox(height: 28.h),
-                Text(
-                  "Login To Your\nAdmin Dashboard",
-                  style: GoogleFonts.lato(
-                    color: kTextRedDark,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.0,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 28.h),
-                InputTextFormField(
-                  textController: _emailOrPhoneController,
-                  labelText: "Email or Phone Number",
-                  hintText: "Enter email or phone Number",
-                  prefixIconData: Icons.mail_outlined,
-                  keyboardType: TextInputType.emailAddress,
-                  validatorText: "Please enter your valid email or phone Number",
-                ),
-                SizedBox(height: 12.h),
-                InputTextFormField(
-                  textController: _passwordController,
-                  labelText: "Password",
-                  hintText: "Enter password",
-                  prefixIconData: Icons.lock_outline,
-                  keyboardType: TextInputType.text,
-                  validatorText: "Please set your Password",
-                  obscureText: true,
-                ),
-                SizedBox(height: 28.h),
-                Text(
-                  "Or",
-                  style: GoogleFonts.yeonSung(
-                    color: kTextPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                Text(
-                  "Continue With",
-                  style: GoogleFonts.yeonSung(
-                    color: kTextPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SocialAuthButton(
-                      authProviderName: "Facebook",
-                      authProviderlogoImagePath: kFacebookIcon,
-                      onTap: () {},
-                    ),
-                    SocialAuthButton(
-                      authProviderName: "Google",
-                      authProviderlogoImagePath: kGoogleIcon,
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-                BlocBuilder<AuthBloc, AuthState>(
-                    builder: (context, state) {
-                      return GradientButton(
-                        buttonText: "Login",
-                        onTap: () {
-                          _onLogin(context, _formKey, state);
-                        },
-                      );
-                    },
-                  ),
-                SizedBox(height: 10.h),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Don’t Have Account?",
+                  SizedBox(height: 10.h),
+                  Text(
+                    "Deliever Favorite Food",
                     style: GoogleFonts.lato(
                       color: kTextRedDark,
-                      fontSize: 10,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 28.h),
+                  Text(
+                    "Login To Your\nAdmin Dashboard",
+                    style: GoogleFonts.lato(
+                      color: kTextRedDark,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.0,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ],
+                  SizedBox(height: 28.h),
+                  InputTextFormField(
+                    textController: _emailOrPhoneController,
+                    labelText: "Email or Phone Number",
+                    hintText: "Enter email or phone Number",
+                    prefixIconData: Icons.mail_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                    validatorText: "Please enter your valid email or phone Number",
+                  ),
+                  SizedBox(height: 12.h),
+                  InputTextFormField(
+                    textController: _passwordController,
+                    labelText: "Password",
+                    hintText: "Enter password",
+                    prefixIconData: Icons.lock_outline,
+                    keyboardType: TextInputType.text,
+                    validatorText: "Please set your Password",
+                    obscureText: true,
+                  ),
+                  SizedBox(height: 28.h),
+                  Text(
+                    "Or",
+                    style: GoogleFonts.yeonSung(
+                      color: kTextPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  Text(
+                    "Continue With",
+                    style: GoogleFonts.yeonSung(
+                      color: kTextPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SocialAuthButton(
+                        authProviderName: "Facebook",
+                        authProviderlogoImagePath: kFacebookIcon,
+                        onTap: () {
+                           context.read<AuthBloc>().add(AuthSignInWithFacebook());
+                        },
+                      ),
+                      SocialAuthButton(
+                        authProviderName: "Google",
+                        authProviderlogoImagePath: kGoogleIcon,
+                        onTap: () {
+                           context.read<AuthBloc>().add(AuthSignInWithGoogle());
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+                  BlocBuilder<AuthBloc, AuthState>(
+                      builder: (context, state) {
+                        return GradientButton(
+                          buttonText: "Login",
+                          onTap: () {
+                            _onLogin(context, _formKey, state);
+                          },
+                        );
+                      },
+                    ),
+                  SizedBox(height: 10.h),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRouter.signUp,
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    child: Text(
+                      "Don’t Have Account?",
+                      style: GoogleFonts.lato(
+                        color: kTextRedDark,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -184,16 +256,14 @@ class _LoginViewState extends State<LoginView> {
         isPhone = state.isPhone;
       }
 
-      if (isEmail) {
+      // if (isEmail) {
         context.read<AuthBloc>().add(AuthSignInWithEmail(SignInWithEmailParams(
             email: emailOrPhone,
             password: _passwordController.text,
             authProvider: "email")));
-      } else if (isPhone) {
-        // context.read<AuthBloc>().add(AuthVerifyPhoneNumberForLogin(
-        //     SignInWithPhoneParams(phone: emailOrPhone, authProvider: "phone")));
+      // } else if (isPhone) {
+      // context.read<AuthBloc>().add(AuthVerifyPhoneNumberForLogin(
+      //     SignInWithPhoneParams(phone: emailOrPhone, authProvider: "phone")));
       }
     }
-  }
-
 }

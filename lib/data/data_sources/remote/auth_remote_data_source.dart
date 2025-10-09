@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -7,22 +8,32 @@ import 'package:foody_licious_admin_app/core/constants/strings.dart';
 import 'package:foody_licious_admin_app/core/error/failures.dart';
 import 'package:foody_licious_admin_app/data/models/restaurant/authentication_reponsse_model.dart';
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_usecase.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 
 abstract class AuthRemoteDataSource {
   Future<AuthenticationResponseModel> signInWithEmail(
       SignInWithEmailParams params);
+  Future<Unit> verifyPhoneNumberForLogin(SignInWithPhoneParams params);
+  Future<AuthenticationResponseModel> signInWithPhone(
+      SignInWithPhoneParams params);
   Future<AuthenticationResponseModel> signInWithGoogle();
-  Future<AuthenticationResponseModel> signInWithFacebook();    
+  Future<AuthenticationResponseModel> signInWithFacebook();
+  Future<Unit> sendPasswordResetEmail(SendPasswordResetEmailParams params);
   Future<AuthenticationResponseModel> signUpWithEmail(
-    SignUpWithEmailParams params,
-  );
+      SignUpWithEmailParams params);
+  Future<Unit> sendVerificationEmail();
+  Future<Unit> waitForEmailVerification();
+  Future<Unit> verifyPhoneNumberForRegistration(SignUpWithPhoneParams params);
+  Future<AuthenticationResponseModel> signUpWithPhone(
+      SignUpWithPhoneParams params);
   Future<AuthenticationResponseModel> signUpWithGoogle();
   Future<AuthenticationResponseModel> signUpWithFacebook();
-
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -58,6 +69,38 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     }
   }
+
+    @override
+  Future<Unit> verifyPhoneNumberForLogin(SignInWithPhoneParams params) async {
+    final requestBody = json.encode({
+      "phone": params.phone ?? "",
+    });
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/auth/sendVerificationCodeForLogin'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 200) {
+      return Future.value(unit);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else if (response.statusCode == 404) {
+      throw UserNotExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signInWithPhone(
+      SignInWithPhoneParams params) async {
+    return await _sendLoginWithPhoneRequest(params);
+  }
+
  
   @override
   Future<AuthenticationResponseModel> signInWithGoogle() async {
@@ -108,6 +151,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     return await _sendLoginRequest(user!, authProvider: "facebook");
   }
 
+    @override
+  Future<Unit> sendPasswordResetEmail(
+      SendPasswordResetEmailParams params) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: params.email);
+      return Future.value(unit);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw UserNotExistsFailure();
+      } else {
+        throw AuthenticationFailure(e.message ?? 'Unknown error');
+      }
+    } catch (e) {
+      throw AuthenticationFailure(e.toString() ?? 'Unknown error');
+    }
+  }
+
+
   @override
   Future<AuthenticationResponseModel> signUpWithEmail(
     SignUpWithEmailParams params,
@@ -120,6 +181,91 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     user = userCredential.user;
     return await _sendRegisterRequest(user!, params: params);
   }
+
+  
+  @override
+  Future<Unit> sendVerificationEmail() async {
+    final user = firebaseAuth.currentUser;
+    if (user != null) {
+      try {
+        await user.reload();
+        await user.sendEmailVerification();
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'too-many-requests') {
+          throw TooManyRequestsFailure();
+        } else {
+          throw ServerFailure();
+        }
+      } catch (e) {
+        throw ServerFailure();
+      }
+    } else {
+      throw UserNotExistsFailure();
+    }
+    return Future.value(unit);
+  }
+
+  @override
+  Future<Unit> waitForEmailVerification({
+    Duration checkInterval = const Duration(seconds: 3),
+    Duration timeout = const Duration(minutes: 5),
+  }) async {
+    final user = firebaseAuth.currentUser;
+    if (user == null) {
+      throw UserNotExistsFailure();
+    }
+
+    final stopwatch = Stopwatch()..start();
+
+    while (true) {
+      await user.reload(); // Refresh user state
+      final refreshedUser = firebaseAuth.currentUser;
+
+      if (refreshedUser != null && refreshedUser.emailVerified) {
+        //TODO: Update user verified to true in database
+        return Future.value(unit);
+      }
+
+      if (stopwatch.elapsed >= timeout) {
+        throw TimeOutFailure();
+      }
+
+      await Future.delayed(checkInterval);
+    }
+  }
+
+  @override
+  Future<Unit> verifyPhoneNumberForRegistration(
+      SignUpWithPhoneParams params) async {
+    final requestBody = json.encode({
+      "phone": params.phone ?? "",
+    });
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/auth/sendVerificationCodeForRegistration'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 201) {
+      return Future.value(unit);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else if (response.statusCode == 409) {
+      throw UserAlreadyExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
+  @override
+  Future<AuthenticationResponseModel> signUpWithPhone(
+      SignUpWithPhoneParams params) async {
+    return await _sendRegisterWithPhoneRequest(params);
+  }
+
 
   @override
   Future<AuthenticationResponseModel> signUpWithGoogle() async {
@@ -212,6 +358,34 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerFailure();
     }
   }
+
+  Future<AuthenticationResponseModel> _sendLoginWithPhoneRequest(
+      SignInWithPhoneParams params) async {
+    final requestBody = json.encode({
+      "phone": params.phone ?? "",
+      "authProvider": params.authProvider,
+      "code": params.code
+    });
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/auth/verifyCodeAndLoginWithPhone'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 200) {
+      return authenticationResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else if (response.statusCode == 404) {
+      throw UserNotExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
   Future<AuthenticationResponseModel> _sendRegisterRequest(
     User restaurant, {
     SignUpWithEmailParams? params,
@@ -256,5 +430,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       debugPrint('Exception is :$e');
     }
     throw ExceptionFailure("Unknown exception");
+  }
+  
+  Future<AuthenticationResponseModel> _sendRegisterWithPhoneRequest(
+      SignUpWithPhoneParams params) async {
+    final requestBody = json.encode({
+      "phone": params.phone ?? "",
+      "name": params.name ?? "",
+      "authProvider": params.authProvider,
+      "code": params.code
+    });
+
+    final response = await client.post(
+      Uri.parse('$kBaseUrl/api/restaurant/auth/verifyCodeAndRegisterWithPhone'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (response.statusCode == 201) {
+      return authenticationResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else if (response.statusCode == 409) {
+      throw UserAlreadyExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
   }
 }

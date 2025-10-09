@@ -7,13 +7,22 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/network/network_info.dart';
+import 'package:foody_licious_admin_app/data/data_sources/local/restaurant_local_data_source.dart';
 import 'package:foody_licious_admin_app/data/repositories/auth_repository_impl.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/send_password_reset_email_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/send_verification_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_facebook_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_google_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_out_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_facebook_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_google_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/verify_phone_number_for_login_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/verify_phone_number_for_registration_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/wait_for_email_verification_usecase.dart';
 import 'package:foody_licious_admin_app/firebase_options.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -41,26 +50,38 @@ Future<void> init() async {
 
   //Features - Auth
   // Bloc
-  sl.registerFactory(() => AuthBloc(sl(),sl(),sl(),sl(),sl(),sl()));
+  sl.registerFactory(() => AuthBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(),
+      sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
-  sl.registerLazySingleton(() => SignInWithGoogleUseCase(sl()));
-  sl.registerLazySingleton(() => SignInWithFacebookUseCase(sl()));
+  sl.registerLazySingleton(() => VerifyPhoneNumberForLoginUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithEmailUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithGoogleUseCase(sl()));
+  sl.registerLazySingleton(() => SendPasswordResetEmailUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithFacebookUseCase(sl()));
+  sl.registerLazySingleton(() => SendVerificationEmailUseCase(sl()));
+  sl.registerLazySingleton(() => WaitForEmailVerificationUsecase(sl()));
+  sl.registerLazySingleton(() => VerifyPhoneNumberForRegistrationUseCase(sl()));
+  sl.registerLazySingleton(() => SignUpWithPhoneUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithGoogleUseCase(sl()));
   sl.registerLazySingleton(() => SignUpWithFacebookUseCase(sl()));
+  sl.registerLazySingleton(() => SignOutUseCase(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       remoteDataSource: sl(),
-      // localDataSource: sl(),
+      localDataSource: sl(),
       networkInfo: sl(),
     ),
   );
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
         firebaseAuth: sl(), client: sl(), googleSignIn: sl(),facebookAuth:sl()),
+  );
+  sl.registerLazySingleton<RestaurantLocalDataSource>(
+    () => RestaurantLocalDataSourceImpl(sharedPreferences: sl()),
   );
 
   ///***********************************************

@@ -4,13 +4,23 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:foody_licious_admin_app/core/constants/validators.dart';
+import 'package:foody_licious_admin_app/core/usecase/usecase.dart';
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/send_password_reset_email_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/send_verification_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_facebook_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_google_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_out_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_facebook_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_google_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/verify_phone_number_for_login_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/verify_phone_number_for_registration_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/wait_for_email_verification_usecase.dart';
 
 import '../../../core/error/failures.dart';
 
@@ -19,27 +29,55 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithEmailUseCase _signInWithEmailUseCase;
+  final VerifyPhoneNumberForLoginUseCase _verifyPhoneNumberForLoginUseCase;
+  final SignInWithPhoneUseCase _signInWithPhoneUseCase;
   final SignInWithGoogleUseCase _signInWithGoogleUseCase;
   final SignInWithFacebookUseCase _signInWithFacebookUseCase;
+  final SendPasswordResetEmailUseCase _sendPasswordResetEmailUseCase;
   final SignUpWithEmailUseCase _signUpWithEmailUseCase;
+  final SendVerificationEmailUseCase _sendVerificationEmailUseCase;
+  final WaitForEmailVerificationUsecase _waitForEmailVerificationUseCase;
+  final VerifyPhoneNumberForRegistrationUseCase
+  _verifyPhoneNumberForRegistrationUseCase;
+  final SignUpWithPhoneUseCase _signUpWithPhoneUseCase;
   final SignUpWithGoogleUseCase _signUpWithGoogleUseCase;
   final SignUpWithFacebookUseCase _signUpWithFacebookUseCase;
+  final SignOutUseCase _signOutUseCase;
 
   AuthBloc(
     this._signInWithEmailUseCase,
+    this._verifyPhoneNumberForLoginUseCase,
+    this._signInWithPhoneUseCase,
     this._signInWithGoogleUseCase,
     this._signInWithFacebookUseCase,
+    this._sendPasswordResetEmailUseCase,
     this._signUpWithEmailUseCase,
+    this._sendVerificationEmailUseCase,
+    this._waitForEmailVerificationUseCase,
+    this._verifyPhoneNumberForRegistrationUseCase,
+    this._signUpWithPhoneUseCase,
     this._signUpWithGoogleUseCase,
     this._signUpWithFacebookUseCase,
+    this._signOutUseCase,
   ) : super(AuthInitial()) {
     on<AuthSignInWithEmail>(_onSignInWithEmail);
+    on<AuthVerifyPhoneNumberForLogin>(_onVerifyPhoneNumberForLogin);
+    on<AuthSignInWithPhone>(_onSignInWithPhone);
     on<AuthSignInWithGoogle>(_onSignInWithGoogle);
     on<AuthSignInWithFacebook>(_onSignInWithFacebook);
+    on<AuthSendPasswordResetEmail>(_onSendPasswordResetEmail);
     on<AuthSignUpWithEmail>(_onSignUpWithEmail);
+    on<AuthSendVerificationEmail>(_onSendVerificationEmail);
+    on<AuthWaitForEmailVerification>(_onWaitForEmailVerification);
+    on<AuthVerifyPhoneNumberForRegistration>(
+      _onVerifyPhoneNumberForRegistration,
+    );
+    on<AuthSignUpWithPhone>(_onSignUpWithPhone);
     on<AuthSignUpWithGoogle>(_onSignUpWithGoogle);
     on<AuthSignUpWithFacebook>(_onSignUpWithFacebook);
     on<AuthCheck>(_onCheckAuth);
+    on<AuthSignOut>(_onSignOut);
+    on<ValidateEmailOrPhone>(_onValidateEmailOrPhone);
   }
 
   void _onSignInWithEmail(
@@ -55,6 +93,40 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     } catch (e) {
       emit(AuthSignInWithEmailFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
+  FutureOr<void> _onVerifyPhoneNumberForLogin(
+    AuthVerifyPhoneNumberForLogin event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      emit(AuthLoading());
+      final result = await _verifyPhoneNumberForLoginUseCase(event.params);
+      result.fold(
+        (failure) => emit(AuthVerificationSMSForLoginSentFailed(failure)),
+        (unit) => emit(AuthVerificationSMSForLoginSent(unit)),
+      );
+    } catch (e) {
+      emit(
+        AuthVerificationSMSForLoginSentFailed(ExceptionFailure(e.toString())),
+      );
+    }
+  }
+
+  FutureOr<void> _onSignInWithPhone(
+    AuthSignInWithPhone event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      emit(AuthLoading());
+      final result = await _signInWithPhoneUseCase(event.params);
+      result.fold(
+        (failure) => emit(AuthPhoneVerificationForLoginFailed(failure)),
+        (user) => emit(AuthPhoneVerificationForLoginSuccess(user)),
+      );
+    } catch (e) {
+      emit(AuthPhoneVerificationForLoginFailed(ExceptionFailure(e.toString())));
     }
   }
 
@@ -90,6 +162,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  FutureOr<void> _onSendPasswordResetEmail(
+    AuthSendPasswordResetEmail event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      emit(AuthLoading());
+      final result = await _sendPasswordResetEmailUseCase(event.params);
+      result.fold(
+        (failure) => emit(AuthPasswordResetEmailSentFailed(failure)),
+        (unit) => emit(AuthPasswordResetEmailSent()),
+      );
+    } catch (e) {
+      emit(AuthPasswordResetEmailSentFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
   FutureOr<void> _onSignUpWithEmail(
     AuthSignUpWithEmail event,
     Emitter<AuthState> emit,
@@ -103,6 +191,81 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     } catch (e) {
       emit(AuthVerificationEmailRequestFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
+  FutureOr<void> _onSendVerificationEmail(
+    AuthSendVerificationEmail event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      emit(AuthLoading());
+      final result = await _sendVerificationEmailUseCase(NoParams());
+      result.fold(
+        (failure) => emit(AuthVerificationEmailSentFailed(failure)),
+        (unit) => emit(AuthVerificationEmailSent()),
+      );
+    } catch (e) {
+      emit(AuthVerificationEmailSentFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
+  FutureOr<void> _onWaitForEmailVerification(
+    AuthWaitForEmailVerification event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      emit(AuthVerificationEmailSent());
+      final result = await _waitForEmailVerificationUseCase(NoParams());
+      result.fold(
+        (failure) => emit(AuthEmailVerificationFailed(failure)),
+        (unit) => emit(AuthEmailVerificationSuccess()),
+      );
+    } catch (e) {
+      emit(AuthEmailVerificationFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
+  FutureOr<void> _onVerifyPhoneNumberForRegistration(
+    AuthVerifyPhoneNumberForRegistration event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      emit(AuthLoading());
+      final result = await _verifyPhoneNumberForRegistrationUseCase(
+        event.params,
+      );
+      result.fold(
+        (failure) =>
+            emit(AuthVerificationSMSForRegistrationSentFailed(failure)),
+        (unit) => emit(AuthVerificationSMSForRegistrationSent(unit)),
+      );
+    } catch (e) {
+      emit(
+        AuthVerificationSMSForRegistrationSentFailed(
+          ExceptionFailure(e.toString()),
+        ),
+      );
+    }
+  }
+
+  FutureOr<void> _onSignUpWithPhone(
+    AuthSignUpWithPhone event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      emit(AuthLoading());
+      final result = await _signUpWithPhoneUseCase(event.params);
+      result.fold(
+        (failure) => emit(AuthPhoneVerificationForRegistrationFailed(failure)),
+        (user) => emit(AuthPhoneVerificationForRegistrationSuccess(user)),
+      );
+    } catch (e) {
+      emit(
+        AuthPhoneVerificationForRegistrationFailed(
+          ExceptionFailure(e.toString()),
+        ),
+      );
     }
   }
 
@@ -149,5 +312,46 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       emit(AuthLoggedFail(ExceptionFailure(e.toString())));
     }
+  }
+
+  void _onSignOut(AuthSignOut event, Emitter<AuthState> emit) async {
+    try {
+      emit(AuthLoading());
+      await _signOutUseCase(NoParams());
+      emit(AuthLoggedOut());
+    } catch (e) {
+      emit(AuthLoggedFail(ExceptionFailure(e.toString())));
+    }
+  }
+
+  void _onValidateEmailOrPhone(
+    ValidateEmailOrPhone event,
+    Emitter<AuthState> emit,
+  ) {
+    final input = event.input.trim();
+
+    if (input.isEmpty) {
+      emit(
+        InputValidationState(
+          isEmail: false,
+          isPhone: false,
+          isValid: false,
+          inputType: 'none',
+        ),
+      );
+      return;
+    }
+
+    final bool isEmail = Validators.isValidEmail(input);
+    final bool isPhone = Validators.isValidPhone(input);
+
+    emit(
+      InputValidationState(
+        isEmail: isEmail,
+        isPhone: isPhone,
+        isValid: isEmail || isPhone,
+        inputType: isEmail ? 'email' : (isPhone ? 'phone' : 'invalid'),
+      ),
+    );
   }
 }

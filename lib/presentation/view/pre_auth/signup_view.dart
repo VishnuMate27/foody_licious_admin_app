@@ -5,7 +5,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/constants/images.dart';
+import 'package:foody_licious_admin_app/core/error/failures.dart';
+import 'package:foody_licious_admin_app/core/extension/failure_extension.dart';
+import 'package:foody_licious_admin_app/core/router/app_router.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/input_text_form_field.dart';
@@ -44,7 +48,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   void _onInputChanged() {
     final text = _emailOrPhoneController.text.trim();
-    // context.read<AuthBloc>().add(ValidateEmailOrPhone(text));
+    context.read<AuthBloc>().add(ValidateEmailOrPhone(text));
   }
 
   @override
@@ -55,6 +59,96 @@ class _SignUpViewState extends State<SignUpView> {
         EasyLoading.dismiss();
         if (state is AuthLoading) {
           EasyLoading.show(status: 'Loading...');
+        } else if (state is AuthLoggedFail) {
+          String errorMessage = "An error occurred. Please try again.";
+          if (state.failure is CredentialFailure) {
+            errorMessage = "Incorrect username or password.";
+          } else if (state.failure is NetworkFailure) {
+            errorMessage = "Network error. Check your connection.";
+          }
+          // EasyLoading.showError(errorMessage);
+          print(errorMessage);
+        } else if (state is InputValidationState) {
+          if (!state.isEmail && _passwordController.text.isNotEmpty) {
+            _passwordController.clear();
+          }
+        } else if (state is AuthVerificationEmailRequested) {
+          context.read<AuthBloc>().add(AuthSendVerificationEmail());
+        } else if (state is AuthVerificationEmailSent) {
+          context.read<AuthBloc>().add(AuthWaitForEmailVerification());
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.verification,
+            (Route<dynamic> route) => false,
+            arguments: {
+              'nameController': _nameController,
+              'emailOrPhoneController': _emailOrPhoneController,
+              'authProvider': 'email',
+            },
+          );
+        } else if (state is AuthVerificationSMSForRegistrationSent) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.verification,
+            (Route<dynamic> route) => false,
+            arguments: {
+              'nameController': _nameController,
+              'emailOrPhoneController': _emailOrPhoneController,
+              'authProvider': 'phone',
+            },
+          );
+        } else if (state is AuthGoogleSignUpSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.setLocation,
+            (Route<dynamic> route) => false,
+            arguments: {'previousCity': state.user.address?.city},
+          );
+        } else if (state is AuthFacebookSignUpSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            AppRouter.setLocation,
+            (Route<dynamic> route) => false,
+            arguments: {'previousCity': state.user.address?.city},
+          );
+        } else if (state is AuthVerificationEmailRequestFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Verification Email Request Failed!",
+            ),
+          );
+        } else if (state is AuthVerificationEmailSentFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to send verification email!",
+            ),
+          );
+        } else if (state is AuthEmailVerificationFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Email Verification Failed!",
+            ),
+          );
+        } else if (state is AuthVerificationSMSForRegistrationSentFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to send verification SMS!",
+            ),
+          );
+        } else if (state is AuthPhoneVerificationForRegistrationFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to verify phone number!",
+            ),
+          );
+        } else if (state is AuthGoogleSignUpFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to sign up with google!",
+            ),
+          );
+        } else if (state is AuthFacebookSignUpFailed) {
+          EasyLoading.showError(
+            state.failure.toMessage(
+              defaultMessage: "Failed to sign up with facebook!",
+            ),
+          );
         }
       },
       child: Scaffold(
@@ -147,14 +241,16 @@ class _SignUpViewState extends State<SignUpView> {
                         authProviderName: "Facebook",
                         authProviderlogoImagePath: kFacebookIcon,
                         onTap: () {
-                          context.read<AuthBloc>().add(AuthSignUpWithFacebook());
+                          context.read<AuthBloc>().add(
+                            AuthSignUpWithFacebook(),
+                          );
                         },
                       ),
                       SocialAuthButton(
                         authProviderName: "Google",
                         authProviderlogoImagePath: kGoogleIcon,
                         onTap: () {
-                           context.read<AuthBloc>().add(AuthSignUpWithGoogle());
+                          context.read<AuthBloc>().add(AuthSignUpWithGoogle());
                         },
                       ),
                     ],
@@ -173,7 +269,12 @@ class _SignUpViewState extends State<SignUpView> {
                     },
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRouter.login,
+                        (Route<dynamic> route) => false,
+                      );
+                    },
                     child: Text(
                       "Already Have An Account?",
                       style: GoogleFonts.lato(
@@ -199,17 +300,16 @@ class _SignUpViewState extends State<SignUpView> {
     AuthState state,
   ) {
     if (key.currentState!.validate()) {
-      if (key.currentState!.validate()) {
-        final emailOrPhone = _emailOrPhoneController.text.trim();
-        bool isEmail = false;
-        bool isPhone = false;
+      final emailOrPhone = _emailOrPhoneController.text.trim();
+      bool isEmail = false;
+      bool isPhone = false;
 
-        if (state is InputValidationState) {
-          isEmail = state.isEmail;
-          isPhone = state.isPhone;
-        }
+      if (state is InputValidationState) {
+        isEmail = state.isEmail;
+        isPhone = state.isPhone;
+      }
 
-        // if (isEmail) {
+      if (isEmail) {
         context.read<AuthBloc>().add(
           AuthSignUpWithEmail(
             SignUpWithEmailParams(
@@ -220,13 +320,16 @@ class _SignUpViewState extends State<SignUpView> {
             ),
           ),
         );
-        // } else if (isPhone) {
-        //   context.read<AuthBloc>().add(AuthVerifyPhoneNumberForRegistration(
-        //       SignUpWithPhoneParams(
-        //           name: _nameController.text.trim(),
-        //           phone: emailOrPhone,
-        //           authProvider: "phone")));
-        // }
+      } else if (isPhone) {
+        context.read<AuthBloc>().add(
+          AuthVerifyPhoneNumberForRegistration(
+            SignUpWithPhoneParams(
+              name: _nameController.text.trim(),
+              phone: emailOrPhone,
+              authProvider: "phone",
+            ),
+          ),
+        );
       }
     }
   }
