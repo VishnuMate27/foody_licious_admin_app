@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          initialRoute: AppRouter.splash,
+          initialRoute: AppRouter.signUp,
           onGenerateRoute: AppRouter.onGenerateRoute,
           builder: EasyLoading.init(),
         ),

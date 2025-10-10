@@ -26,11 +26,11 @@ class AuthenticationFailure extends Failure {
   AuthenticationFailure(this.failureMessage);
 }
 
-class UserNotExistsFailure extends Failure {}
+class RestaurantNotExistsFailure extends Failure {}
 
 class TimeOutFailure extends Failure {}
 
-class UserAlreadyExistsFailure extends Failure {}
+class RestaurantAlreadyExistsFailure extends Failure {}
 
 class TooManyRequestsFailure extends Failure {}
 

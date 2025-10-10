@@ -7,6 +7,7 @@ import 'package:foody_licious_admin_app/core/constants/images.dart';
 import 'package:foody_licious_admin_app/core/extension/failure_extension.dart';
 import 'package:foody_licious_admin_app/core/router/app_router.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/input_text_form_field.dart';
@@ -21,12 +22,11 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final TextEditingController _emailOrPhoneController =
-        TextEditingController();
+  final TextEditingController _emailOrPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-    @override
+  @override
   void initState() {
     super.initState();
     // Listen to changes in email/phone field and dispatch to BLoC
@@ -43,7 +43,7 @@ class _LoginViewState extends State<LoginView> {
 
   void _onInputChanged() {
     final text = _emailOrPhoneController.text.trim();
-    // context.read<AuthBloc>().add(ValidateEmailOrPhone(text));
+    context.read<AuthBloc>().add(ValidateEmailOrPhone(text));
   }
 
   @override
@@ -57,23 +57,21 @@ class _LoginViewState extends State<LoginView> {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
             (Route<dynamic> route) => false,
-            arguments: {
-              'previousCity': state.user.address?.city,
-            },
+            arguments: {'previousCity': state.user.address?.city},
           );
         } else if (state is AuthSignInWithEmailFailed) {
           EasyLoading.showError(
-            state.failure.toMessage(
-              defaultMessage: "Email login Failed!",
-            ),
+            state.failure.toMessage(defaultMessage: "Email login Failed!"),
           );
         } else if (state is AuthVerificationSMSForLoginSent) {
           Navigator.of(context).pushNamedAndRemoveUntil(
-              AppRouter.verification, (Route<dynamic> route) => false,
-              arguments: {
-                'emailOrPhoneController': _emailOrPhoneController,
-                'authProvider': 'phone',
-              });
+            AppRouter.verification,
+            (Route<dynamic> route) => false,
+            arguments: {
+              'emailOrPhoneController': _emailOrPhoneController,
+              'authProvider': 'phone',
+            },
+          );
         } else if (state is AuthVerificationSMSForLoginSentFailed) {
           EasyLoading.showError(
             state.failure.toMessage(
@@ -84,17 +82,13 @@ class _LoginViewState extends State<LoginView> {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
             (Route<dynamic> route) => false,
-            arguments: {
-              'previousCity': state.user.address?.city,
-            },
+            arguments: {'previousCity': state.user.address?.city},
           );
         } else if (state is AuthFacebookSignInSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.setLocation,
             (Route<dynamic> route) => false,
-            arguments: {
-              'previousCity': state.user.address?.city,
-            },
+            arguments: {'previousCity': state.user.address?.city},
           );
         } else if (state is AuthPasswordResetEmailSent) {
           EasyLoading.showToast("Password Reset Email Sent!");
@@ -157,7 +151,8 @@ class _LoginViewState extends State<LoginView> {
                     hintText: "Enter email or phone Number",
                     prefixIconData: Icons.mail_outlined,
                     keyboardType: TextInputType.emailAddress,
-                    validatorText: "Please enter your valid email or phone Number",
+                    validatorText:
+                        "Please enter your valid email or phone Number",
                   ),
                   SizedBox(height: 12.h),
                   InputTextFormField(
@@ -194,29 +189,31 @@ class _LoginViewState extends State<LoginView> {
                         authProviderName: "Facebook",
                         authProviderlogoImagePath: kFacebookIcon,
                         onTap: () {
-                           context.read<AuthBloc>().add(AuthSignInWithFacebook());
+                          context.read<AuthBloc>().add(
+                            AuthSignInWithFacebook(),
+                          );
                         },
                       ),
                       SocialAuthButton(
                         authProviderName: "Google",
                         authProviderlogoImagePath: kGoogleIcon,
                         onTap: () {
-                           context.read<AuthBloc>().add(AuthSignInWithGoogle());
+                          context.read<AuthBloc>().add(AuthSignInWithGoogle());
                         },
                       ),
                     ],
                   ),
                   SizedBox(height: 20.h),
                   BlocBuilder<AuthBloc, AuthState>(
-                      builder: (context, state) {
-                        return GradientButton(
-                          buttonText: "Login",
-                          onTap: () {
-                            _onLogin(context, _formKey, state);
-                          },
-                        );
-                      },
-                    ),
+                    builder: (context, state) {
+                      return GradientButton(
+                        buttonText: "Login",
+                        onTap: () {
+                          _onLogin(context, _formKey, state);
+                        },
+                      );
+                    },
+                  ),
                   SizedBox(height: 10.h),
                   TextButton(
                     onPressed: () {
@@ -244,8 +241,11 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-    _onLogin(
-      BuildContext context, GlobalKey<FormState> key, AuthState state) async {
+  _onLogin(
+    BuildContext context,
+    GlobalKey<FormState> key,
+    AuthState state,
+  ) async {
     if (key.currentState!.validate()) {
       final emailOrPhone = _emailOrPhoneController.text.trim();
       bool isEmail = false;
@@ -256,14 +256,23 @@ class _LoginViewState extends State<LoginView> {
         isPhone = state.isPhone;
       }
 
-      // if (isEmail) {
-        context.read<AuthBloc>().add(AuthSignInWithEmail(SignInWithEmailParams(
-            email: emailOrPhone,
-            password: _passwordController.text,
-            authProvider: "email")));
-      // } else if (isPhone) {
-      // context.read<AuthBloc>().add(AuthVerifyPhoneNumberForLogin(
-      //     SignInWithPhoneParams(phone: emailOrPhone, authProvider: "phone")));
+      if (isEmail) {
+        context.read<AuthBloc>().add(
+          AuthSignInWithEmail(
+            SignInWithEmailParams(
+              email: emailOrPhone,
+              password: _passwordController.text,
+              authProvider: "email",
+            ),
+          ),
+        );
+      } else if (isPhone) {
+        context.read<AuthBloc>().add(
+          AuthVerifyPhoneNumberForLogin(
+            SignInWithPhoneParams(phone: emailOrPhone, authProvider: "phone"),
+          ),
+        );
       }
     }
+  }
 }
