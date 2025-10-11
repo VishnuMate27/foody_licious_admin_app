@@ -81,7 +81,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final requestBody = json.encode({"phone": params.phone ?? ""});
 
     final response = await client.post(
-      Uri.parse('$kBaseUrl/api/auth/sendVerificationCodeForLogin'),
+      Uri.parse('$kBaseUrl/api/restaurant/auth/sendVerificationCodeForLogin'),
       headers: {'Content-Type': 'application/json'},
       body: requestBody,
     );
@@ -372,7 +372,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     });
 
     final response = await client.post(
-      Uri.parse('$kBaseUrl/api/auth/verifyCodeAndLoginWithPhone'),
+      Uri.parse('$kBaseUrl/api/restaurant/auth/verifyCodeAndLoginWithPhone'),
       headers: {'Content-Type': 'application/json'},
       body: requestBody,
     );

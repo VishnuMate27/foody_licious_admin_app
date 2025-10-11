@@ -4,7 +4,7 @@ import 'package:foody_licious_admin_app/data/models/restaurant/restaurant_model.
 class Restaurant extends Equatable {
   final String id;
   final String name;
-  final String ownerName;
+  final String? ownerName;
   final String? email;
   final String? phone;
   final String? authProvider;
@@ -18,7 +18,7 @@ class Restaurant extends Equatable {
   const Restaurant({
     required this.id,
     required this.name,
-    required this.ownerName,
+    this.ownerName,
     this.email,
     this.phone,
     this.authProvider,

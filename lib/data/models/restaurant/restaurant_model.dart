@@ -10,7 +10,7 @@ class RestaurantModel extends Restaurant {
   const RestaurantModel({
     required super.id,
     required super.name,
-    required super.ownerName,
+    super.ownerName,
     super.email,
     super.phone,
     super.authProvider,
@@ -26,7 +26,7 @@ class RestaurantModel extends Restaurant {
     return RestaurantModel(
       id: json['id'] as String,
       name: json['name'] as String,
-      ownerName: json['ownerName'] as String,
+      ownerName: json['ownerName'] as String?,
       email: json['email'] as String?,
       phone: json['phone'] as String?,
       authProvider: json['authProvider'] as String?,
