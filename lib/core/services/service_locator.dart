@@ -8,7 +8,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/network/network_info.dart';
 import 'package:foody_licious_admin_app/data/data_sources/local/restaurant_local_data_source.dart';
+import 'package:foody_licious_admin_app/data/data_sources/remote/restaurant_remote_data_source.dart';
 import 'package:foody_licious_admin_app/data/repositories/auth_repository_impl.dart';
+import 'package:foody_licious_admin_app/data/repositories/restaurant_repository_impl.dart';
+import 'package:foody_licious_admin_app/data/services/location_service.dart';
+import 'package:foody_licious_admin_app/domain/repositories/restaurant_repository.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/send_verification_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
@@ -23,8 +27,13 @@ import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_
 import 'package:foody_licious_admin_app/domain/usecases/auth/verify_phone_number_for_login_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/verify_phone_number_for_registration_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/wait_for_email_verification_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/check_restaurant_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/delete_restaurant_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_location_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/firebase_options.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
+import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -80,15 +89,37 @@ Future<void> init() async {
     () => AuthRemoteDataSourceImpl(
         firebaseAuth: sl(), client: sl(), googleSignIn: sl(),facebookAuth:sl()),
   );
+
+  //Features - Restaurant
+  // Bloc
+  sl.registerFactory(() => RestaurantBloc(sl(), sl(), sl(), sl()));
+  // Use cases
+  sl.registerLazySingleton(() => CheckRestaurantUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateRestaurantLocationUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateRestaurantUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteRestaurantUseCase(sl()));
+  // Repository
+  sl.registerLazySingleton<RestaurantRepository>(
+    () => RestaurantRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  // Data sources
+  sl.registerLazySingleton<RestaurantRemoteDataSource>(
+    () => RestaurantRemoteDataSourceImpl(client: sl(), locationService: sl()),
+  );
   sl.registerLazySingleton<RestaurantLocalDataSource>(
     () => RestaurantLocalDataSourceImpl(sharedPreferences: sl()),
   );
+
 
   ///***********************************************
   ///! Core
   /// sl.registerLazySingleton(() => InputConverter());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
-  // sl.registerLazySingleton<LocationService>(() => LocationServiceImpl());
+  sl.registerLazySingleton<LocationService>(() => LocationServiceImpl());
 
   ///! External
   final sharedPreferences = await SharedPreferences.getInstance();

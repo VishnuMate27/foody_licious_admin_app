@@ -23,5 +23,5 @@ class AuthenticationResponseModel {
 
   Map<String, dynamic> toJson() => {
         "restaurant": restaurant.toJson(),
-      };
+  };
 }

@@ -24,8 +24,8 @@ class AppRouter {
   static const String verification = '/verification';
   static const String setLocation = '/set-location';
   //post_auth
-  static const String addMenu = '/add-menu';
   static const String allMenu = '/all-menu';
+  static const String addMenu = '/add-menu';
   static const String delivery = '/delivery';
   static const String profile = '/profile';
   static const String feedback = '/feedback';
@@ -55,14 +55,14 @@ class AppRouter {
         final args = routeSettings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
           builder: (_) => SetLocationView(
-            // previousCity: args?['previousCity'],
+            previousCity: args?['previousCity'],
           ),
         );
       //post_auth
-      case addMenu:
-        return MaterialPageRoute(builder: (_) => AddMenuView());
       case allMenu:
         return MaterialPageRoute(builder: (_) => AllMenuView());
+      case addMenu:
+        return MaterialPageRoute(builder: (_) => AddMenuView());
       case delivery:
         return MaterialPageRoute(builder: (_) => DeliveryView());
       case profile:

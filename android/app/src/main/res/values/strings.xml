@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Foody Licious App</string>
+    <string name="facebook_app_id">2039421979796999</string>
+    <string name="fb_login_protocol_scheme">fb2039421979796999</string>
+    <string name="facebook_client_token">86a2aaaf9cec6c8ade782011af4201c4</string>
+</resources>

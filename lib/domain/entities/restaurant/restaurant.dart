@@ -3,13 +3,13 @@ import 'package:foody_licious_admin_app/data/models/restaurant/restaurant_model.
 
 class Restaurant extends Equatable {
   final String id;
-  final String name;
-  final String? ownerName;
+  final String ownerName;
+  final String? name;
   final String? email;
   final String? phone;
   final String? authProvider;
   final AddressModel? address;
-  final String? photo;
+  final String? photoUrl;
   final String? description;
   final List<String>? menuItems;
   final List<String>? receivedOrders;
@@ -17,13 +17,13 @@ class Restaurant extends Equatable {
 
   const Restaurant({
     required this.id,
-    required this.name,
-    this.ownerName,
+    required this.ownerName,
+    this.name,
     this.email,
     this.phone,
     this.authProvider,
     this.address,
-    this.photo,
+    this.photoUrl,
     this.description,
     this.menuItems,
     this.receivedOrders,
@@ -33,13 +33,13 @@ class Restaurant extends Equatable {
   @override
   List<Object?> get props => [
     id,
-    name,
     ownerName,
+    name,
     email,
     phone,
     authProvider,
     address,
-    photo,
+    photoUrl,
     description,
     menuItems,
     receivedOrders,

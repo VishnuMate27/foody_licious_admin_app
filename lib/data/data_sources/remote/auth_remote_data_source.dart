@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:foody_licious_admin_app/core/constants/strings.dart';
 import 'package:foody_licious_admin_app/core/error/failures.dart';
 import 'package:foody_licious_admin_app/data/models/restaurant/authentication_reponsse_model.dart';
-import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_usecase.dart';
@@ -398,16 +396,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       requestBody = json.encode({
         "email": restaurant.email ?? params.email,
         "id": restaurant.uid,
-        "name": params.name,
+        "ownerName": params.ownerName,
         "phone": restaurant.phoneNumber ?? "",
+        "photoUrl": restaurant.photoURL ?? "photoUrl",
         "authProvider": params.authProvider,
       });
     } else {
       requestBody = json.encode({
         "email": restaurant.email,
         "id": restaurant.uid,
-        "name": restaurant.displayName,
+        "ownerName": restaurant.displayName,
         "phone": restaurant.phoneNumber ?? "",
+        "photoUrl": restaurant.photoURL ?? "photoUrl",
         "authProvider": authProvider,
       });
     }
@@ -439,7 +439,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   ) async {
     final requestBody = json.encode({
       "phone": params.phone ?? "",
-      "name": params.name ?? "",
+      "ownerName": params.ownerName ?? "",
       "authProvider": params.authProvider,
       "code": params.code,
     });

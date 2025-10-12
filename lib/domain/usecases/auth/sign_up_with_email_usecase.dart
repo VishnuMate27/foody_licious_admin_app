@@ -4,7 +4,8 @@ import 'package:foody_licious_admin_app/core/usecase/usecase.dart';
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
 import 'package:foody_licious_admin_app/domain/repositories/auth_repository.dart';
 
-class SignUpWithEmailUseCase implements UseCase<Restaurant, SignUpWithEmailParams> {
+class SignUpWithEmailUseCase
+    implements UseCase<Restaurant, SignUpWithEmailParams> {
   final AuthRepository repository;
   SignUpWithEmailUseCase(this.repository);
 
@@ -15,10 +16,14 @@ class SignUpWithEmailUseCase implements UseCase<Restaurant, SignUpWithEmailParam
 }
 
 class SignUpWithEmailParams {
-  final String? name;
+  final String? ownerName;
   final String? email;
   final String? password;
   final String authProvider;
-  const SignUpWithEmailParams(
-      {this.name, this.email, this.password, required this.authProvider});
+  const SignUpWithEmailParams({
+    this.ownerName,
+    this.email,
+    this.password,
+    required this.authProvider,
+  });
 }

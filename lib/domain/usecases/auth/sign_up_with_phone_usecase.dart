@@ -4,7 +4,8 @@ import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.da
 import '../../../../../core/error/failures.dart';
 import '../../repositories/auth_repository.dart';
 
-class SignUpWithPhoneUseCase implements UseCase<Restaurant, SignUpWithPhoneParams> {
+class SignUpWithPhoneUseCase
+    implements UseCase<Restaurant, SignUpWithPhoneParams> {
   final AuthRepository repository;
   SignUpWithPhoneUseCase(this.repository);
 
@@ -15,10 +16,14 @@ class SignUpWithPhoneUseCase implements UseCase<Restaurant, SignUpWithPhoneParam
 }
 
 class SignUpWithPhoneParams {
-  final String? name;
+  final String? ownerName;
   final String? phone;
   final String? code;
   final String authProvider;
-  const SignUpWithPhoneParams(
-      {this.name, this.phone, this.code, required this.authProvider});
+  const SignUpWithPhoneParams({
+    this.ownerName,
+    this.phone,
+    this.code,
+    required this.authProvider,
+  });
 }

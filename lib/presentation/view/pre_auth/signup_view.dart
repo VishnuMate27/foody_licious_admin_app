@@ -313,7 +313,7 @@ class _SignUpViewState extends State<SignUpView> {
         context.read<AuthBloc>().add(
           AuthSignUpWithEmail(
             SignUpWithEmailParams(
-              name: _nameController.text.trim(),
+              ownerName: _nameController.text.trim(),
               email: emailOrPhone,
               password: _passwordController.text,
               authProvider: "email",
@@ -324,7 +324,7 @@ class _SignUpViewState extends State<SignUpView> {
         context.read<AuthBloc>().add(
           AuthVerifyPhoneNumberForRegistration(
             SignUpWithPhoneParams(
-              name: _nameController.text.trim(),
+              ownerName: _nameController.text.trim(),
               phone: emailOrPhone,
               authProvider: "phone",
             ),

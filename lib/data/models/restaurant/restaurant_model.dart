@@ -2,20 +2,22 @@ import 'dart:convert';
 
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
 
-RestaurantModel restaurantModelFromJson(String str) => RestaurantModel.fromJson(json.decode(str));
+RestaurantModel restaurantModelFromJson(String str) =>
+    RestaurantModel.fromJson(json.decode(str));
 
-String restaurantModelToJson(RestaurantModel data) => json.encode(data.toJson());
+String restaurantModelToJson(RestaurantModel data) =>
+    json.encode(data.toJson());
 
 class RestaurantModel extends Restaurant {
   const RestaurantModel({
     required super.id,
-    required super.name,
-    super.ownerName,
+    required super.ownerName,
+    super.name,
     super.email,
     super.phone,
     super.authProvider,
     super.address,
-    super.photo,
+    super.photoUrl,
     super.description,
     super.menuItems,
     super.receivedOrders,
@@ -25,13 +27,13 @@ class RestaurantModel extends Restaurant {
   factory RestaurantModel.fromJson(Map<String, dynamic> json) {
     return RestaurantModel(
       id: json['id'] as String,
-      name: json['name'] as String,
-      ownerName: json['ownerName'] as String?,
+      ownerName: json['ownerName'] as String,
+      name: json['name'] as String?,
       email: json['email'] as String?,
       phone: json['phone'] as String?,
       authProvider: json['authProvider'] as String?,
       address: AddressModel.fromJson(json['address'] ?? {}),
-      photo: json['photo'] as String?,
+      photoUrl: json['photoUrl'] as String?,
       description: json['description'] as String?,
       menuItems: List<String>.from(json['menuItems'] ?? {}),
       receivedOrders: List<String>.from(json['receivedOrders'] ?? {}),
@@ -42,13 +44,13 @@ class RestaurantModel extends Restaurant {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
       'ownerName': ownerName,
+      'name': name,
       'email': email,
       'phone': phone,
       'authProvider': authProvider,
       'address': address != null ? (address as AddressModel).toJson() : null,
-      'photo': photo,
+      'photoUrl': photoUrl,
       'description': description,
       'menuItems': menuItems,
       'receivedOrders': receivedOrders,

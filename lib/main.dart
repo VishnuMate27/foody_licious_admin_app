@@ -6,6 +6,7 @@ import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/router/app_router.dart';
 import 'package:foody_licious_admin_app/core/services/service_locator.dart' as di;
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
+import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (context) => di.sl<RestaurantBloc>()..add(CheckRestaurant()),
+        ),
         BlocProvider(
           create: (context) => di.sl<AuthBloc>()..add(AuthCheck()),
         ),
