@@ -10,8 +10,10 @@ class InputTextFormField extends StatefulWidget {
   final TextEditingController textController;
   final TextStyle? labelStyle;
   final TextStyle? hintStyle;
+  final bool? showlabelTextOnBorder;
   final Widget? suffixIcon;
   final IconData? prefixIconData;
+  final int? maxLength;
   final int? minLines;
   final int? maxLines;
   final TextInputType? keyboardType;
@@ -25,8 +27,10 @@ class InputTextFormField extends StatefulWidget {
     required this.textController,
     this.labelStyle,
     this.hintStyle,
+    this.showlabelTextOnBorder,
     this.suffixIcon,
     this.prefixIconData,
+    this.maxLength,
     this.minLines,
     this.maxLines,
     this.keyboardType = TextInputType.text,
@@ -50,6 +54,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLength: widget.maxLength,
       minLines: widget.minLines,
       maxLines: widget.obscureText == false ? widget.maxLines : 1,
       controller: widget.textController,
@@ -68,6 +73,10 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
             ),
         hintText: widget.hintText,
         hintStyle: widget.hintStyle,
+        floatingLabelBehavior:
+            widget.showlabelTextOnBorder == true
+                ? FloatingLabelBehavior.auto
+                : FloatingLabelBehavior.never,
         prefixIcon:
             widget.prefixIconData != null
                 ? Icon(widget.prefixIconData, color: kBlack)

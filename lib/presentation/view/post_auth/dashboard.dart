@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/extension/failure_extension.dart';
+import 'package:foody_licious_admin_app/core/router/app_router.dart';
+import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DashboardView extends StatefulWidget {
@@ -417,41 +422,63 @@ class _DashboardViewState extends State<DashboardView> {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  debugPrint("Log Out tapped");
-                },
-                child: Container(
-                  width: 150.w,
-                  height: 85.w,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF0C0C0),
-                    borderRadius: BorderRadius.circular(15.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF6CCB94),
-                        blurRadius: 3,
-                        offset: Offset(0, 1), // changes position of shadow
+              BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthLoading) {
+                    EasyLoading.show(status: "Logging Out...");
+                  } else if (state is AuthLoggedOut) {
+                    EasyLoading.dismiss();
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).pushNamedAndRemoveUntil(
+                      AppRouter.login,
+                      (Route<dynamic> route) => false,
+                    );
+                  } else if (state is AuthLoggedOutFailed) {
+                    EasyLoading.showError(
+                      state.failure.toMessage(
+                        defaultMessage: "Failed to Logout!",
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Icon(
-                          CupertinoIcons.add_circled,
-                          size: 30.w,
-                          color: Color(0xFFD13131),
-                        ),
-                        Text(
-                          "Log Out",
-                          style: GoogleFonts.yeonSung(
-                            color: Color(0xFFD13131),
-                            fontSize: 12.sp,
-                          ),
+                    );
+                  }
+                },
+                child: GestureDetector(
+                  onTap: () {
+                    debugPrint("Log Out tapped");
+                  },
+                  child: Container(
+                    width: 150.w,
+                    height: 85.w,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFF0C0C0),
+                      borderRadius: BorderRadius.circular(15.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xFF6CCB94),
+                          blurRadius: 3,
+                          offset: Offset(0, 1), // changes position of shadow
                         ),
                       ],
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Icon(
+                            CupertinoIcons.add_circled,
+                            size: 30.w,
+                            color: Color(0xFFD13131),
+                          ),
+                          Text(
+                            "Log Out",
+                            style: GoogleFonts.yeonSung(
+                              color: Color(0xFFD13131),
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

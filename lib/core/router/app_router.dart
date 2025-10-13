@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foody_licious_admin_app/core/error/failures.dart';
 import 'package:foody_licious_admin_app/presentation/view/post_auth/add_menu_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/post_auth/all_menu_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/post_auth/dashboard.dart';
 import 'package:foody_licious_admin_app/presentation/view/post_auth/delivery_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/post_auth/feedback_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/post_auth/onboarding_view.dart';
@@ -16,13 +17,13 @@ class AppRouter {
   //splash & onboarding
   static const String splash = '/';
   static const String onboarding = '/onboarding';
-  //main menu
-  static const String dashboard = '/dashboard';
   //authentication
   static const String login = '/login';
   static const String signUp = '/sign-up';
   static const String verification = '/verification';
   static const String setLocation = '/set-location';
+  //main menu
+  static const String dashboard = '/dashboard';
   //post_auth
   static const String allMenu = '/all-menu';
   static const String addMenu = '/add-menu';
@@ -45,20 +46,21 @@ class AppRouter {
       case verification:
         final args = routeSettings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
-          builder: (_) => VerificationView(
-            nameController: args['nameController'],
-            emailOrPhoneController: args['emailOrPhoneController'],
-            authProvider: args['authProvider'],
-          ),
+          builder:
+              (_) => VerificationView(
+                nameController: args['nameController'],
+                emailOrPhoneController: args['emailOrPhoneController'],
+                authProvider: args['authProvider'],
+              ),
         );
       case setLocation:
         final args = routeSettings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
-          builder: (_) => SetLocationView(
-            previousCity: args?['previousCity'],
-          ),
+          builder: (_) => SetLocationView(previousCity: args?['previousCity']),
         );
       //post_auth
+      case dashboard:
+        return MaterialPageRoute(builder: (_) => DashboardView());
       case allMenu:
         return MaterialPageRoute(builder: (_) => AllMenuView());
       case addMenu:
@@ -71,7 +73,6 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => FeedbackView());
       default:
         throw ExceptionFailure("Route not found!");
-      // throw const RouteException('Route not found!');
     }
   }
 }
