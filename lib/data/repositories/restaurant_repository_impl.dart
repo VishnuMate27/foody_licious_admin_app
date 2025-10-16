@@ -5,7 +5,9 @@ import 'package:foody_licious_admin_app/data/data_sources/local/restaurant_local
 import 'package:foody_licious_admin_app/data/data_sources/remote/restaurant_remote_data_source.dart';
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
 import 'package:foody_licious_admin_app/domain/repositories/restaurant_repository.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/remove_restaurant_profile_picture_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restaurant_profile_picture_usecase.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -44,6 +46,38 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
       return Left(failure);
     }
   }
+
+  @override
+  Future<Either<Failure, Restaurant>> uploadRestaurantProfilePicture(UploadRestaurantProfilePictureParams params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final restaurant = await localDataSource.getRestaurant();
+      params.restaurantId = restaurant.id;
+      final remoteResponse = await remoteDataSource.uploadRestaurantProfilePicture(params);
+      await localDataSource.saveRestaurant(remoteResponse.restaurant);
+      return Right(remoteResponse.restaurant);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Restaurant>> removeRestaurantProfilePicture() async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final restaurant = await localDataSource.getRestaurant();
+      final remoteResponse = await remoteDataSource.removeRestaurantProfilePicture(restaurant.id);
+      await localDataSource.saveRestaurant(remoteResponse.restaurant);
+      return Right(remoteResponse.restaurant);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
 
   @override
   Future<Either<Failure, Restaurant>> updateRestaurantLocation() async {

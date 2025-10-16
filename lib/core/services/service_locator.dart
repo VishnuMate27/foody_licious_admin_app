@@ -29,8 +29,10 @@ import 'package:foody_licious_admin_app/domain/usecases/auth/verify_phone_number
 import 'package:foody_licious_admin_app/domain/usecases/auth/wait_for_email_verification_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/check_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/delete_restaurant_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/remove_restaurant_profile_picture_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_location_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restaurant_profile_picture_usecase.dart';
 import 'package:foody_licious_admin_app/firebase_options.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
@@ -92,12 +94,14 @@ Future<void> init() async {
 
   //Features - Restaurant
   // Bloc
-  sl.registerFactory(() => RestaurantBloc(sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => RestaurantBloc(sl(), sl(), sl(), sl(),sl(),sl()));
   // Use cases
   sl.registerLazySingleton(() => CheckRestaurantUseCase(sl()));
   sl.registerLazySingleton(() => UpdateRestaurantLocationUseCase(sl()));
   sl.registerLazySingleton(() => UpdateRestaurantUseCase(sl()));
   sl.registerLazySingleton(() => DeleteRestaurantUseCase(sl()));
+  sl.registerLazySingleton(() => UploadRestaurantProfilePictureUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveRestaurantProfilePictureUseCase(sl()));
   // Repository
   sl.registerLazySingleton<RestaurantRepository>(
     () => RestaurantRepositoryImpl(

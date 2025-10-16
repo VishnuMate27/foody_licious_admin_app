@@ -27,6 +27,33 @@ class RestaurantUnauthenticated extends RestaurantState{
   List<Object> get props => [];
 }
 
+class RestaurantUploadProfilePictureSuccess extends RestaurantState {
+  final Restaurant restaurant;
+  RestaurantUploadProfilePictureSuccess(this.restaurant);
+  @override
+  List<Object> get props => [restaurant];
+}
+
+class RestaurantUploadProfilePictureFailed extends RestaurantState {
+  final Failure failure;
+  RestaurantUploadProfilePictureFailed(this.failure);
+  @override
+  List<Object> get props => [];
+}
+
+class RestaurantRemoveProfilePictureSuccess extends RestaurantState {
+  final Restaurant restaurant;
+  RestaurantRemoveProfilePictureSuccess(this.restaurant);
+  @override
+  List<Object> get props => [restaurant];
+}
+
+class RestaurantRemoveProfilePictureFailed extends RestaurantState {
+  final Failure failure;
+  RestaurantRemoveProfilePictureFailed(this.failure);
+  @override
+  List<Object> get props => [];
+}
 
 class RestaurantUpdateSuccess extends RestaurantState {
   final Restaurant restaurant;

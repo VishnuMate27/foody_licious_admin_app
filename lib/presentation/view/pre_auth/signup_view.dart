@@ -300,7 +300,7 @@ class _SignUpViewState extends State<SignUpView> {
     AuthState state,
   ) {
     if (key.currentState!.validate()) {
-      final emailOrPhone = _emailOrPhoneController.text.trim();
+      final emailOrPhone = _emailOrPhoneController.text.toLowerCase().trim();
       bool isEmail = false;
       bool isPhone = false;
 

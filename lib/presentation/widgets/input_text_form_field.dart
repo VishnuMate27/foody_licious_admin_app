@@ -27,7 +27,7 @@ class InputTextFormField extends StatefulWidget {
     required this.textController,
     this.labelStyle,
     this.hintStyle,
-    this.showlabelTextOnBorder,
+    this.showlabelTextOnBorder = true,
     this.suffixIcon,
     this.prefixIconData,
     this.maxLength,

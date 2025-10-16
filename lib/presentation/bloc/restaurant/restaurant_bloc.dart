@@ -7,8 +7,10 @@ import 'package:foody_licious_admin_app/core/usecase/usecase.dart';
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/check_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/delete_restaurant_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/remove_restaurant_profile_picture_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_location_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restaurant_profile_picture_usecase.dart';
 part 'restaurant_event.dart';
 part 'restaurant_state.dart';
 
@@ -16,17 +18,23 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
   CheckRestaurantUseCase _checkRestaurantUseCase;
   UpdateRestaurantLocationUseCase _updateRestaurantLocationUseCase;
   UpdateRestaurantUseCase _updateRestaurantUseCase;
+  UploadRestaurantProfilePictureUseCase _uploadRestaurantProfilePictureUseCase;
+  RemoveRestaurantProfilePictureUseCase _removeRestaurantProfilePictureUseCase;
   DeleteRestaurantUseCase _deleteRestaurantUseCase;
 
   RestaurantBloc(
     this._checkRestaurantUseCase,
     this._updateRestaurantLocationUseCase,
     this._updateRestaurantUseCase,
+    this._uploadRestaurantProfilePictureUseCase,
+    this._removeRestaurantProfilePictureUseCase,
     this._deleteRestaurantUseCase,
   ) : super(RestaurantInitial()) {
     on<CheckRestaurant>(_checkRestaurant);
     on<UpdateRestaurant>(_updateRestaurant);
     on<UpdateRestaurantLocation>(_updateRestaurantLocation);
+    on<UploadRestaurantProfilePicture>(_uploadRestaurantProfilePicture);
+    on<RemoveRestaurantProfilePicture>(_removeRestaurantProfilePicture);
     on<DeleteRestaurant>(_deleteRestaurant);
   }
 
@@ -59,6 +67,38 @@ class RestaurantBloc extends Bloc<RestaurantEvent, RestaurantState> {
       );
     } catch (e) {
       emit(RestaurantUpdateFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
+  void _uploadRestaurantProfilePicture(
+    UploadRestaurantProfilePicture event,
+    Emitter<RestaurantState> emit,
+  ) async {
+    try {
+      emit(RestaurantLoading());
+      final result = await _uploadRestaurantProfilePictureUseCase(event.params);
+      result.fold(
+        (failure) => emit(RestaurantUploadProfilePictureFailed(failure)),
+        (restaurant) => emit(RestaurantUploadProfilePictureSuccess(restaurant)),
+      );
+    } catch (e) {
+      emit(RestaurantUploadProfilePictureFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
+  void _removeRestaurantProfilePicture(
+    RemoveRestaurantProfilePicture event,
+    Emitter<RestaurantState> emit,
+  ) async {
+    try {
+      emit(RestaurantLoading());
+      final result = await _removeRestaurantProfilePictureUseCase(NoParams());
+      result.fold(
+        (failure) => emit(RestaurantRemoveProfilePictureFailed(failure)),
+        (restaurant) => emit(RestaurantRemoveProfilePictureSuccess(restaurant)),
+      );
+    } catch (e) {
+      emit(RestaurantRemoveProfilePictureFailed(ExceptionFailure(e.toString())));
     }
   }
 

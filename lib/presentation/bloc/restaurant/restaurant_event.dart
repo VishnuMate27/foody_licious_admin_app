@@ -10,6 +10,13 @@ class UpdateRestaurant extends RestaurantEvent {
   UpdateRestaurant(this.params);
 }
 
+class UploadRestaurantProfilePicture extends RestaurantEvent {
+  final UploadRestaurantProfilePictureParams params;
+  UploadRestaurantProfilePicture(this.params);
+}
+
+class RemoveRestaurantProfilePicture extends RestaurantEvent {}
+
 class UpdateRestaurantLocation extends RestaurantEvent {}
 
 class DeleteRestaurant extends RestaurantEvent {}
