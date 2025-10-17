@@ -35,7 +35,7 @@ class _SetLocationViewState extends State<SetLocationView>
   final TextEditingController _restaurantEmailController =
       TextEditingController();
   final TextEditingController _restaurantPhoneController =
-      TextEditingController();
+      TextEditingController(text:"+91");
   final TextEditingController _restaurantDescriptionController =
       TextEditingController();
 
@@ -173,8 +173,8 @@ class _SetLocationViewState extends State<SetLocationView>
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (state.restaurant.name != "" ||
-                              state.restaurant.name != null) ...[
+                          if (state.restaurant.name == "" ||
+                              state.restaurant.name == null) ...[
                             Text(
                               "Name of Restaurant",
                               style: GoogleFonts.yeonSung(
@@ -207,8 +207,8 @@ class _SetLocationViewState extends State<SetLocationView>
                               validatorText: "Please enter your valid email",
                             ),
                           ],
-                          if (state.restaurant.phone != "" ||
-                              state.restaurant.phone != null) ...[
+                          if (state.restaurant.phone == "" ||
+                              state.restaurant.phone == null) ...[
                             SizedBox(height: 12.h),
                             InputTextFormField(
                               textController: _restaurantPhoneController,
@@ -220,8 +220,8 @@ class _SetLocationViewState extends State<SetLocationView>
                                   "Please enter your valid phone number",
                             ),
                           ],
-                          if (state.restaurant.description != "" ||
-                              state.restaurant.description != null) ...[
+                          if (state.restaurant.description == "" ||
+                              state.restaurant.description == null) ...[
                             SizedBox(height: 12.h),
                             InputTextFormField(
                               textController: _restaurantDescriptionController,

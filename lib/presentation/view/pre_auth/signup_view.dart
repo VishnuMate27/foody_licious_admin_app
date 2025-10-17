@@ -29,6 +29,7 @@ class _SignUpViewState extends State<SignUpView> {
   final TextEditingController _emailOrPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _showPasswordField = false;
 
   @override
   void initState() {
@@ -197,24 +198,99 @@ class _SignUpViewState extends State<SignUpView> {
                     validatorText: "Please enter your name",
                   ),
                   SizedBox(height: 12.h),
-                  InputTextFormField(
-                    textController: _emailOrPhoneController,
-                    labelText: "Email or Phone Number",
-                    hintText: "Enter email or phone Number",
-                    prefixIconData: Icons.mail_outlined,
-                    keyboardType: TextInputType.emailAddress,
-                    validatorText:
-                        "Please enter your valid email or phone Number",
+                  BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state is InputValidationState) {
+                        if (state.isPhone) {
+                          // Phone mode → enforce +91
+                          if (!_emailOrPhoneController.text.startsWith("+91")) {
+                            final newText = _emailOrPhoneController.text;
+                            _emailOrPhoneController.text = "+91$newText";
+                            _emailOrPhoneController
+                                .selection = TextSelection.fromPosition(
+                              TextPosition(
+                                offset: _emailOrPhoneController.text.length,
+                              ),
+                            );
+                          }
+                        } else if (state.isEmail) {
+                          // Email mode → remove +91 if present
+                          if (_emailOrPhoneController.text.startsWith("+91")) {
+                            final newText = _emailOrPhoneController.text
+                                .replaceFirst("+91", "");
+                            _emailOrPhoneController.text = newText;
+                            _emailOrPhoneController
+                                .selection = TextSelection.fromPosition(
+                              TextPosition(
+                                offset: _emailOrPhoneController.text.length,
+                              ),
+                            );
+                          }
+                        }
+                      }
+                    },
+                    builder: (context, state) {
+                      bool isEmail = false;
+                      bool isPhone = false;
+                      IconData prefixIcon = Icons.mail_outlined;
+                      TextInputType keyboardType = TextInputType.text;
+
+                      if (state is InputValidationState) {
+                        isEmail = state.isEmail;
+                        isPhone = state.isPhone;
+
+                        if (isEmail) {
+                          prefixIcon = Icons.mail_outlined;
+                          keyboardType = TextInputType.emailAddress;
+                        } else if (isPhone) {
+                          prefixIcon = Icons.phone_outlined;
+                          keyboardType = TextInputType.phone;
+                        }
+                      }
+
+                      return InputTextFormField(
+                        textController: _emailOrPhoneController,
+                        labelText: "Email or Phone Number",
+                        hintText: "Enter email or phone number",
+                        prefixIconData: prefixIcon,
+                        keyboardType: keyboardType,
+                        validatorText:
+                            "Please enter your email or phone number",
+                      );
+                    },
                   ),
                   SizedBox(height: 12.h),
-                  InputTextFormField(
-                    textController: _passwordController,
-                    labelText: "Password",
-                    hintText: "Enter password",
-                    prefixIconData: Icons.lock_outline,
-                    keyboardType: TextInputType.text,
-                    validatorText: "Please set your Password",
-                    obscureText: true,
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      bool showPassword = false;
+
+                      if (state is InputValidationState) {
+                        showPassword = state.isEmail && state.isValid;
+                        _showPasswordField = showPassword; 
+                      }
+
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        height: showPassword ? null : 0,
+                        child:
+                            showPassword
+                                ? Column(
+                                  children: [
+                                    InputTextFormField(
+                                      textController: _passwordController,
+                                      labelText: "Password",
+                                      hintText: "Enter password",
+                                      prefixIconData: Icons.lock_outline,
+                                      keyboardType: TextInputType.text,
+                                      validatorText: "Please set your Password",
+                                      obscureText: true,
+                                    ),
+                                    SizedBox(height: 12.h),
+                                  ],
+                                )
+                                : const SizedBox.shrink(),
+                      );
+                    },
                   ),
                   SizedBox(height: 18.h),
                   Text(

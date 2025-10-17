@@ -445,7 +445,8 @@ class _DashboardViewState extends State<DashboardView> {
                 },
                 child: GestureDetector(
                   onTap: () {
-                    debugPrint("Log Out tapped");
+                    // Dispatch logout event to AuthBloc
+                    context.read<AuthBloc>().add(AuthSignOut());
                   },
                   child: Container(
                     width: 150.w,
