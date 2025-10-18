@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             appBarTheme: AppBarTheme(backgroundColor: kWhite),
             useMaterial3: true,
           ),
-          initialRoute: AppRouter.signUp,
+          initialRoute: AppRouter.splash,
           onGenerateRoute: AppRouter.onGenerateRoute,
           builder: EasyLoading.init(),
         ),
