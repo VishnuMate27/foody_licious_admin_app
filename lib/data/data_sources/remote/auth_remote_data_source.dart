@@ -398,7 +398,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         "id": restaurant.uid,
         "ownerName": params.ownerName,
         "phone": restaurant.phoneNumber ?? "",
-        "photoUrl": restaurant.photoURL ?? "photoUrl",
+        if (restaurant.photoURL != null) "photoUrl": restaurant.photoURL, 
         "authProvider": params.authProvider,
       });
     } else {
@@ -407,7 +407,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         "id": restaurant.uid,
         "ownerName": restaurant.displayName,
         "phone": restaurant.phoneNumber ?? "",
-        "photoUrl": restaurant.photoURL ?? "photoUrl",
+        if (restaurant.photoURL != null) "photoUrl": restaurant.photoURL, 
         "authProvider": authProvider,
       });
     }

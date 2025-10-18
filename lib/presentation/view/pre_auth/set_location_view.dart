@@ -35,7 +35,7 @@ class _SetLocationViewState extends State<SetLocationView>
   final TextEditingController _restaurantEmailController =
       TextEditingController();
   final TextEditingController _restaurantPhoneController =
-      TextEditingController(text:"+91");
+      TextEditingController(text: "+91");
   final TextEditingController _restaurantDescriptionController =
       TextEditingController();
 
@@ -316,24 +316,30 @@ class _SetLocationViewState extends State<SetLocationView>
                                     .toList(),
                             expandedInsets: EdgeInsets.zero,
                           ),
-                          SizedBox(height: 16.h),
-                          ImageUploadField(
-                            label: "Restaurant Photo",
-                            onImageSelected: (file) {
-                              context.read<RestaurantBloc>().add(
-                                UploadRestaurantProfilePicture(
-                                  UploadRestaurantProfilePictureParams(
-                                    imageFilePath: file.path,
+                          if (state.restaurant.photoUrl == "" ||
+                              state.restaurant.photoUrl == null ||
+                              !state.restaurant.photoUrl!.contains(
+                                "foodylicious",
+                              )) ...[
+                            SizedBox(height: 16.h),
+                            ImageUploadField(
+                              label: "Restaurant Photo",
+                              onImageSelected: (file) {
+                                context.read<RestaurantBloc>().add(
+                                  UploadRestaurantProfilePicture(
+                                    UploadRestaurantProfilePictureParams(
+                                      imageFilePath: file.path,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            onImageRemoved: () {
-                              context.read<RestaurantBloc>().add(
-                                RemoveRestaurantProfilePicture(),
-                              );
-                            },
-                          ),
+                                );
+                              },
+                              onImageRemoved: () {
+                                context.read<RestaurantBloc>().add(
+                                  RemoveRestaurantProfilePicture(),
+                                );
+                              },
+                            ),
+                          ],
                         ],
                       ),
                     SizedBox(height: 12.h),
@@ -341,24 +347,82 @@ class _SetLocationViewState extends State<SetLocationView>
                       child: GradientButton(
                         buttonText: "Submit",
                         onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            context.read<RestaurantBloc>().add(
-                              UpdateRestaurant(
-                                UpdateRestaurantParams(
-                                  name: _restaurantNameController.text.trim(),
-                                  description:
-                                      _restaurantDescriptionController.text
-                                          .trim(),
-                                  email:
-                                      _restaurantEmailController.text
-                                          .toLowerCase()
-                                          .trim(),
-                                  phone: _restaurantPhoneController.text.trim(),
-                                  address: AddressModel(city: dropdownValue),
-                                ),
-                              ),
+                          if (state is! RestaurantAuthenticated) {
+                            EasyLoading.showError(
+                              "Please wait until restaurant data loads!",
                             );
+                            return;
                           }
+
+                          final restaurant = state.restaurant;
+
+                          // Perform conditional checks
+                          final isEmailRequired =
+                              restaurant.email == null ||
+                              restaurant.email!.isEmpty;
+                          final isPhoneRequired =
+                              restaurant.phone == null ||
+                              restaurant.phone!.isEmpty;
+
+                          // Additional manual checks for required fields
+                          if (_restaurantNameController.text.trim().isEmpty) {
+                            EasyLoading.showError(
+                              "Restaurant name is required!",
+                            );
+                            return;
+                          }
+
+                          if (_restaurantDescriptionController.text
+                              .trim()
+                              .isEmpty) {
+                            EasyLoading.showError(
+                              "Restaurant description is required!",
+                            );
+                            return;
+                          }
+
+                          if (isEmailRequired &&
+                              _restaurantEmailController.text.trim().isEmpty) {
+                            EasyLoading.showError("Email is required!");
+                            return;
+                          }
+
+                          final cleaned = _restaurantPhoneController.text
+                                .trim()
+                                .replaceAll(RegExp(r'[\s\+\-]'), '');
+
+                          if (isPhoneRequired && !RegExp(r'^[0-9]{10}$').hasMatch(cleaned)) {
+                              EasyLoading.showError(
+                                "Phone number is required!",
+                              );
+                            return;
+                          }
+
+                          // Form validation
+                          if (!_formKey.currentState!.validate()) return;
+
+                          // If all validations pass
+                          context.read<RestaurantBloc>().add(
+                            UpdateRestaurant(
+                              UpdateRestaurantParams(
+                                name: _restaurantNameController.text.trim(),
+                                description:
+                                    _restaurantDescriptionController.text
+                                        .trim(),
+                                email:
+                                    isEmailRequired
+                                        ? _restaurantEmailController.text
+                                            .toLowerCase()
+                                            .trim()
+                                        : restaurant.email,
+                                phone:
+                                    isPhoneRequired
+                                        ? _restaurantPhoneController.text.trim()
+                                        : restaurant.phone,
+                                address: AddressModel(city: dropdownValue),
+                              ),
+                            ),
+                          );
                         },
                       ),
                     ),
