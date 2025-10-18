@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -47,7 +48,7 @@ class _ImageUploadFieldState extends State<ImageUploadField> {
       children: [
         Text(
           widget.label,
-          style: GoogleFonts.yeonSung(color: Color(0xFFBB0C24), fontSize: 14),
+          style: GoogleFonts.yeonSung(color: kTextRedDark, fontSize: 14),
         ),
         const SizedBox(height: 10),
         Stack(
@@ -62,14 +63,14 @@ class _ImageUploadFieldState extends State<ImageUploadField> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   gradient: const LinearGradient(
-                    colors: [Color(0xFFE3F2FD), Color(0xFFFCE4EC)],
+                    colors: [kInActiveGradientStart, kInActiveGradientEnd],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  border: Border.all(color: Colors.grey.shade300, width: 1.2),
+                  border: Border.all(color: kGrey.withOpacity(0.3), width: 1.2),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.15),
+                      color: kGrey.withOpacity(0.15),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -83,13 +84,13 @@ class _ImageUploadFieldState extends State<ImageUploadField> {
                             Icon(
                               Icons.image_outlined,
                               size: 40,
-                              color: Colors.blueGrey,
+                              color: kBlueGrey,
                             ),
                             SizedBox(height: 4),
                             Text(
                               "Tap to choose image",
                               style: TextStyle(
-                                color: Colors.blueGrey,
+                                color: kBlueGrey,
                                 fontSize: 12,
                               ),
                             ),
@@ -112,7 +113,7 @@ class _ImageUploadFieldState extends State<ImageUploadField> {
                   setState(() => _selectedImage = null);
                   widget.onImageRemoved?.call();
                 },
-                icon: Icon(Icons.cancel, color: Colors.black),
+                icon: Icon(Icons.cancel, color: kBlack),
               ),
             ],
           ],

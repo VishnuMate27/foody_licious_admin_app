@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FeedbackView extends StatefulWidget {
@@ -16,38 +17,41 @@ class _FeedbackViewState extends State<FeedbackView> {
       appBar: AppBar(
         title: Text(
           "Feedback",
-          style: GoogleFonts.yeonSung(color: Color(0xFFE85353), fontSize: 40),
+          style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
         ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Image.asset("assets/icons/back_arrow.png", color: Colors.black),
+          icon: Image.asset("assets/icons/back_arrow.png", color: kBlack),
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 20.h),
-          ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: 3,
-            padding: EdgeInsets.zero,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 12.h),
-                child: FeedbackCard(
-                  customerName: "Customer Name",
-                  starRating: 4,
-                  description:
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-                ),
-              );
-            },
-          ),
-          SizedBox(height: 12.h),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          children: [
+            SizedBox(height: 20.h),
+            ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: 3,
+              padding: EdgeInsets.zero,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 12.h),
+                  child: FeedbackCard(
+                    customerName: "Customer Name",
+                    starRating: 4,
+                    description:
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: 12.h),
+          ],
+        ),
       ),
     );
   }
@@ -79,7 +83,7 @@ class _FeedbackCardState extends State<FeedbackCard> {
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: Color(0x51FF8080)),
+          border: Border.all(color: kBorder),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,7 +97,7 @@ class _FeedbackCardState extends State<FeedbackCard> {
                   Text(
                     widget.customerName,
                     style: GoogleFonts.yeonSung(
-                      color: Color(0xFF000000),
+                      color: kTextPrimary,
                       fontSize: 15,
                     ),
                   ),
@@ -104,7 +108,7 @@ class _FeedbackCardState extends State<FeedbackCard> {
                         index < widget.starRating
                             ? Icons.star
                             : Icons.star_border,
-                        color: Colors.amber,
+                        color: kYellow,
                         size: 14,
                       );
                     }),
@@ -112,7 +116,7 @@ class _FeedbackCardState extends State<FeedbackCard> {
                   Text(
                     widget.description,
                     style: GoogleFonts.yeonSung(
-                      color: Color(0xFF000000),
+                      color: kTextPrimary,
                       fontSize: 15,
                     ),
                   ),

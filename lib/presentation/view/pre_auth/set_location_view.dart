@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/constants/images.dart';
 import 'package:foody_licious_admin_app/core/error/failures.dart';
 import 'package:foody_licious_admin_app/core/extension/failure_extension.dart';
@@ -133,7 +134,6 @@ class _SetLocationViewState extends State<SetLocationView>
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -150,7 +150,7 @@ class _SetLocationViewState extends State<SetLocationView>
                       child: Text(
                         "Foody Licious",
                         style: GoogleFonts.yeonSung(
-                          color: Color(0xFFE85353),
+                          color: kTextRed,
                           fontSize: 40,
                         ),
                         textAlign: TextAlign.center,
@@ -160,7 +160,7 @@ class _SetLocationViewState extends State<SetLocationView>
                       child: Text(
                         "Restaurant Details",
                         style: GoogleFonts.lato(
-                          color: Color(0xFFBB0C24),
+                          color: kTextRedDark,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.0,
@@ -178,7 +178,7 @@ class _SetLocationViewState extends State<SetLocationView>
                             Text(
                               "Name of Restaurant",
                               style: GoogleFonts.yeonSung(
-                                color: Color(0xFFBB0C24),
+                                color: kTextRedDark,
                                 fontSize: 14,
                               ),
                               textAlign: TextAlign.start,
@@ -237,7 +237,7 @@ class _SetLocationViewState extends State<SetLocationView>
                           Text(
                             "Choose Your Location",
                             style: GoogleFonts.yeonSung(
-                              color: Color(0xFFBB0C24),
+                              color: kTextRedDark,
                               fontSize: 14,
                             ),
                             textAlign: TextAlign.start,
@@ -247,51 +247,46 @@ class _SetLocationViewState extends State<SetLocationView>
                             trailingIcon: Icon(
                               Icons.arrow_circle_down,
                               size: 30,
-                              color: Colors.black,
+                              color: kBlack,
                             ),
                             inputDecorationTheme: InputDecorationTheme(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 borderSide: BorderSide(
-                                  color: Color(
-                                    0x80F4F4F4,
-                                  ), // Make the border transparent
+                                  color:
+                                      kBorderLight, // Make the border transparent
                                   width: 1, // Set the border width to 0
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 borderSide: BorderSide(
-                                  color: Color(
-                                    0x51FF8080,
-                                  ), // Transparent border when not focused
+                                  color:
+                                      kBorder, // Transparent border when not focused
                                   width: 1.sp,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 borderSide: BorderSide(
-                                  color: Color(
-                                    0x51FF8080,
-                                  ), // Transparent border when focused
+                                  color:
+                                      kBorder, // Transparent border when focused
                                   width: 1,
                                 ),
                               ),
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 borderSide: BorderSide(
-                                  color: Color(
-                                    0xCCFF0000,
-                                  ), // Transparent border for error state
+                                  color:
+                                      kError, // Transparent border for error state
                                   width: 1,
                                 ),
                               ),
                               disabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 borderSide: BorderSide(
-                                  color: Color(
-                                    0x51FF8080,
-                                  ), // Transparent border when disabled
+                                  color:
+                                      kBorder, // Transparent border when disabled
                                   width: 1,
                                 ),
                               ),
@@ -357,6 +352,12 @@ class _SetLocationViewState extends State<SetLocationView>
                           final restaurant = state.restaurant;
 
                           // Perform conditional checks
+                          final isRestaurantNameRequired =
+                              restaurant.name == null ||
+                              restaurant.name!.isEmpty;
+                          final isRestaurantDescriptionRequired =
+                              restaurant.description == null ||
+                              restaurant.description!.isEmpty;
                           final isEmailRequired =
                               restaurant.email == null ||
                               restaurant.email!.isEmpty;
@@ -365,16 +366,18 @@ class _SetLocationViewState extends State<SetLocationView>
                               restaurant.phone!.isEmpty;
 
                           // Additional manual checks for required fields
-                          if (_restaurantNameController.text.trim().isEmpty) {
+                          if (isRestaurantNameRequired &&
+                              _restaurantNameController.text.trim().isEmpty) {
                             EasyLoading.showError(
                               "Restaurant name is required!",
                             );
                             return;
                           }
 
-                          if (_restaurantDescriptionController.text
-                              .trim()
-                              .isEmpty) {
+                          if (isRestaurantDescriptionRequired &&
+                              _restaurantDescriptionController.text
+                                  .trim()
+                                  .isEmpty) {
                             EasyLoading.showError(
                               "Restaurant description is required!",
                             );
@@ -388,13 +391,12 @@ class _SetLocationViewState extends State<SetLocationView>
                           }
 
                           final cleaned = _restaurantPhoneController.text
-                                .trim()
-                                .replaceAll(RegExp(r'[\s\+\-]'), '');
+                              .trim()
+                              .replaceAll(RegExp(r'[\s\+\-]'), '');
 
-                          if (isPhoneRequired && !RegExp(r'^[0-9]{10}$').hasMatch(cleaned)) {
-                              EasyLoading.showError(
-                                "Phone number is required!",
-                              );
+                          if (isPhoneRequired &&
+                              !RegExp(r'^[0-9]{10}$').hasMatch(cleaned)) {
+                            EasyLoading.showError("Phone number is required!");
                             return;
                           }
 

@@ -4,7 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/router/app_router.dart';
-import 'package:foody_licious_admin_app/core/services/service_locator.dart' as di;
+import 'package:foody_licious_admin_app/core/services/service_locator.dart'
+    as di;
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 
@@ -25,9 +26,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.sl<RestaurantBloc>()..add(CheckRestaurant()),
         ),
-        BlocProvider(
-          create: (context) => di.sl<AuthBloc>()..add(AuthCheck()),
-        ),
+        BlocProvider(create: (context) => di.sl<AuthBloc>()..add(AuthCheck())),
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 800),
@@ -35,9 +34,10 @@ class MyApp extends StatelessWidget {
         splitScreenMode: true,
         child: MaterialApp(
           navigatorKey: di.navigatorKey,
-          title: 'Foody Licious',
+          title: 'Foody Licious Admin App',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            scaffoldBackgroundColor: kWhite,
+            appBarTheme: AppBarTheme(backgroundColor: kWhite),
             useMaterial3: true,
           ),
           initialRoute: AppRouter.signUp,

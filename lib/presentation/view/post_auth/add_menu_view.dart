@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/constants/images.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/input_text_form_field.dart';
@@ -34,7 +35,7 @@ class _AddMenuViewState extends State<AddMenuView> {
       appBar: AppBar(
         title: Text(
           "Add Item",
-          style: GoogleFonts.yeonSung(color: Color(0xFFE85353), fontSize: 40),
+          style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
         ),
         centerTitle: true,
       ),
@@ -48,14 +49,14 @@ class _AddMenuViewState extends State<AddMenuView> {
               textController: _itemNameController,
               labelText: "Item Name",
               labelStyle: GoogleFonts.yeonSung(
-                color: Color(0xFF000000),
+                color: kTextPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 letterSpacing: 0,
               ),
               hintText: "Enter Item name",
               hintStyle: GoogleFonts.yeonSung(
-                color: Color(0xFF000000),
+                color: kTextPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 letterSpacing: 0,
@@ -68,14 +69,14 @@ class _AddMenuViewState extends State<AddMenuView> {
               textController: _itemNameController,
               labelText: "Item Price",
               labelStyle: GoogleFonts.yeonSung(
-                color: Color(0xFF000000),
+                color: kTextPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 letterSpacing: 0,
               ),
               hintText: "Enter Item price",
               hintStyle: GoogleFonts.yeonSung(
-                color: Color(0xFF000000),
+                color: kTextPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 letterSpacing: 0,
@@ -90,7 +91,7 @@ class _AddMenuViewState extends State<AddMenuView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
                 border: Border.all(
-                  color: Color(0x51FF8080), // Transparent border
+                  color: kBorder, // Transparent border
                   width: 1.sp,
                 ),
               ),
@@ -102,7 +103,7 @@ class _AddMenuViewState extends State<AddMenuView> {
                     Text(
                       "Add Image",
                       style: GoogleFonts.yeonSung(
-                        color: Color(0xFF000000),
+                        color: kTextPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.normal,
                         letterSpacing: 0,
@@ -112,7 +113,7 @@ class _AddMenuViewState extends State<AddMenuView> {
                       padding: EdgeInsets.only(right: 8.w),
                       child: Icon(
                         CupertinoIcons.add_circled,
-                        color: Color(0xFF000000),
+                        color: kTextPrimary,
                         size: 24.sp,
                       ),
                     ),
@@ -125,9 +126,7 @@ class _AddMenuViewState extends State<AddMenuView> {
               child: Container(
                 width: 174.w,
                 height: 118.h,
-                child: Image(
-                  image: AssetImage(kAttachedMenuPhoto),
-                ),
+                child: Image(image: AssetImage(kAttachedMenuPhoto)),
               ),
             ),
             SizedBox(height: 8.h),
@@ -137,14 +136,14 @@ class _AddMenuViewState extends State<AddMenuView> {
               textController: _itemNameController,
               labelText: "Short Description",
               labelStyle: GoogleFonts.yeonSung(
-                color: Color(0xFF000000),
+                color: kTextPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 letterSpacing: 0,
               ),
               hintText: "Enter Short Description",
               hintStyle: GoogleFonts.yeonSung(
-                color: Color(0xFF000000),
+                color: kTextPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 letterSpacing: 0,
@@ -156,7 +155,7 @@ class _AddMenuViewState extends State<AddMenuView> {
             Text(
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad ",
               style: GoogleFonts.lato(
-                color: Color(0xFF000000),
+                color: kTextPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 letterSpacing: 0.5,
@@ -171,14 +170,14 @@ class _AddMenuViewState extends State<AddMenuView> {
                     textController: _itemNameController,
                     labelText: "Ingredients",
                     labelStyle: GoogleFonts.yeonSung(
-                      color: Color(0xFF000000),
+                      color: kTextPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0,
                     ),
                     hintText: "Enter Ingredients",
                     hintStyle: GoogleFonts.yeonSung(
-                      color: Color(0xFF000000),
+                      color: kTextPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0,
@@ -191,7 +190,7 @@ class _AddMenuViewState extends State<AddMenuView> {
                 ElevatedButton(
                   onPressed: _addIngredients,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFE85353),
+                    backgroundColor: kPrimaryRed,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -200,7 +199,7 @@ class _AddMenuViewState extends State<AddMenuView> {
                   child: Text(
                     'Add',
                     style: GoogleFonts.yeonSung(
-                      color: Color(0xFFFFFFFF),
+                      color: kWhite,
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       letterSpacing: 0,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/extension/failure_extension.dart';
 import 'package:foody_licious_admin_app/core/router/app_router.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
@@ -22,7 +23,7 @@ class _DashboardViewState extends State<DashboardView> {
       appBar: AppBar(
         title: Text(
           "Foody Licious",
-          style: GoogleFonts.yeonSung(color: Color(0xFFE85353), fontSize: 40),
+          style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
         ),
         leading: Image.asset(
           "assets/images/logo.png",
@@ -37,12 +38,12 @@ class _DashboardViewState extends State<DashboardView> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               decoration: BoxDecoration(
-                color: Color(0xFFF1F1F1),
+                color: kLightGreen,
                 borderRadius: BorderRadius.circular(20.r),
-                // border: Border.all(color: Color(0xFFE85353), width: 0.5),
+                // border: Border.all(color: kTextRed, width: 0.5),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
+                    color: kGrey.withOpacity(0.3),
                     spreadRadius: 2,
                     blurRadius: 2,
                     offset: Offset(0, 1), // changes position of shadow
@@ -54,23 +55,19 @@ class _DashboardViewState extends State<DashboardView> {
                 children: [
                   Column(
                     children: [
-                      Icon(
-                        CupertinoIcons.info,
-                        size: 30.w,
-                        color: Color(0xFFE85353),
-                      ),
+                      Icon(CupertinoIcons.info, size: 30.w, color: kPrimaryRed),
                       SizedBox(height: 8.h),
                       Text(
                         "Pending Order",
                         style: GoogleFonts.yeonSung(
-                          color: Color(0xFFE85353),
+                          color: kTextRed,
                           fontSize: 20.sp,
                         ),
                       ),
                       Text(
                         "30",
                         style: GoogleFonts.yeonSung(
-                          color: Colors.black,
+                          color: kBlack,
                           fontSize: 20.sp,
                         ),
                       ),
@@ -81,13 +78,13 @@ class _DashboardViewState extends State<DashboardView> {
                       Icon(
                         CupertinoIcons.checkmark_alt_circle,
                         size: 24.w,
-                        color: Color(0xFF6CCB94),
+                        color: kGreen,
                       ),
                       SizedBox(height: 8.h),
                       Text(
                         "Completed\nOrders",
                         style: GoogleFonts.yeonSung(
-                          color: Color(0xFFE85353),
+                          color: kTextRed,
                           fontSize: 12.sp,
                         ),
                         textAlign: TextAlign.center,
@@ -95,7 +92,7 @@ class _DashboardViewState extends State<DashboardView> {
                       Text(
                         "10",
                         style: GoogleFonts.yeonSung(
-                          color: Color(0xFFFEAD1D),
+                          color: kYellow,
                           fontSize: 20.sp,
                         ),
                       ),
@@ -106,13 +103,13 @@ class _DashboardViewState extends State<DashboardView> {
                       Icon(
                         CupertinoIcons.money_dollar_circle,
                         size: 24.w,
-                        color: Colors.black,
+                        color: kBlack,
                       ),
                       SizedBox(height: 8.h),
                       Text(
                         "Whole Time\nEarning",
                         style: GoogleFonts.yeonSung(
-                          color: Color(0xFFE85353),
+                          color: kTextRed,
                           fontSize: 12.sp,
                         ),
                         textAlign: TextAlign.center,
@@ -120,7 +117,7 @@ class _DashboardViewState extends State<DashboardView> {
                       Text(
                         "100\$",
                         style: GoogleFonts.yeonSung(
-                          color: Color(0xFF53E88B),
+                          color: kGreen,
                           fontSize: 20.sp,
                         ),
                       ),
@@ -145,16 +142,17 @@ class _DashboardViewState extends State<DashboardView> {
               GestureDetector(
                 onTap: () {
                   debugPrint("Add Menu tapped");
+                  Navigator.pushNamed(context, AppRouter.addMenu);
                 },
                 child: Container(
                   width: 150.w,
                   height: 85.w,
                   decoration: BoxDecoration(
-                    color: Color(0xFFF0C0C0),
+                    color: kRedTab,
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xFF6CCB94),
+                        color: kGreen,
                         // spreadRadius: 1,
                         blurRadius: 3,
                         offset: Offset(0, 1), // changes position of shadow
@@ -168,12 +166,12 @@ class _DashboardViewState extends State<DashboardView> {
                         Icon(
                           CupertinoIcons.add_circled,
                           size: 30.w,
-                          color: Color(0xFFD13131),
+                          color: kRedIcon,
                         ),
                         Text(
                           "Add Menu",
                           style: GoogleFonts.yeonSung(
-                            color: Color(0xFFD13131),
+                            color: kTextSecondaryRed,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -185,16 +183,17 @@ class _DashboardViewState extends State<DashboardView> {
               GestureDetector(
                 onTap: () {
                   debugPrint("All Item Menu tapped");
+                  Navigator.pushNamed(context, AppRouter.allMenu);
                 },
                 child: Container(
                   width: 150.w,
                   height: 85.w,
                   decoration: BoxDecoration(
-                    color: Color(0xFFF0C0C0),
+                    color: kRedTab,
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xFF6CCB94),
+                        color: kGreen,
                         // spreadRadius: 1,
                         blurRadius: 3,
                         offset: Offset(0, 1), // changes position of shadow
@@ -205,15 +204,11 @@ class _DashboardViewState extends State<DashboardView> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Icon(
-                          CupertinoIcons.eye,
-                          size: 30.w,
-                          color: Color(0xFFD13131),
-                        ),
+                        Icon(CupertinoIcons.eye, size: 30.w, color: kRedIcon),
                         Text(
                           "All Item Menu",
                           style: GoogleFonts.yeonSung(
-                            color: Color(0xFFD13131),
+                            color: kTextSecondaryRed,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -225,16 +220,17 @@ class _DashboardViewState extends State<DashboardView> {
               GestureDetector(
                 onTap: () {
                   debugPrint("Out For Delivery tapped");
+                  Navigator.pushNamed(context, AppRouter.delivery);
                 },
                 child: Container(
                   width: 150.w,
                   height: 85.w,
                   decoration: BoxDecoration(
-                    color: Color(0xFFF0C0C0),
+                    color: kRedTab,
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xFF6CCB94),
+                        color: kGreen,
                         // spreadRadius: 1,
                         blurRadius: 3,
                         offset: Offset(0, 1), // changes position of shadow
@@ -248,12 +244,12 @@ class _DashboardViewState extends State<DashboardView> {
                         Icon(
                           CupertinoIcons.location,
                           size: 30.w,
-                          color: Color(0xFFD13131),
+                          color: kRedIcon,
                         ),
                         Text(
                           "Out For Delivery",
                           style: GoogleFonts.yeonSung(
-                            color: Color(0xFFD13131),
+                            color: kTextSecondaryRed,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -265,16 +261,17 @@ class _DashboardViewState extends State<DashboardView> {
               GestureDetector(
                 onTap: () {
                   debugPrint("Feedback tapped");
+                  Navigator.pushNamed(context, AppRouter.feedback);
                 },
                 child: Container(
                   width: 150.w,
                   height: 85.w,
                   decoration: BoxDecoration(
-                    color: Color(0xFFF0C0C0),
+                    color: kRedTab,
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xFF6CCB94),
+                        color: kGreen,
                         // spreadRadius: 1,
                         blurRadius: 3,
                         offset: Offset(0, 1), // changes position of shadow
@@ -288,12 +285,12 @@ class _DashboardViewState extends State<DashboardView> {
                         Icon(
                           CupertinoIcons.chat_bubble,
                           size: 30.w,
-                          color: Color(0xFFD13131),
+                          color: kRedIcon,
                         ),
                         Text(
                           "Feedback",
                           style: GoogleFonts.yeonSung(
-                            color: Color(0xFFD13131),
+                            color: kTextSecondaryRed,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -305,16 +302,17 @@ class _DashboardViewState extends State<DashboardView> {
               GestureDetector(
                 onTap: () {
                   debugPrint("Profile tapped");
+                  Navigator.pushNamed(context, AppRouter.profile);
                 },
                 child: Container(
                   width: 150.w,
                   height: 85.w,
                   decoration: BoxDecoration(
-                    color: Color(0xFFF0C0C0),
+                    color: kRedTab,
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xFF6CCB94),
+                        color: kGreen,
                         // spreadRadius: 1,
                         blurRadius: 3,
                         offset: Offset(0, 1), // changes position of shadow
@@ -328,12 +326,12 @@ class _DashboardViewState extends State<DashboardView> {
                         Icon(
                           CupertinoIcons.profile_circled,
                           size: 30.w,
-                          color: Color(0xFFD13131),
+                          color: kRedIcon,
                         ),
                         Text(
                           "Profile",
                           style: GoogleFonts.yeonSung(
-                            color: Color(0xFFD13131),
+                            color: kTextSecondaryRed,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -350,11 +348,11 @@ class _DashboardViewState extends State<DashboardView> {
                   width: 150.w,
                   height: 85.w,
                   decoration: BoxDecoration(
-                    color: Color(0xFFF0C0C0),
+                    color: kRedTab,
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xFF6CCB94),
+                        color: kGreen,
                         // spreadRadius: 1,
                         blurRadius: 3,
                         offset: Offset(0, 1), // changes position of shadow
@@ -368,12 +366,12 @@ class _DashboardViewState extends State<DashboardView> {
                         Icon(
                           CupertinoIcons.money_dollar,
                           size: 30.w,
-                          color: Color(0xFFD13131),
+                          color: kRedIcon,
                         ),
                         Text(
                           "Money On Holed",
                           style: GoogleFonts.yeonSung(
-                            color: Color(0xFFD13131),
+                            color: kTextSecondaryRed,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -390,11 +388,11 @@ class _DashboardViewState extends State<DashboardView> {
                   width: 150.w,
                   height: 85.w,
                   decoration: BoxDecoration(
-                    color: Color(0xFFF0C0C0),
+                    color: kRedTab,
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xFF6CCB94),
+                        color: kGreen,
                         // spreadRadius: 1,
                         blurRadius: 3,
                         offset: Offset(0, 1), // changes position of shadow
@@ -408,12 +406,12 @@ class _DashboardViewState extends State<DashboardView> {
                         Icon(
                           CupertinoIcons.person_add,
                           size: 30.w,
-                          color: Color(0xFFD13131),
+                          color: kRedIcon,
                         ),
                         Text(
                           "Create New User",
                           style: GoogleFonts.yeonSung(
-                            color: Color(0xFFD13131),
+                            color: kTextSecondaryRed,
                             fontSize: 12.sp,
                           ),
                         ),
@@ -452,11 +450,11 @@ class _DashboardViewState extends State<DashboardView> {
                     width: 150.w,
                     height: 85.w,
                     decoration: BoxDecoration(
-                      color: Color(0xFFF0C0C0),
+                      color: kRedTab,
                       borderRadius: BorderRadius.circular(15.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Color(0xFF6CCB94),
+                          color: kGreen,
                           blurRadius: 3,
                           offset: Offset(0, 1), // changes position of shadow
                         ),
@@ -469,12 +467,12 @@ class _DashboardViewState extends State<DashboardView> {
                           Icon(
                             CupertinoIcons.add_circled,
                             size: 30.w,
-                            color: Color(0xFFD13131),
+                            color: kRedIcon,
                           ),
                           Text(
                             "Log Out",
                             style: GoogleFonts.yeonSung(
-                              color: Color(0xFFD13131),
+                              color: kTextSecondaryRed,
                               fontSize: 12.sp,
                             ),
                           ),

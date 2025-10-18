@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,13 +21,13 @@ class _ProfileViewState extends State<ProfileView> {
       appBar: AppBar(
         title: Text(
           "Admin Profile",
-          style: GoogleFonts.yeonSung(color: Color(0xFFE85353), fontSize: 40),
+          style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
         ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Image.asset("assets/icons/back_arrow.png", color: Colors.black),
+          icon: Image.asset("assets/icons/back_arrow.png", color: kBlack),
         ),
         centerTitle: true,
       ),
@@ -39,7 +40,7 @@ class _ProfileViewState extends State<ProfileView> {
             Text(
               "Choose Your Location",
               style: GoogleFonts.yeonSung(
-                color: Color(0xFFE85353),
+                color: kTextRed,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -50,47 +51,41 @@ class _ProfileViewState extends State<ProfileView> {
               trailingIcon: Icon(
                 Icons.arrow_circle_down,
                 size: 30,
-                color: Colors.black,
+                color: kBlack,
               ),
               inputDecorationTheme: InputDecorationTheme(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x80F4F4F4), // Make the border transparent
+                    color: kBorderLight, // Make the border transparent
                     width: 1, // Set the border width to 0
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when not focused
+                    color: kBorder, // Transparent border when not focused
                     width: 1.sp,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x51FF8080), // Transparent border when focused
+                    color: kBorder, // Transparent border when focused
                     width: 1,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0xCCFF0000,
-                    ), // Transparent border for error state
+                    color: kError, // Transparent border for error state
                     width: 1,
                   ),
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when disabled
+                    color: kBorder, // Transparent border when disabled
                     width: 1,
                   ),
                 ),
@@ -117,63 +112,54 @@ class _ProfileViewState extends State<ProfileView> {
             TextFormField(
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
-                fillColor: Color(0xFFF4F4F4),
+                fillColor: kCardBackground,
                 labelText: 'Name',
                 labelStyle: GoogleFonts.yeonSung(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
                 hintText: 'Enter name',
                 hintStyle: GoogleFonts.lato(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
-                suffixIcon: Icon(
-                  CupertinoIcons.create,
-                  color: Color(0xFF000000),
-                ),
+                suffixIcon: Icon(CupertinoIcons.create, color: kTextPrimary),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x80F4F4F4), // Make the border transparent
+                    color: kBorderLight, // Make the border transparent
                     width: 1, // Set the border width to 0
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when not focused
+                    color: kBorder, // Transparent border when not focused
                     width: 1.sp,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x51FF8080), // Transparent border when focused
+                    color: kBorder, // Transparent border when focused
                     width: 1,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0xCCFF0000,
-                    ), // Transparent border for error state
+                    color: kError, // Transparent border for error state
                     width: 1,
                   ),
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when disabled
+                    color: kBorder, // Transparent border when disabled
                     width: 1,
                   ),
                 ),
@@ -193,63 +179,54 @@ class _ProfileViewState extends State<ProfileView> {
               // expands: true,
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
-                fillColor: Color(0xFFF4F4F4),
+                fillColor: kCardBackground,
                 labelText: 'Address',
                 labelStyle: GoogleFonts.yeonSung(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
                 hintText: 'Enter full address',
                 hintStyle: GoogleFonts.lato(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
-                suffixIcon: Icon(
-                  CupertinoIcons.create,
-                  color: Color(0xFF000000),
-                ),
+                suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x80F4F4F4), // Make the border transparent
+                    color: kBorderLight, // Make the border transparent
                     width: 1, // Set the border width to 0
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when not focused
+                    color: kBorder, // Transparent border when not focused
                     width: 1.sp,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x51FF8080), // Transparent border when focused
+                    color: kBorder, // Transparent border when focused
                     width: 1,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0xCCFF0000,
-                    ), // Transparent border for error state
+                    color: kError, // Transparent border for error state
                     width: 1,
                   ),
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when disabled
+                    color: kBorder, // Transparent border when disabled
                     width: 1,
                   ),
                 ),
@@ -266,63 +243,54 @@ class _ProfileViewState extends State<ProfileView> {
             TextFormField(
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                fillColor: Color(0xFFF4F4F4),
+                fillColor: kCardBackground,
                 labelText: 'Email',
                 labelStyle: GoogleFonts.yeonSung(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
                 hintText: 'Enter your email address',
                 hintStyle: GoogleFonts.lato(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
-                suffixIcon: Icon(
-                  CupertinoIcons.create,
-                  color: Color(0xFF000000),
-                ),
+                suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x80F4F4F4), // Make the border transparent
+                    color: kBorderLight, // Make the border transparent
                     width: 1, // Set the border width to 0
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when not focused
+                    color: kBorder, // Transparent border when not focused
                     width: 1.sp,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x51FF8080), // Transparent border when focused
+                    color: kBorder, // Transparent border when focused
                     width: 1,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0xCCFF0000,
-                    ), // Transparent border for error state
+                    color: kError, // Transparent border for error state
                     width: 1,
                   ),
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when disabled
+                    color: kBorder, // Transparent border when disabled
                     width: 1,
                   ),
                 ),
@@ -340,63 +308,54 @@ class _ProfileViewState extends State<ProfileView> {
               maxLength: 10,
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
-                fillColor: Color(0xFFF4F4F4),
+                fillColor: kCardBackground,
                 labelText: 'Phone',
                 labelStyle: GoogleFonts.yeonSung(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
                 hintText: 'Enter your 10 digit phone number',
                 hintStyle: GoogleFonts.lato(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
-                suffixIcon: Icon(
-                  CupertinoIcons.create,
-                  color: Color(0xFF000000),
-                ),
+                suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x80F4F4F4), // Make the border transparent
+                    color: kBorderLight, // Make the border transparent
                     width: 1, // Set the border width to 0
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when not focused
+                    color: kBorder, // Transparent border when not focused
                     width: 1.sp,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x51FF8080), // Transparent border when focused
+                    color: kBorder, // Transparent border when focused
                     width: 1,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0xCCFF0000,
-                    ), // Transparent border for error state
+                    color: kError, // Transparent border for error state
                     width: 1,
                   ),
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when disabled
+                    color: kBorder, // Transparent border when disabled
                     width: 1,
                   ),
                 ),
@@ -413,63 +372,54 @@ class _ProfileViewState extends State<ProfileView> {
             TextFormField(
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecoration(
-                fillColor: Color(0xFFF4F4F4),
+                fillColor: kCardBackground,
                 labelText: 'Password',
                 labelStyle: GoogleFonts.yeonSung(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
                 hintText: 'Enter your password',
                 hintStyle: GoogleFonts.lato(
-                  color: Color(0xFF000000),
+                  color: kTextPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.normal,
                   letterSpacing: 0.5,
                 ),
-                suffixIcon: Icon(
-                  CupertinoIcons.create,
-                  color: Color(0xFF000000),
-                ),
+                suffixIcon: Icon(CupertinoIcons.create, color: kBlack),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x80F4F4F4), // Make the border transparent
+                    color: kBorderLight, // Make the border transparent
                     width: 1, // Set the border width to 0
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when not focused
+                    color: kBorder, // Transparent border when not focused
                     width: 1.sp,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(0x51FF8080), // Transparent border when focused
+                    color: kBorder, // Transparent border when focused
                     width: 1,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0xCCFF0000,
-                    ), // Transparent border for error state
+                    color: kError, // Transparent border for error state
                     width: 1,
                   ),
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide(
-                    color: Color(
-                      0x51FF8080,
-                    ), // Transparent border when disabled
+                    color: kBorder, // Transparent border when disabled
                     width: 1,
                   ),
                 ),
@@ -489,7 +439,7 @@ class _ProfileViewState extends State<ProfileView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
                 border: Border.all(
-                  color: Color(0x51FF8080), // Transparent border
+                  color: kBorder, // Transparent border
                   width: 1.sp,
                 ),
               ),
@@ -501,7 +451,7 @@ class _ProfileViewState extends State<ProfileView> {
                     Text(
                       "Restaurant Image",
                       style: GoogleFonts.yeonSung(
-                        color: Color(0xFF000000),
+                        color: kTextPrimary,
                         fontSize: 24,
                         fontWeight: FontWeight.normal,
                         letterSpacing: 0,
@@ -512,7 +462,7 @@ class _ProfileViewState extends State<ProfileView> {
                       child: Text(
                         "Select Image",
                         style: GoogleFonts.yeonSung(
-                          color: Color(0xFF000000),
+                          color: kTextPrimary,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0,
@@ -531,15 +481,15 @@ class _ProfileViewState extends State<ProfileView> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: Color(0xFFFEFEFF),
-                  border: Border.all(color: Color(0xFFE85353), width: 0.5),
+                  color: kTextOnPrimary,
+                  border: Border.all(color: kPrimaryRed, width: 0.5),
                 ),
                 height: 57.h,
                 child: Center(
                   child: Text(
                     "Save Information",
                     style: GoogleFonts.yeonSung(
-                      color: Color(0xFFBE1515),
+                      color: kPrimaryRed,
                       fontSize: 14,
                     ),
                   ),

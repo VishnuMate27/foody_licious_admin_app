@@ -153,7 +153,6 @@ class _SignUpViewState extends State<SignUpView> {
         }
       },
       child: Scaffold(
-        backgroundColor: kWhite,
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),

@@ -193,7 +193,6 @@ class _VerificationViewState extends State<VerificationView>
         if (state is AuthVerificationEmailSent ||
             state is AuthEmailVerificationFailed) {
           return Scaffold(
-            backgroundColor: kWhite,
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -308,7 +307,6 @@ class _VerificationViewState extends State<VerificationView>
           );
         } else if (state is AuthEmailVerificationSuccess) {
           return Scaffold(
-            backgroundColor: kWhite,
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -348,7 +346,7 @@ class _VerificationViewState extends State<VerificationView>
                     BouncyIcon(
                       icon: Icons.verified_rounded,
                       size: 60,
-                      color: Colors.green,
+                      color: kGreen,
                     ),
                     SizedBox(height: 20.h),
                     Text(
@@ -405,7 +403,7 @@ class _VerificationViewState extends State<VerificationView>
                                     value: value,
                                     backgroundColor: Colors.transparent,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white.withOpacity(0.4),
+                                      kBackground.withOpacity(0.4),
                                     ),
                                   ),
                                 ),
@@ -414,7 +412,7 @@ class _VerificationViewState extends State<VerificationView>
                                   style: GoogleFonts.lato(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: kBackground,
                                   ),
                                 ),
                               ],
@@ -431,7 +429,6 @@ class _VerificationViewState extends State<VerificationView>
         } else if (state is AuthVerificationSMSForRegistrationSent ||
             state is AuthVerificationSMSForLoginSent) {
           return Scaffold(
-            backgroundColor: kWhite,
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -594,7 +591,6 @@ class _VerificationViewState extends State<VerificationView>
           );
         } else if (state is AuthVerificationEmailSentFailed) {
           return Scaffold(
-            backgroundColor: kWhite,
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),

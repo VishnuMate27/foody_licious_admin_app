@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/constants/images.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/menu_item_card.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,7 +20,7 @@ class _AllMenuViewState extends State<AllMenuView> {
       appBar: AppBar(
         title: Text(
           "All Item",
-          style: GoogleFonts.yeonSung(color: Color(0xFFE85353), fontSize: 40),
+          style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
         ),
         centerTitle: true,
       ),

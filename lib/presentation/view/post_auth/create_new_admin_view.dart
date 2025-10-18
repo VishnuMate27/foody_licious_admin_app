@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CreateNewAdminView extends StatefulWidget {
@@ -18,7 +19,7 @@ class _CreateNewAdminViewState extends State<CreateNewAdminView> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Image.asset("assets/icons/back_arrow.png", color: Colors.black),
+          icon: Image.asset("assets/icons/back_arrow.png", color: kBlack),
         ),
       ),
       body: SingleChildScrollView(
@@ -36,16 +37,13 @@ class _CreateNewAdminViewState extends State<CreateNewAdminView> {
               ),
               Text(
                 "Foody Licious",
-                style: GoogleFonts.yeonSung(
-                  color: Color(0xFFE85353),
-                  fontSize: 40,
-                ),
+                style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
               ),
               SizedBox(height: 10.h),
               Text(
                 "Create New User Admin",
                 style: GoogleFonts.lato(
-                  color: Color(0xFFBB0C24),
+                  color: kTextOnPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
@@ -54,59 +52,48 @@ class _CreateNewAdminViewState extends State<CreateNewAdminView> {
               TextFormField(
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  fillColor: Color(0xFFF4F4F4),
+                  fillColor: kCardBackground,
                   labelText: 'Name',
                   labelStyle: GoogleFonts.lato(
-                    color: Color(0xFF3B3B3B),
+                    color: kTextOnPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                     letterSpacing: 0.5,
                   ),
                   hintText: 'Enter name',
-                  prefixIcon: Icon(
-                    Icons.person_2_outlined,
-                    color: Colors.black,
-                  ),
+                  prefixIcon: Icon(Icons.person_2_outlined, color: kBlack),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(0x80F4F4F4), // Make the border transparent
+                      color: kBorder, // Make the border transparent
                       width: 1, // Set the border width to 0
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when not focused
+                      color: kBorder, // Transparent border when not focused
                       width: 1.sp,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when focused
+                      color: kBorder, // Transparent border when focused
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0xCCFF0000,
-                      ), // Transparent border for error state
+                      color: kError, // Transparent border for error state
                       width: 1,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when disabled
+                      color: kBorder, // Transparent border when disabled
                       width: 1,
                     ),
                   ),
@@ -123,56 +110,48 @@ class _CreateNewAdminViewState extends State<CreateNewAdminView> {
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  fillColor: Color(0xFFF4F4F4),
+                  fillColor: kCardBackground,
                   labelText: 'Email or Phone Number',
                   labelStyle: GoogleFonts.lato(
-                    color: Color(0xFF3B3B3B),
+                    color: kTextOnPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                     letterSpacing: 0.5,
                   ),
                   hintText: 'Enter email',
-                  prefixIcon: Icon(Icons.mail_outlined, color: Colors.black),
+                  prefixIcon: Icon(Icons.mail_outlined, color: kBlack),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(0x80F4F4F4), // Make the border transparent
+                      color: kBorder, // Make the border transparent
                       width: 1, // Set the border width to 0
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when not focused
+                      color: kBorder, // Transparent border when not focused
                       width: 1.sp,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when focused
+                      color: kBorder, // Transparent border when focused
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0xCCFF0000,
-                      ), // Transparent border for error state
+                      color: kError, // Transparent border for error state
                       width: 1,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when disabled
+                      color: kBorder, // Transparent border when disabled
                       width: 1,
                     ),
                   ),
@@ -189,56 +168,48 @@ class _CreateNewAdminViewState extends State<CreateNewAdminView> {
               TextFormField(
                 keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(
-                  fillColor: Color(0xFFF4F4F4),
+                  fillColor: kCardBackground,
                   labelText: 'Password',
                   labelStyle: GoogleFonts.lato(
-                    color: Color(0xFF3B3B3B),
+                    color: kTextOnPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                     letterSpacing: 0.5,
                   ),
                   hintText: 'Enter Password',
-                  prefixIcon: Icon(Icons.lock_outline, color: Colors.black),
+                  prefixIcon: Icon(Icons.lock_outline, color: kBlack),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(0x51FF8080), // Make the border transparent
+                      color: kBorder, // Make the border transparent
                       width: 1, // Set the border width to 0
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when not focused
+                      color: kBorder, // Transparent border when not focused
                       width: 1,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when focused
+                      color: kBorder, // Transparent border when focused
                       width: 1,
                     ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0xCCFF0000,
-                      ), // Transparent border for error state
+                      color: kError, // Transparent border for error state
                       width: 1,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(
-                      color: Color(
-                        0x51FF8080,
-                      ), // Transparent border when disabled
+                      color: kBorder, // Transparent border when disabled
                       width: 1,
                     ),
                   ),
@@ -258,7 +229,7 @@ class _CreateNewAdminViewState extends State<CreateNewAdminView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     gradient: LinearGradient(
-                      colors: [Color(0xFFE85353), Color(0xFFBE1515)],
+                      colors: [kGradientStart, kGradientEnd],
                       stops: [0.0, 1.0],
                     ),
                   ),
@@ -267,10 +238,7 @@ class _CreateNewAdminViewState extends State<CreateNewAdminView> {
                   child: Center(
                     child: Text(
                       "Create New User",
-                      style: GoogleFonts.yeonSung(
-                        color: Color(0xFFFFFFFF),
-                        fontSize: 20,
-                      ),
+                      style: GoogleFonts.yeonSung(color: kWhite, fontSize: 20),
                     ),
                   ),
                 ),
