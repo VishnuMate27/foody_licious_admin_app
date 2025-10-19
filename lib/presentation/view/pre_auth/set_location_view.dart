@@ -383,19 +383,28 @@ class _SetLocationViewState extends State<SetLocationView>
                             );
                             return;
                           }
-
-                          if (isEmailRequired &&
-                              _restaurantEmailController.text.trim().isEmpty) {
+                          if (_restaurantEmailController.text.trim().isEmpty &&
+                              isEmailRequired) {
                             EasyLoading.showError("Email is required!");
+                            return;
+                          } else if (!RegExp(
+                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                              ).hasMatch(
+                                _restaurantEmailController.text.trim(),
+                              ) &&
+                              isEmailRequired) {
+                            EasyLoading.showError(
+                              "Please enter a valid email!",
+                            );
                             return;
                           }
 
-                          final cleaned = _restaurantPhoneController.text
+                          final cleanedPhone = _restaurantPhoneController.text
                               .trim()
                               .replaceAll(RegExp(r'[\s\+\-]'), '');
 
                           if (isPhoneRequired &&
-                              !RegExp(r'^[0-9]{10}$').hasMatch(cleaned)) {
+                              !RegExp(r'^[0-9]{10}$').hasMatch(cleanedPhone)) {
                             EasyLoading.showError("Phone number is required!");
                             return;
                           }
