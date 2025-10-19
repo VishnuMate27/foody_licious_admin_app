@@ -403,9 +403,24 @@ class _SetLocationViewState extends State<SetLocationView>
                               .trim()
                               .replaceAll(RegExp(r'[\s\+\-]'), '');
 
-                          if (isPhoneRequired &&
-                              !RegExp(r'^[0-9]{10}$').hasMatch(cleanedPhone)) {
-                            EasyLoading.showError("Phone number is required!");
+                          if (_restaurantPhoneController.text.trim().isEmpty &&
+                              isPhoneRequired) {
+                            EasyLoading.showError("Phone is required!");
+                            return;
+                          } else if (!_restaurantPhoneController.text
+                              .trim()
+                              .startsWith("+91") && isPhoneRequired) {
+                            EasyLoading.showError(
+                              "Only Phone number starting from +91 is allowed.",
+                            );
+                            return;
+                          } else if (!RegExp(
+                                r'^[0-9]{12}$',
+                              ).hasMatch(cleanedPhone) &&
+                              isPhoneRequired) {
+                            EasyLoading.showError(
+                              "Please enter a valid phone number!",
+                            );
                             return;
                           }
 

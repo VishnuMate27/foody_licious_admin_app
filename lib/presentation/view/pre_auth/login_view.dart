@@ -204,6 +204,27 @@ class _LoginViewState extends State<LoginView> {
                         keyboardType: keyboardType,
                         validatorText:
                             "Please enter your email or phone number",
+                        onEditingComplete: () {
+                          final trimmed = _emailOrPhoneController.text.trim();
+
+                          final isEmailValid = RegExp(
+                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                          ).hasMatch(trimmed);
+
+                          final isPhoneValid =
+                              RegExp(r'^\+91[0-9]{10}$').hasMatch(trimmed) ||
+                              RegExp(r'^[0-9]{10}$').hasMatch(trimmed);
+
+                          if (trimmed.isEmpty) {
+                            EasyLoading.showError(
+                              "Please enter your email or phone number",
+                            );
+                          } else if (!isEmailValid && !isPhoneValid) {
+                            EasyLoading.showError(
+                              "Please enter valid email or phone",
+                            );
+                          }
+                        },
                       );
                     },
                   ),
@@ -213,39 +234,41 @@ class _LoginViewState extends State<LoginView> {
                       bool showPassword = _showPasswordField;
                       if (state is InputValidationState) {
                         showPassword = state.isEmail && state.isValid;
-                        _showPasswordField = showPassword; 
+                        _showPasswordField = showPassword;
                       }
                       return AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         height: showPassword ? null : 0,
-                        child: showPassword
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  InputTextFormField(
+                        child:
+                            showPassword
+                                ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    InputTextFormField(
                                       textController: _passwordController,
                                       labelText: "Password",
                                       hintText: "Enter password",
                                       prefixIconData: Icons.lock_outline,
                                       keyboardType: TextInputType.text,
                                       validatorText: "Please set your Password",
-                                      obscureText: true),
-                                  Row(
+                                      obscureText: true,
+                                    ),
+                                    Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         TextButton(
                                           onPressed: () {
                                             context.read<AuthBloc>().add(
-                                                  AuthSendPasswordResetEmail(
-                                                    SendPasswordResetEmailParams(
-                                                      email:
-                                                          _emailOrPhoneController
-                                                              .text
-                                                              .toLowerCase()
-                                                              .trim(),
-                                                    ),
-                                                  ),
-                                                );
+                                              AuthSendPasswordResetEmail(
+                                                SendPasswordResetEmailParams(
+                                                  email:
+                                                      _emailOrPhoneController
+                                                          .text
+                                                          .toLowerCase()
+                                                          .trim(),
+                                                ),
+                                              ),
+                                            );
                                           },
                                           child: Text(
                                             "Forgot Password ?",
@@ -256,12 +279,13 @@ class _LoginViewState extends State<LoginView> {
                                             ),
                                             textAlign: TextAlign.end,
                                           ),
-                                        )
-                                      ]),
-                                  SizedBox(height: 12.h),
-                                ],
-                              )
-                            : const SizedBox.shrink(),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 12.h),
+                                  ],
+                                )
+                                : const SizedBox.shrink(),
                       );
                     },
                   ),

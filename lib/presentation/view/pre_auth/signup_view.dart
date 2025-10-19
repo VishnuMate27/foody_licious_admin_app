@@ -255,6 +255,27 @@ class _SignUpViewState extends State<SignUpView> {
                         keyboardType: keyboardType,
                         validatorText:
                             "Please enter your email or phone number",
+                        onEditingComplete: () {
+                          final trimmed = _emailOrPhoneController.text.trim();
+
+                          final isEmailValid = RegExp(
+                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                          ).hasMatch(trimmed);
+
+                          final isPhoneValid =
+                              RegExp(r'^\+91[0-9]{10}$').hasMatch(trimmed) ||
+                              RegExp(r'^[0-9]{10}$').hasMatch(trimmed);
+
+                          if (trimmed.isEmpty) {
+                            EasyLoading.showError(
+                              "Please enter your email or phone number",
+                            );
+                          } else if (!isEmailValid && !isPhoneValid) {
+                            EasyLoading.showError(
+                              "Please enter valid email or phone",
+                            );
+                          }
+                        },
                       );
                     },
                   ),
@@ -265,7 +286,7 @@ class _SignUpViewState extends State<SignUpView> {
 
                       if (state is InputValidationState) {
                         showPassword = state.isEmail && state.isValid;
-                        _showPasswordField = showPassword; 
+                        _showPasswordField = showPassword;
                       }
 
                       return AnimatedContainer(

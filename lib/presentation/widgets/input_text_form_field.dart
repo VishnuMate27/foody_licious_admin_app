@@ -19,6 +19,7 @@ class InputTextFormField extends StatefulWidget {
   final TextInputType? keyboardType;
   final String? validatorText;
   final bool obscureText; // initial value
+  final Function()? onEditingComplete;
 
   const InputTextFormField({
     super.key,
@@ -36,6 +37,7 @@ class InputTextFormField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validatorText = "This field cannot be empty.",
     this.obscureText = false,
+    this.onEditingComplete,
   });
 
   @override
@@ -121,6 +123,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
           borderSide: BorderSide(color: kBorder, width: 1),
         ),
       ),
+      onEditingComplete: widget.onEditingComplete,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return widget.validatorText;
