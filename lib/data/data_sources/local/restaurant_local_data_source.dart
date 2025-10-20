@@ -12,7 +12,7 @@ abstract class RestaurantLocalDataSource {
   Future<void> clearCache();
 }
 
-const cachedRestaurant = 'USER';
+const cachedRestaurant = 'RESTAURANT';
 
 class RestaurantLocalDataSourceImpl implements RestaurantLocalDataSource {
   final SharedPreferences sharedPreferences;
