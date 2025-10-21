@@ -26,9 +26,3 @@ var tUpdateRestaurantParams = UpdateRestaurantParams(
   name: "Test Name",
   phone: "+919876543210",
 );
-
-var tUploadRestaurantProfilePictureParams =
-    UploadRestaurantProfilePictureParams(
-      restaurantId: "RcrNpesIeKSd3afH67ndyDLUaMJ3",
-      imageFilePath: "sample_path",
-    );
