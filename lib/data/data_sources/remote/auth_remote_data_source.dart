@@ -412,7 +412,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       });
     }
 
-    try {
       final response = await client.post(
         Uri.parse('$kBaseUrl/api/restaurant/auth/register'),
         headers: {'Content-Type': 'application/json'},
@@ -428,10 +427,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         throw ServerFailure();
       }
-    } catch (e) {
-      debugPrint('Exception is :$e');
-    }
-    throw ExceptionFailure("Unknown exception");
   }
 
   Future<AuthenticationResponseModel> _sendRegisterWithPhoneRequest(
