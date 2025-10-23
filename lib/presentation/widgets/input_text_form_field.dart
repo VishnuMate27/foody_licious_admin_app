@@ -16,6 +16,7 @@ class InputTextFormField extends StatefulWidget {
   final int? maxLength;
   final int? minLines;
   final int? maxLines;
+  final bool readOnly;
   final TextInputType? keyboardType;
   final String? validatorText;
   final bool obscureText; // initial value
@@ -34,10 +35,11 @@ class InputTextFormField extends StatefulWidget {
     this.maxLength,
     this.minLines,
     this.maxLines,
+    this.readOnly = false,
     this.keyboardType = TextInputType.text,
     this.validatorText = "This field cannot be empty.",
     this.obscureText = false,
-    this.onEditingComplete,
+    this.onEditingComplete,  
   });
 
   @override
@@ -62,6 +64,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
       controller: widget.textController,
       keyboardType: widget.keyboardType,
       obscureText: _obscure,
+      readOnly: widget.readOnly,
       decoration: InputDecoration(
         fillColor: const Color.fromARGB(255, 49, 42, 42),
         labelText: widget.labelText,
