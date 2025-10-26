@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:foody_licious_admin_app/core/error/failures.dart';
-import 'package:foody_licious_admin_app/presentation/view/post_auth/add_menu_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/post_auth/all_menu_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/post_auth/dashboard.dart';
-import 'package:foody_licious_admin_app/presentation/view/post_auth/delivery_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/post_auth/feedback_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/post_auth/onboarding_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/post_auth/profile_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/pre_auth/login_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/pre_auth/set_location_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/pre_auth/signup_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/pre_auth/splash_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/pre_auth/verification_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/menuItem/add_menu_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/menuItem/all_menu_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/dashboard/dashboard.dart';
+import 'package:foody_licious_admin_app/presentation/view/delivery/delivery_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/feedback/feedback_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/onboarding/onboarding_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/profile/profile_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/authentication/login_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/authentication/set_location_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/authentication/signup_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/onboarding/splash_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/authentication/verification_view.dart';
 
 class AppRouter {
   //splash & onboarding

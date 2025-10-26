@@ -46,7 +46,6 @@ class _AddMenuViewState extends State<AddMenuView> {
           children: [
             SizedBox(height: 30.h),
             InputTextFormField(
-              
               textController: _itemNameController,
               labelText: "Item Name",
               labelStyle: GoogleFonts.yeonSung(

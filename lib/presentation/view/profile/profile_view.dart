@@ -97,7 +97,7 @@ class _ProfileViewState extends State<ProfileView> {
         backgroundColor: kWhite,
         appBar: AppBar(
           title: Text(
-            "Profile",
+            "Restaurant Profile",
             style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 24),
           ),
           centerTitle: true,

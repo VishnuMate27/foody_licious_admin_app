@@ -5,11 +5,8 @@ import 'package:foody_licious_admin_app/data/data_sources/local/restaurant_local
 import 'package:foody_licious_admin_app/data/data_sources/remote/restaurant_remote_data_source.dart';
 import 'package:foody_licious_admin_app/domain/entities/restaurant/restaurant.dart';
 import 'package:foody_licious_admin_app/domain/repositories/restaurant_repository.dart';
-import 'package:foody_licious_admin_app/domain/usecases/restaurant/remove_restaurant_profile_picture_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restaurant_profile_picture_usecase.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class RestaurantRepositoryImpl implements RestaurantRepository {
   final RestaurantRemoteDataSource remoteDataSource;
