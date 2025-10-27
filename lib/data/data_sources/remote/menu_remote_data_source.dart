@@ -50,6 +50,7 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
   Future<Unit> sendAddItemInMenuRequest(AddMenuItemParams params) async {
     final response = await client.post(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/addNewItem"),
+      headers: {'Content-Type': 'application/json'},
       body: json.encode({
         "restaurant_id": params.restaurantId,
         "name": params.name,
@@ -73,6 +74,7 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
   Future<Unit> sendDeleteItemInMenuRequest(DeleteMenuItemParams params) async {
     final response = await client.delete(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/deleteItem"),
+      headers: {'Content-Type': 'application/json'},
       body: json.encode({"id": params.itemId}),
     );
     if (response.statusCode == 200) {
@@ -108,6 +110,7 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
   Future<Unit> sendIncreaseItemQuantityRequest(String itemId) async {
     final response = await client.put(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/increaseItemQuantity"),
+      headers: {'Content-Type': 'application/json'},
       body: json.encode({"id": itemId}),
     );
     if (response.statusCode == 200) {
@@ -120,6 +123,7 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
   Future<Unit> sendDecreaseItemQuantityRequest(String itemId) async {
     final response = await client.put(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/decreaseItemQuantity"),
+      headers: {'Content-Type': 'application/json'},
       body: json.encode({"id": itemId}),
     );
     if (response.statusCode == 200) {

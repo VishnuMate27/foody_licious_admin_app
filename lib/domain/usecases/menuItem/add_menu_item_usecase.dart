@@ -3,9 +3,9 @@ import 'package:foody_licious_admin_app/core/error/failures.dart';
 import 'package:foody_licious_admin_app/core/usecase/usecase.dart';
 import 'package:foody_licious_admin_app/domain/repositories/menu_item_repository.dart';
 
-class AddMenuItemUsecase implements UseCase<Unit, AddMenuItemParams> {
+class AddMenuItemUseCase implements UseCase<Unit, AddMenuItemParams> {
   final MenuItemRepository repository;
-  AddMenuItemUsecase({required this.repository});
+  AddMenuItemUseCase(this.repository);
 
   @override
   Future<Either<Failure, Unit>> call(params) {
@@ -14,21 +14,19 @@ class AddMenuItemUsecase implements UseCase<Unit, AddMenuItemParams> {
 }
 
 class AddMenuItemParams {
-  String restaurantId;
+  String? restaurantId;
   final String name;
   final int price;
   final String? description;
-  final String? image;
   final int? availableQuantity;
   final List<String>? ingredients;
 
   AddMenuItemParams({
-    required this.restaurantId,
+    this.restaurantId,
     required this.name,
     required this.price,
     this.description,
-    this.image,
     this.availableQuantity = 0,
-    this.ingredients = const [],
+    this.ingredients = const ["ingredient1"],
   });
 }

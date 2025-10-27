@@ -16,7 +16,7 @@ class MenuItemModel extends MenuItem {
     required super.name,
     required super.price,
     super.description,
-    super.image,
+    super.images,
     super.ingredients,
   });
 
@@ -27,7 +27,7 @@ class MenuItemModel extends MenuItem {
       name: json['name'],
       price: json['price'],
       description: json['description'],
-      image: json['image'],
+      images: json['images'],
       ingredients: json['ingredients'],
     );
   }
@@ -39,7 +39,7 @@ class MenuItemModel extends MenuItem {
       "name": name,
       "price": price,
       "description": description,
-      "image": image,
+      "images": images,
       "ingredients": ingredients,
     };
   }

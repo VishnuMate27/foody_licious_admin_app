@@ -4,6 +4,7 @@ import 'package:foody_licious_admin_app/core/network/network_info.dart';
 import 'package:foody_licious_admin_app/data/data_sources/local/restaurant_local_data_source.dart';
 import 'package:foody_licious_admin_app/data/data_sources/remote/menu_remote_data_source.dart';
 import 'package:foody_licious_admin_app/data/models/menuItem/menu_items_response_model.dart';
+import 'package:foody_licious_admin_app/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious_admin_app/domain/repositories/menu_item_repository.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
@@ -54,7 +55,7 @@ class MenuItemRepositoryImpl implements MenuItemRepository {
   }
 
   @override
-  Future<Either<Failure, MenuItemsResponseModel>> getAllMenuItem() async {
+  Future<Either<Failure, List<MenuItem>>> getAllMenuItem() async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }    
@@ -63,7 +64,7 @@ class MenuItemRepositoryImpl implements MenuItemRepository {
       final remoteResponse = await menuItemsRemoteDataSource.getAllMenuItem(
         restaurant.id,
       );
-      return Right(remoteResponse);
+      return Right(remoteResponse.menuItems);
     } on Failure catch (failure) {
       return Left(failure);
     }

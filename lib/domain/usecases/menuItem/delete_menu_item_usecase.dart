@@ -3,10 +3,10 @@ import 'package:foody_licious_admin_app/core/error/failures.dart';
 import 'package:foody_licious_admin_app/core/usecase/usecase.dart';
 import 'package:foody_licious_admin_app/domain/repositories/menu_item_repository.dart';
 
-class DeleteMenuItemUsecase implements UseCase<Unit, DeleteMenuItemParams> {
-  final MenuItemRepository repository;  
+class DeleteMenuItemUseCase implements UseCase<Unit, DeleteMenuItemParams> {
+  final MenuItemRepository repository;
 
-  DeleteMenuItemUsecase({required this.repository});
+  DeleteMenuItemUseCase(this.repository);
 
   @override
   Future<Either<Failure, Unit>> call(params) {

@@ -6,7 +6,7 @@ class MenuItem extends Equatable {
   final String name;
   final String price;
   final String? description;
-  final String? image;
+  final List<String>? images;
   final List<String>? ingredients;
 
   const MenuItem({
@@ -15,7 +15,7 @@ class MenuItem extends Equatable {
     required this.name,
     required this.price,
     this.description,
-    this.image,
+    this.images,
     this.ingredients,
   });
 
@@ -26,7 +26,7 @@ class MenuItem extends Equatable {
     name,
     price,
     description,
-    image,
+    images,
     ingredients,
   ];
 }

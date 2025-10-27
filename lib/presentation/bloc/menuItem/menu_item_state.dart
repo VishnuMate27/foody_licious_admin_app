@@ -19,6 +19,8 @@ class MenuItemAddSuccess extends MenuItemState {
 }
 
 class MenuItemAddFailed extends MenuItemState {
+  final Failure failure;
+  MenuItemAddFailed(this.failure);
   @override
   List<Object?> get props => [];
 }
@@ -35,8 +37,10 @@ class MenuItemDeleteSuccess extends MenuItemState {
 }
 
 class MenuItemDeleteFailed extends MenuItemState {
+  final Failure failure;
+  MenuItemDeleteFailed(this.failure);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [failure];
 }
 
 /// FetchingAllMenuItems
@@ -46,13 +50,17 @@ class FetchingAllMenuItemsLoading extends MenuItemState {
 }
 
 class FetchingAllMenuItemsSuccess extends MenuItemState {
+  final List<MenuItem> menuItems;
+  FetchingAllMenuItemsSuccess(this.menuItems);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [menuItems];
 }
 
 class FetchingAllMenuItemsFailed extends MenuItemState {
+  final Failure failure;
+  FetchingAllMenuItemsFailed(this.failure);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [failure];
 }
 
 /// IncreaseMenuItemQuantity
@@ -67,8 +75,10 @@ class IncreaseMenuItemQuantitySuccess extends MenuItemState {
 }
 
 class IncreaseMenuItemQuantityFailed extends MenuItemState {
+  final Failure failure;
+  IncreaseMenuItemQuantityFailed(this.failure);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [failure];
 }
 
 /// DecreaseMenuItemQuantity
@@ -83,6 +93,8 @@ class DecreaseMenuItemQuantitySuccess extends MenuItemState {
 }
 
 class DecreaseMenuItemQuantityFailed extends MenuItemState {
+  final Failure failure;
+  DecreaseMenuItemQuantityFailed(this.failure);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [failure];
 }

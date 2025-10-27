@@ -8,10 +8,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/network/network_info.dart';
 import 'package:foody_licious_admin_app/data/data_sources/local/restaurant_local_data_source.dart';
+import 'package:foody_licious_admin_app/data/data_sources/remote/menu_remote_data_source.dart';
 import 'package:foody_licious_admin_app/data/data_sources/remote/restaurant_remote_data_source.dart';
 import 'package:foody_licious_admin_app/data/repositories/auth_repository_impl.dart';
+import 'package:foody_licious_admin_app/data/repositories/menu_item_repository_impl.dart';
 import 'package:foody_licious_admin_app/data/repositories/restaurant_repository_impl.dart';
 import 'package:foody_licious_admin_app/data/services/location_service.dart';
+import 'package:foody_licious_admin_app/domain/repositories/menu_item_repository.dart';
 import 'package:foody_licious_admin_app/domain/repositories/restaurant_repository.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/send_verification_email_usecase.dart';
@@ -27,6 +30,11 @@ import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_
 import 'package:foody_licious_admin_app/domain/usecases/auth/verify_phone_number_for_login_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/verify_phone_number_for_registration_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/wait_for_email_verification_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/decrease_item_quantity_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/get_all_menu_items_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/increase_item_quantity_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/check_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/delete_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/remove_restaurant_profile_picture_usecase.dart';
@@ -35,6 +43,7 @@ import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restau
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restaurant_profile_picture_usecase.dart';
 import 'package:foody_licious_admin_app/firebase_options.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
+import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -116,6 +125,28 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<RestaurantLocalDataSource>(
     () => RestaurantLocalDataSourceImpl(sharedPreferences: sl()),
+  );
+
+  //Features - MenuItem
+  // Bloc
+  sl.registerFactory(() => MenuItemBloc(sl(), sl(), sl(), sl(),sl()));
+  // Use cases
+  sl.registerLazySingleton(() => AddMenuItemUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteMenuItemUseCase(sl()));
+  sl.registerLazySingleton(() => GetAllMenuItemsUseCase(sl()));
+  sl.registerLazySingleton(() => IncreaseItemQuantityUseCase(sl()));
+  sl.registerLazySingleton(() => DecreaseItemQuantityUseCase(sl()));
+  // Repository
+  sl.registerLazySingleton<MenuItemRepository>(
+    () => MenuItemRepositoryImpl(
+      menuItemsRemoteDataSource: sl(),
+      restaurantLocalDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  // Data sources
+  sl.registerLazySingleton<MenuItemsRemoteDataSource>(
+    () => MenuItemsRemoteDataSourceImpl(client: sl()),
   );
 
 

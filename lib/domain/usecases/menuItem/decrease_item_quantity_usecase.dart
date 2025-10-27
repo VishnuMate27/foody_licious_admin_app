@@ -3,10 +3,10 @@ import 'package:foody_licious_admin_app/core/error/failures.dart';
 import 'package:foody_licious_admin_app/core/usecase/usecase.dart';
 import 'package:foody_licious_admin_app/domain/repositories/menu_item_repository.dart';
 
-class DecreaseItemQuantityUsecase
+class DecreaseItemQuantityUseCase
     implements UseCase<Unit, DecreaseItemQuantityParams> {
   final MenuItemRepository repository;
-  DecreaseItemQuantityUsecase({required this.repository});
+  DecreaseItemQuantityUseCase(this.repository);
 
   @override
   Future<Either<Failure, Unit>> call(params) async {
