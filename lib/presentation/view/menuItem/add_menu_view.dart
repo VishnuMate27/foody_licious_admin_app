@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/constants/images.dart';
+import 'package:foody_licious_admin_app/core/utils/image_picker_helper.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dart';
@@ -25,6 +28,7 @@ class _AddMenuViewState extends State<AddMenuView> {
   final TextEditingController _itemDescriptionController =
       TextEditingController();
   final List<String> _ingredients = [];
+  List<File> selectedImages = [];
 
   void _addIngredients() {
     String text = _ingredientsController.text.trim();
@@ -106,45 +110,62 @@ class _AddMenuViewState extends State<AddMenuView> {
                   validatorText: "Please enter your valid Item price",
                 ),
                 SizedBox(height: 12.h),
-                Container(
-                  width: double.infinity,
-                  height: 56.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(color: kBorder, width: 1.sp),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Add Image",
-                          style: GoogleFonts.yeonSung(
-                            color: kTextPrimary,
-                            fontSize: 14,
+                InkWell(
+                  onTap: () async {
+                    final images = await ImagePickerHelper.pickMultipleImages();
+                    setState(() => selectedImages = images);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 56.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: kBorder, width: 1.sp),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Add Images",
+                            style: GoogleFonts.yeonSung(
+                              color: kTextPrimary,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(right: 8.w),
-                          child: Icon(
-                            CupertinoIcons.add_circled,
-                            color: kTextPrimary,
-                            size: 24.sp,
+                          Padding(
+                            padding: EdgeInsets.only(right: 8.w),
+                            child: Icon(
+                              CupertinoIcons.add_circled,
+                              color: kTextPrimary,
+                              size: 24.sp,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(height: 12.h),
-                Center(
-                  child: SizedBox(
-                    width: 174.w,
-                    height: 118.h,
-                    child: const Image(image: AssetImage(kAttachedMenuPhoto)),
+                if (selectedImages.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children:
+                        selectedImages
+                            .map(
+                              (img) => Image.file(img, width: 100, height: 100),
+                            )
+                            .toList(),
                   ),
-                ),
+                // SizedBox(height: 12.h),
+                // Center(
+                //   child: SizedBox(
+                //     width: 174.w,
+                //     height: 118.h,
+                //     child: const Image(image: AssetImage(kAttachedMenuPhoto)),
+                //   ),
+                // ),
                 SizedBox(height: 12.h),
                 InputTextFormField(
                   minLines: 1,
