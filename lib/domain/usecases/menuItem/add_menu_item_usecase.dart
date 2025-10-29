@@ -14,19 +14,23 @@ class AddMenuItemUseCase implements UseCase<Unit, AddMenuItemParams> {
 }
 
 class AddMenuItemParams {
+  String? itemId;
   String? restaurantId;
   final String name;
   final int price;
   final String? description;
   final int? availableQuantity;
+  final List<String>? imageFilePaths;
   final List<String>? ingredients;
 
   AddMenuItemParams({
+    this.itemId,
     this.restaurantId,
     required this.name,
     required this.price,
     this.description,
     this.availableQuantity = 0,
-    this.ingredients = const ["ingredient1"],
+    this.imageFilePaths,
+    this.ingredients,
   });
 }

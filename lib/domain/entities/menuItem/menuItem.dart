@@ -4,7 +4,7 @@ class MenuItem extends Equatable {
   final String id;
   final String restaurantId;
   final String name;
-  final String price;
+  final int price;
   final String? description;
   final List<String>? images;
   final List<String>? ingredients;

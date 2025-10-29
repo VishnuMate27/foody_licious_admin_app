@@ -28,7 +28,7 @@ class _AddMenuViewState extends State<AddMenuView> {
   final TextEditingController _itemDescriptionController =
       TextEditingController();
   final List<String> _ingredients = [];
-  List<File> selectedImages = [];
+  List<String> selectedImagesPaths = [];
 
   void _addIngredients() {
     String text = _ingredientsController.text.trim();
@@ -54,9 +54,9 @@ class _AddMenuViewState extends State<AddMenuView> {
           _itemPriceController.clear();
           _itemDescriptionController.clear();
           _ingredientsController.clear();
-
           // Clear ingredient list
           setState(() {
+            selectedImagesPaths.clear();
             _ingredients.clear();
           });
         } else if (state is MenuItemAddFailed) {
@@ -113,7 +113,7 @@ class _AddMenuViewState extends State<AddMenuView> {
                 InkWell(
                   onTap: () async {
                     final images = await ImagePickerHelper.pickMultipleImages();
-                    setState(() => selectedImages = images);
+                    setState(() => selectedImagesPaths = images);
                   },
                   child: Container(
                     width: double.infinity,
@@ -148,13 +148,17 @@ class _AddMenuViewState extends State<AddMenuView> {
                   ),
                 ),
                 SizedBox(height: 12.h),
-                if (selectedImages.isNotEmpty)
+                if (selectedImagesPaths.isNotEmpty)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children:
-                        selectedImages
+                        selectedImagesPaths
                             .map(
-                              (img) => Image.file(img, width: 100, height: 100),
+                              (img) => Image.file(
+                                File(img),
+                                width: 100,
+                                height: 100,
+                              ),
                             )
                             .toList(),
                   ),
@@ -291,6 +295,7 @@ class _AddMenuViewState extends State<AddMenuView> {
                             price: int.tryParse(_itemPriceController.text) ?? 0,
                             description: _itemDescriptionController.text,
                             ingredients: _ingredients,
+                            imageFilePaths: selectedImagesPaths,
                           ),
                         ),
                       );

@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:foody_licious_admin_app/domain/entities/menuItem/menuItem.dart';
 
-MenuItemModel menuItemModelFromJson(String str) => MenuItemModel.fromJson(
- json.decode(str)
-);
+MenuItemModel menuItemModelFromJson(String str) =>
+    MenuItemModel.fromJson(json.decode(str));
 
 String menuItemModelToJson(MenuItemModel data) =>
     json.encode(data.toJson());
@@ -22,13 +20,19 @@ class MenuItemModel extends MenuItem {
 
   factory MenuItemModel.fromJson(Map<String, dynamic> json) {
     return MenuItemModel(
-      id: json['id'],
-      restaurantId: json['restaurantId'],
-      name: json['name'],
-      price: json['price'],
+      id: json['id'] ?? '',
+      restaurantId: json['restaurantId'] ?? '',
+      name: json['name'] ?? '',
+      price: json['price'] is int
+          ? json['price']
+          : int.tryParse(json['price'].toString()) ?? 0,
       description: json['description'],
-      images: json['images'],
-      ingredients: json['ingredients'],
+      images: json['images'] != null
+          ? List<String>.from(json['images'])
+          : <String>[], // ✅ safely defaults to empty list
+      ingredients: json['ingredients'] != null
+          ? List<String>.from(json['ingredients'])
+          : <String>[], // ✅ safely defaults to empty list
     );
   }
 
@@ -39,8 +43,8 @@ class MenuItemModel extends MenuItem {
       "name": name,
       "price": price,
       "description": description,
-      "images": images,
-      "ingredients": ingredients,
+      "images": images ?? [],
+      "ingredients": ingredients ?? [],
     };
   }
 }

@@ -47,6 +47,38 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     return await sendDecreaseItemQuantityRequest(itemId);
   }
 
+  Future<Unit> _sendUploadMenuItemImagesRequest(
+    AddMenuItemParams params,
+  ) async {
+    final uri = Uri.parse(
+      '$kBaseUrl/api/restaurants/menuItems/upload_menu_item_images',
+    );
+
+    final request =
+        http.MultipartRequest('POST', uri)
+          ..fields['folder'] = 'restaurants'
+          ..fields['sub_folder'] = "menu_items"
+          ..fields['restaurant_id'] = params.restaurantId!
+          ..fields['item_id'] = params.itemId!;
+
+    // Add file
+    for (var image in params.imageFilePaths!) {
+      request.files.add(await http.MultipartFile.fromPath('images', image));
+    }
+
+    // ✅ Send using your existing `client`
+    final streamedResponse = await client.send(request);
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return unit;
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
   Future<Unit> sendAddItemInMenuRequest(AddMenuItemParams params) async {
     final response = await client.post(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/addNewItem"),
@@ -61,7 +93,12 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
       }),
     );
     if (response.statusCode == 201) {
-      return unit;
+      if (params.imageFilePaths != null || params.imageFilePaths!.isNotEmpty) {
+        params.itemId = menuItemResponseModelFromJson(response.body).menuItemResponseModel.id;
+        return _sendUploadMenuItemImagesRequest(params);
+      } else {
+        return unit;
+      }
     } else if (response.statusCode == 404) {
       throw RestaurantNotExistsFailure();
     } else if (response.statusCode == 409) {
