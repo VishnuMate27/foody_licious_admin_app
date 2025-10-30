@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
-import 'package:foody_licious_admin_app/core/constants/images.dart';
 import 'package:foody_licious_admin_app/core/utils/image_picker_helper.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
@@ -128,7 +127,7 @@ class _AddMenuViewState extends State<AddMenuView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Add Images",
+                            "Add Images (max 3)",
                             style: GoogleFonts.yeonSung(
                               color: kTextPrimary,
                               fontSize: 14,
@@ -152,15 +151,40 @@ class _AddMenuViewState extends State<AddMenuView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children:
-                        selectedImagesPaths
-                            .map(
-                              (img) => Image.file(
-                                File(img),
-                                width: 100,
-                                height: 100,
+                        selectedImagesPaths.map((img) {
+                          return Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: kBorder,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(5.r),
+                                ),
+                                child: Image.file(
+                                  File(img),
+                                  fit: BoxFit.fill,
+                                  width: 100,
+                                  height: 100,
+                                ),
                               ),
-                            )
-                            .toList(),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(
+                                    () => selectedImagesPaths.remove(img),
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.delete,
+                                  size: 18,
+                                  color: kPrimaryRed,
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
                   ),
                 // SizedBox(height: 12.h),
                 // Center(

@@ -13,6 +13,7 @@ class MenuItemModel extends MenuItem {
     required super.restaurantId,
     required super.name,
     required super.price,
+    required super.availableQuantity,
     super.description,
     super.images,
     super.ingredients,
@@ -26,6 +27,9 @@ class MenuItemModel extends MenuItem {
       price: json['price'] is int
           ? json['price']
           : int.tryParse(json['price'].toString()) ?? 0,
+      availableQuantity: json['availableQuantity'] is int
+          ? json['availableQuantity']
+          : int.tryParse(json['availableQuantity'].toString()) ?? 0,    
       description: json['description'],
       images: json['images'] != null
           ? List<String>.from(json['images'])
@@ -42,6 +46,7 @@ class MenuItemModel extends MenuItem {
       "restaurantId": restaurantId,
       "name": name,
       "price": price,
+      "availableQuantity": availableQuantity,
       "description": description,
       "images": images ?? [],
       "ingredients": ingredients ?? [],

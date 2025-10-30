@@ -5,6 +5,7 @@ class MenuItem extends Equatable {
   final String restaurantId;
   final String name;
   final int price;
+  final int availableQuantity;
   final String? description;
   final List<String>? images;
   final List<String>? ingredients;
@@ -14,6 +15,7 @@ class MenuItem extends Equatable {
     required this.restaurantId,
     required this.name,
     required this.price,
+    required this.availableQuantity,
     this.description,
     this.images,
     this.ingredients,
@@ -25,6 +27,7 @@ class MenuItem extends Equatable {
     restaurantId,
     name,
     price,
+    availableQuantity,
     description,
     images,
     ingredients,
