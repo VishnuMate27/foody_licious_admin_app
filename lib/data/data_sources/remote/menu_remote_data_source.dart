@@ -14,8 +14,8 @@ abstract class MenuItemsRemoteDataSource {
   Future<Unit> addItemInMenu(AddMenuItemParams params);
   Future<Unit> deleteItemInMenu(DeleteMenuItemParams params);
   Future<MenuItemsResponseModel> getAllMenuItem(String restaurantId);
-  Future<Unit> increaseItemQuantity(String itemId);
-  Future<Unit> decreaseItemQuantity(String itemId);
+  Future<MenuItemResponseModel> increaseItemQuantity(String itemId);
+  Future<MenuItemResponseModel> decreaseItemQuantity(String itemId);
 }
 
 class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
@@ -38,12 +38,12 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
   }
 
   @override
-  Future<Unit> increaseItemQuantity(String itemId) async {
+  Future<MenuItemResponseModel> increaseItemQuantity(String itemId) async {
     return await sendIncreaseItemQuantityRequest(itemId);
   }
 
   @override
-  Future<Unit> decreaseItemQuantity(String itemId) async {
+  Future<MenuItemResponseModel> decreaseItemQuantity(String itemId) async {
     return await sendDecreaseItemQuantityRequest(itemId);
   }
 
@@ -94,7 +94,10 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     );
     if (response.statusCode == 201) {
       if (params.imageFilePaths != null || params.imageFilePaths!.isNotEmpty) {
-        params.itemId = menuItemResponseModelFromJson(response.body).menuItemResponseModel.id;
+        params.itemId =
+            menuItemResponseModelFromJson(
+              response.body,
+            ).menuItemResponseModel.id;
         return _sendUploadMenuItemImagesRequest(params);
       } else {
         return unit;
@@ -144,27 +147,31 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     }
   }
 
-  Future<Unit> sendIncreaseItemQuantityRequest(String itemId) async {
+  Future<MenuItemResponseModel> sendIncreaseItemQuantityRequest(String itemId) async {
     final response = await client.put(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/increaseItemQuantity"),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({"id": itemId}),
     );
     if (response.statusCode == 200) {
-      return unit;
+      return menuItemResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400) {
+      throw CredentialFailure();
     } else {
       throw ServerFailure();
     }
   }
 
-  Future<Unit> sendDecreaseItemQuantityRequest(String itemId) async {
+  Future<MenuItemResponseModel> sendDecreaseItemQuantityRequest(String itemId) async {
     final response = await client.put(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/decreaseItemQuantity"),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({"id": itemId}),
     );
     if (response.statusCode == 200) {
-      return unit;
+      return menuItemResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400) {
+      throw CredentialFailure();
     } else {
       throw ServerFailure();
     }

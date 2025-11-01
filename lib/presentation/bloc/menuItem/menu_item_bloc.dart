@@ -88,12 +88,23 @@ class MenuItemBloc extends Bloc<MenuItemEvent, MenuItemState> {
     Emitter<MenuItemState> emit,
   ) async {
     try {
-      emit(IncreaseMenuItemQuantityLoading());
-      final result = await _increaseItemQuantityUsecase(event.params);
-      result.fold(
-        (failure) => emit(IncreaseMenuItemQuantityFailed(failure)),
-        (unit) => emit(IncreaseMenuItemQuantitySuccess()),
-      );
+      final currentState = state;
+      if (currentState is FetchingAllMenuItemsSuccess) {
+        final result = await _increaseItemQuantityUsecase(event.params);
+        result.fold(
+          (failure) {
+            emit(IncreaseMenuItemQuantityFailed(failure));
+            emit(FetchingAllMenuItemsSuccess(currentState.menuItems));
+          },
+          (updatedMenuItem) {
+            final updatedList =
+                currentState.menuItems.map((item) {
+                  return item.id == updatedMenuItem.id ? updatedMenuItem : item;
+                }).toList();
+            emit(FetchingAllMenuItemsSuccess(updatedList));
+          },
+        );
+      }
     } catch (e) {
       emit(IncreaseMenuItemQuantityFailed(ExceptionFailure(e.toString())));
     }
@@ -104,12 +115,23 @@ class MenuItemBloc extends Bloc<MenuItemEvent, MenuItemState> {
     Emitter<MenuItemState> emit,
   ) async {
     try {
-      emit(DecreaseMenuItemQuantityLoading());
-      final result = await _decreaseItemQuantityUsecase(event.params);
-      result.fold(
-        (failure) => emit(DecreaseMenuItemQuantityFailed(failure)),
-        (unit) => emit(DecreaseMenuItemQuantitySuccess()),
-      );
+      final currentState = state;
+      if (currentState is FetchingAllMenuItemsSuccess) {
+        final result = await _decreaseItemQuantityUsecase(event.params);
+        result.fold(
+          (failure) {
+            emit(DecreaseMenuItemQuantityFailed(failure));
+            emit(FetchingAllMenuItemsSuccess(currentState.menuItems));
+          },
+          (updatedMenuItem) {
+            final updatedList =
+                currentState.menuItems.map((item) {
+                  return item.id == updatedMenuItem.id ? updatedMenuItem : item;
+                }).toList();
+            emit(FetchingAllMenuItemsSuccess(updatedList));
+          },
+        );
+      }
     } catch (e) {
       emit(DecreaseMenuItemQuantityFailed(ExceptionFailure(e.toString())));
     }

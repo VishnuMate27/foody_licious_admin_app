@@ -9,6 +9,6 @@ abstract class MenuItemRepository {
   Future<Either<Failure,Unit>> addItemInMenu(AddMenuItemParams params);
   Future<Either<Failure,Unit>> deleteItemInMenu(DeleteMenuItemParams params);
   Future<Either<Failure,List<MenuItem>>> getAllMenuItem();
-  Future<Either<Failure,Unit>> increaseItemQuantity(String itemId);
-  Future<Either<Failure,Unit>> decreaseItemQuantity(String itemId);
+  Future<Either<Failure,MenuItem>> increaseItemQuantity(String itemId);
+  Future<Either<Failure,MenuItem>> decreaseItemQuantity(String itemId);
 }

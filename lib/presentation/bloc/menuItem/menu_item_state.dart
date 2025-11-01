@@ -70,8 +70,10 @@ class IncreaseMenuItemQuantityLoading extends MenuItemState {
 }
 
 class IncreaseMenuItemQuantitySuccess extends MenuItemState {
+  final MenuItem menuItem;
+  IncreaseMenuItemQuantitySuccess(this.menuItem);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [menuItem];
 }
 
 class IncreaseMenuItemQuantityFailed extends MenuItemState {
@@ -88,8 +90,10 @@ class DecreaseMenuItemQuantityLoading extends MenuItemState {
 }
 
 class DecreaseMenuItemQuantitySuccess extends MenuItemState {
+  final MenuItem menuItem;
+  DecreaseMenuItemQuantitySuccess(this.menuItem);
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [menuItem];
 }
 
 class DecreaseMenuItemQuantityFailed extends MenuItemState {

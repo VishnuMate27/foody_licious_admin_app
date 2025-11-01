@@ -71,28 +71,28 @@ class MenuItemRepositoryImpl implements MenuItemRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> increaseItemQuantity(String itemId) async {
+  Future<Either<Failure, MenuItem>> increaseItemQuantity(String itemId) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }    
     try {
       final remoteResponse = await menuItemsRemoteDataSource
           .increaseItemQuantity(itemId);
-      return Right(remoteResponse);
+      return Right(remoteResponse.menuItemResponseModel);
     } on Failure catch (failure) {
       return Left(failure);
     }
   }
 
   @override
-  Future<Either<Failure, Unit>> decreaseItemQuantity(String itemId) async {
+  Future<Either<Failure, MenuItem>> decreaseItemQuantity(String itemId) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }    
     try {
       final remoteResponse = await menuItemsRemoteDataSource
           .decreaseItemQuantity(itemId);
-      return Right(remoteResponse);
+      return Right(remoteResponse.menuItemResponseModel);
     } on Failure catch (failure) {
       return Left(failure);
     }
