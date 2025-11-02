@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +19,7 @@ class InputTextFormField extends StatefulWidget {
   final int? maxLines;
   final bool readOnly;
   final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
   final String? validatorText;
   final bool obscureText; // initial value
   final Function()? onEditingComplete;
@@ -37,9 +39,10 @@ class InputTextFormField extends StatefulWidget {
     this.maxLines,
     this.readOnly = false,
     this.keyboardType = TextInputType.text,
+    this.inputFormatters = const [],
     this.validatorText = "This field cannot be empty.",
     this.obscureText = false,
-    this.onEditingComplete,  
+    this.onEditingComplete,
   });
 
   @override
@@ -63,6 +66,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
       maxLines: widget.obscureText == false ? widget.maxLines : 1,
       controller: widget.textController,
       keyboardType: widget.keyboardType,
+      inputFormatters: widget.inputFormatters,
       obscureText: _obscure,
       readOnly: widget.readOnly,
       decoration: InputDecoration(

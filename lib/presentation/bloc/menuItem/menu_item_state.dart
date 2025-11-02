@@ -63,19 +63,10 @@ class FetchingAllMenuItemsFailed extends MenuItemState {
   List<Object?> get props => [failure];
 }
 
-/// IncreaseMenuItemQuantity
-class IncreaseMenuItemQuantityLoading extends MenuItemState {
-  @override
-  List<Object?> get props => [];
-}
-
-class IncreaseMenuItemQuantitySuccess extends MenuItemState {
-  final MenuItem menuItem;
-  IncreaseMenuItemQuantitySuccess(this.menuItem);
-  @override
-  List<Object?> get props => [menuItem];
-}
-
+/// IncreaseMenuItemQuantity 
+/// IncreaseMenuItemQuantityLoading & IncreaseMenuItemQuantitySuccess are not required
+/// Because The principle: “UI rebuilds should be driven by meaningful state”
+/// In a well-architected BLoC:
 class IncreaseMenuItemQuantityFailed extends MenuItemState {
   final Failure failure;
   IncreaseMenuItemQuantityFailed(this.failure);
@@ -84,17 +75,8 @@ class IncreaseMenuItemQuantityFailed extends MenuItemState {
 }
 
 /// DecreaseMenuItemQuantity
-class DecreaseMenuItemQuantityLoading extends MenuItemState {
-  @override
-  List<Object?> get props => [];
-}
-
-class DecreaseMenuItemQuantitySuccess extends MenuItemState {
-  final MenuItem menuItem;
-  DecreaseMenuItemQuantitySuccess(this.menuItem);
-  @override
-  List<Object?> get props => [menuItem];
-}
+/// DecreaseMenuItemQuantityLoading & DecreaseMenuItemQuantitySuccess are not required
+/// Because The principle: “UI rebuilds should be driven by meaningful state”
 
 class DecreaseMenuItemQuantityFailed extends MenuItemState {
   final Failure failure;

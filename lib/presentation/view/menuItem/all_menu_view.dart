@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
+import 'package:foody_licious_admin_app/core/router/app_router.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/decrease_item_quantity_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/increase_item_quantity_usecase.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/menu_item_card.dart';
@@ -42,11 +44,19 @@ class _AllMenuViewState extends State<AllMenuView> {
           listenWhen:
               (previous, current) =>
                   current is IncreaseMenuItemQuantityFailed ||
-                  current is DecreaseMenuItemQuantityFailed,
+                  current is DecreaseMenuItemQuantityFailed ||
+                  current is MenuItemDeleteFailed ||
+                  current is MenuItemDeleteSuccess,
           listener: (context, state) {
             if (state is IncreaseMenuItemQuantityFailed ||
                 state is DecreaseMenuItemQuantityFailed) {
               EasyLoading.showError("Failed to update item quantity");
+            } else if (state is MenuItemDeleteLoading) {
+              EasyLoading.show(status: "Deleting item...");
+            } else if (state is MenuItemDeleteSuccess) {
+              EasyLoading.showSuccess("Menu Item Deleted Successfully!");
+            } else if (state is MenuItemDeleteFailed) {
+              EasyLoading.showError("Failed to delete item!");
             }
           },
           buildWhen: (previous, current) {
@@ -92,8 +102,21 @@ class _AllMenuViewState extends State<AllMenuView> {
                       },
                       onDeleteButtonPressed: () {
                         debugPrint("Delete button tapped");
+                        context.read<MenuItemBloc>().add(
+                          DeleteMenuItem(
+                            DeleteMenuItemParams(itemId: menuItem.id),
+                          ),
+                        );
                       },
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRouter.menuItemDetails,
+                          arguments: {
+                            'menuItem': menuItem
+                          },
+                        );
+                      },
                     ),
                   );
                 },

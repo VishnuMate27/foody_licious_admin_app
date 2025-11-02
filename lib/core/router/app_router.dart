@@ -5,6 +5,7 @@ import 'package:foody_licious_admin_app/presentation/view/menuItem/all_menu_view
 import 'package:foody_licious_admin_app/presentation/view/dashboard/dashboard.dart';
 import 'package:foody_licious_admin_app/presentation/view/delivery/delivery_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/feedback/feedback_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/menuItem/menu_item_details_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/onboarding/onboarding_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/profile/profile_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/authentication/login_view.dart';
@@ -27,6 +28,7 @@ class AppRouter {
   //post_auth
   static const String allMenu = '/all-menu';
   static const String addMenu = '/add-menu';
+  static const String menuItemDetails = '/menu-item-details';
   static const String delivery = '/delivery';
   static const String profile = '/profile';
   static const String feedback = '/feedback';
@@ -63,6 +65,11 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => DashboardView());
       case allMenu:
         return MaterialPageRoute(builder: (_) => AllMenuView());
+      case menuItemDetails:
+        final args = routeSettings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => MenuItemDetailsView(menuItem: args['menuItem']),
+        );
       case addMenu:
         return MaterialPageRoute(builder: (_) => AddMenuView());
       case delivery:
