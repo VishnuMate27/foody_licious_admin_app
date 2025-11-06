@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:path/path.dart' as p;
 import 'package:dartz/dartz.dart';
 import 'package:foody_licious_admin_app/core/constants/strings.dart';
 import 'package:foody_licious_admin_app/core/error/failures.dart';
@@ -8,10 +8,13 @@ import 'package:foody_licious_admin_app/data/models/menuItem/menu_item_response_
 import 'package:foody_licious_admin_app/data/models/menuItem/menu_items_response_model.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 abstract class MenuItemsRemoteDataSource {
   Future<Unit> addItemInMenu(AddMenuItemParams params);
+  Future<MenuItemResponseModel> updateItemInMenu(UpdateMenuItemParams params);
   Future<Unit> deleteItemInMenu(DeleteMenuItemParams params);
   Future<MenuItemsResponseModel> getAllMenuItem(String restaurantId);
   Future<MenuItemResponseModel> increaseItemQuantity(String itemId);
@@ -25,6 +28,13 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
   @override
   Future<Unit> addItemInMenu(AddMenuItemParams params) {
     return sendAddItemInMenuRequest(params);
+  }
+
+  @override
+  Future<MenuItemResponseModel> updateItemInMenu(
+    UpdateMenuItemParams params,
+  ) async {
+    return await sendUpdateItemInMenuRequest(params);
   }
 
   @override
@@ -111,6 +121,101 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     }
   }
 
+  // Future<MenuItemResponseModel> sendUpdateItemInMenuRequest(
+  //   UpdateMenuItemParams params,
+  // ) async {
+  //   final response = await client.put(
+  //     Uri.parse("$kBaseUrl/api/restaurants/menuItems/updateItem"),
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: json.encode({
+  //       "id": params.id,
+  //       "restaurant_id": params.restaurantId,
+  //       "name": params.name,
+  //       "description": params.description,
+  //       "price": params.price,
+  //       "availableQuantity": params.availableQuantity,
+  //       "ingredients": params.ingredients,
+  //       "images": params.images,
+  //     }),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     return menuItemResponseModelFromJson(response.body);
+  //   } else if (response.statusCode == 404) {
+  //     throw RestaurantNotExistsFailure();
+  //   } else if (response.statusCode == 409) {
+  //     throw ItemAlreadyExistsFailure();
+  //   } else {
+  //     throw ServerFailure();
+  //   }
+  // }
+
+  Future<MenuItemResponseModel> sendUpdateItemInMenuRequest(
+    UpdateMenuItemParams params,
+  ) async {
+    final uri = Uri.parse("$kBaseUrl/api/restaurants/menuItems/updateItem");
+    final request = http.MultipartRequest('PUT', uri);
+
+    // 🧩 Add non-null text fields only
+    if (params.id != null) request.fields['id'] = params.id!;
+    if (params.restaurantId != null)
+      request.fields['restaurant_id'] = params.restaurantId!;
+    if (params.name != null) request.fields['name'] = params.name!;
+    if (params.description != null)
+      request.fields['description'] = params.description!;
+    if (params.price != null)
+      request.fields['price'] = params.price!.toString();
+    if (params.availableQuantity != null)
+      request.fields['availableQuantity'] =
+          params.availableQuantity!.toString();
+
+    if (params.ingredients != null) {
+      request.fields['ingredients'] = jsonEncode(params.ingredients);
+    }
+
+    request.fields['folder'] = 'restaurants';
+    request.fields['sub_folder'] = 'menu_items';
+
+    // 🖼️ Handle images (new + existing)
+    if (params.images != null && params.images!.isNotEmpty) {
+      // Separate new files and existing URLs
+      final existingUrls = <String>[];
+
+      for (var image in params.images!) {
+        if (image!.startsWith(
+          'https://foodylicious.s3.ap-south-1.amazonaws.com/',
+        )) {
+          existingUrls.add(image);
+        } else {
+          final fileStream = await http.MultipartFile.fromPath(
+            'images',
+            image,
+            filename: p.basename(image),
+          );
+          request.files.add(fileStream);
+        }
+      }
+
+      // Add existing image URLs as JSON string (if any)
+      if (existingUrls.isNotEmpty) {
+        request.fields['images'] = jsonEncode(existingUrls);
+      }
+    }
+
+    // Send request
+    final response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      return menuItemResponseModelFromJson(responseBody);
+    } else if (response.statusCode == 404) {
+      throw RestaurantNotExistsFailure();
+    } else if (response.statusCode == 409) {
+      throw ItemAlreadyExistsFailure();
+    } else {
+      throw ServerFailure();
+    }
+  }
+
   Future<Unit> sendDeleteItemInMenuRequest(DeleteMenuItemParams params) async {
     final response = await client.delete(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/deleteItem"),
@@ -147,7 +252,9 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     }
   }
 
-  Future<MenuItemResponseModel> sendIncreaseItemQuantityRequest(String itemId) async {
+  Future<MenuItemResponseModel> sendIncreaseItemQuantityRequest(
+    String itemId,
+  ) async {
     final response = await client.put(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/increaseItemQuantity"),
       headers: {'Content-Type': 'application/json'},
@@ -162,7 +269,9 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     }
   }
 
-  Future<MenuItemResponseModel> sendDecreaseItemQuantityRequest(String itemId) async {
+  Future<MenuItemResponseModel> sendDecreaseItemQuantityRequest(
+    String itemId,
+  ) async {
     final response = await client.put(
       Uri.parse("$kBaseUrl/api/restaurants/menuItems/decreaseItemQuantity"),
       headers: {'Content-Type': 'application/json'},

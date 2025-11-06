@@ -51,8 +51,6 @@ class _AllMenuViewState extends State<AllMenuView> {
             if (state is IncreaseMenuItemQuantityFailed ||
                 state is DecreaseMenuItemQuantityFailed) {
               EasyLoading.showError("Failed to update item quantity");
-            } else if (state is MenuItemDeleteLoading) {
-              EasyLoading.show(status: "Deleting item...");
             } else if (state is MenuItemDeleteSuccess) {
               EasyLoading.showSuccess("Menu Item Deleted Successfully!");
             } else if (state is MenuItemDeleteFailed) {
@@ -101,7 +99,6 @@ class _AllMenuViewState extends State<AllMenuView> {
                         );
                       },
                       onDeleteButtonPressed: () {
-                        debugPrint("Delete button tapped");
                         context.read<MenuItemBloc>().add(
                           DeleteMenuItem(
                             DeleteMenuItemParams(itemId: menuItem.id),

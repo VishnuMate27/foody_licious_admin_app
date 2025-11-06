@@ -8,6 +8,7 @@ import 'package:foody_licious_admin_app/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious_admin_app/domain/repositories/menu_item_repository.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
 
 class MenuItemRepositoryImpl implements MenuItemRepository {
   final MenuItemsRemoteDataSource menuItemsRemoteDataSource;
@@ -32,6 +33,23 @@ class MenuItemRepositoryImpl implements MenuItemRepository {
         params,
       );
       return Right(remoteResponse);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, MenuItem>> updateItemInMenu(UpdateMenuItemParams params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final restaurant = await restaurantLocalDataSource.getRestaurant();
+      params.restaurantId = restaurant.id;
+      final remoteResponse = await menuItemsRemoteDataSource.updateItemInMenu(
+        params,
+      );
+      return Right(remoteResponse.menuItemResponseModel);
     } on Failure catch (failure) {
       return Left(failure);
     }

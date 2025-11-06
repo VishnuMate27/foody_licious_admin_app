@@ -10,17 +10,20 @@ import 'package:foody_licious_admin_app/domain/usecases/menuItem/decrease_item_q
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/increase_item_quantity_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
 part 'menu_item_state.dart';
 part 'menu_item_event.dart';
 
 class MenuItemBloc extends Bloc<MenuItemEvent, MenuItemState> {
   final AddMenuItemUseCase _addMenuItemUsecase;
+  final UpdateMenuItemUseCase _updateMenuItemUsecase;
   final DeleteMenuItemUseCase _deleteMenuItemUsecase;
   final GetAllMenuItemsUseCase _getAllMenuItemsUsecase;
   final IncreaseItemQuantityUseCase _increaseItemQuantityUsecase;
   final DecreaseItemQuantityUseCase _decreaseItemQuantityUsecase;
   MenuItemBloc(
     this._addMenuItemUsecase,
+    this._updateMenuItemUsecase,
     this._deleteMenuItemUsecase,
     this._getAllMenuItemsUsecase,
     this._increaseItemQuantityUsecase,
@@ -28,6 +31,7 @@ class MenuItemBloc extends Bloc<MenuItemEvent, MenuItemState> {
   ) : super(MenuItemInitial()) {
     {
       on<AddMenuItem>(_onAddMenuItem);
+      on<UpdateMenuItem>(_onUpdateMenuItem);
       on<DeleteMenuItem>(_onDeleteMenuItem);
       on<GetAllMenuItems>(_onGetAllMenuItems);
       on<IncreaseItemQuantity>(_onIncreaseItemQuantity);
@@ -51,6 +55,22 @@ class MenuItemBloc extends Bloc<MenuItemEvent, MenuItemState> {
     }
   }
 
+  FutureOr<void> _onUpdateMenuItem(
+    UpdateMenuItem event,
+    Emitter<MenuItemState> emit,
+  ) async {
+    try {
+      emit(MenuItemUpdateLoading());
+      final result = await _updateMenuItemUsecase(event.params);
+      result.fold(
+        (failure) => emit(MenuItemUpdateFailed(failure)),
+        (menuItem) => emit(MenuItemUpdateSuccess(menuItem)),
+      );
+    } catch (e) {
+      emit(MenuItemUpdateFailed(ExceptionFailure(e.toString())));
+    }
+  }
+
   FutureOr<void> _onDeleteMenuItem(
     DeleteMenuItem event,
     Emitter<MenuItemState> emit,
@@ -65,7 +85,9 @@ class MenuItemBloc extends Bloc<MenuItemEvent, MenuItemState> {
             emit(FetchingAllMenuItemsSuccess(currentState.menuItems));
           },
           (unit) {
-            currentState.menuItems.removeWhere((item) => item.id == event.params.itemId);
+            currentState.menuItems.removeWhere(
+              (item) => item.id == event.params.itemId,
+            );
             emit(MenuItemDeleteSuccess());
             emit(FetchingAllMenuItemsSuccess(currentState.menuItems));
           },

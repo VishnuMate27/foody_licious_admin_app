@@ -7,6 +7,11 @@ class AddMenuItem extends MenuItemEvent {
   AddMenuItem(this.params);
 }
 
+class UpdateMenuItem extends MenuItemEvent {
+  final UpdateMenuItemParams params;
+  UpdateMenuItem(this.params);
+}
+
 class DeleteMenuItem extends MenuItemEvent {
   final DeleteMenuItemParams params;
   DeleteMenuItem(this.params);

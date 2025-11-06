@@ -8,8 +8,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/constants/images.dart';
+import 'package:foody_licious_admin_app/core/router/app_router.dart';
 import 'package:foody_licious_admin_app/core/utils/image_picker_helper.dart';
 import 'package:foody_licious_admin_app/domain/entities/menuItem/menuItem.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/input_text_form_field.dart';
@@ -85,7 +88,6 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
           EasyLoading.show(status: "Loading...");
         } else if (state is MenuItemAddSuccess) {
           EasyLoading.showSuccess("Menu Item Added Successfully!");
-
           // Clear all controllers
           _itemNameController.clear();
           _itemPriceController.clear();
@@ -98,6 +100,31 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
           });
         } else if (state is MenuItemAddFailed) {
           EasyLoading.showError("Failed to Add Menu Item");
+        } else if (state is MenuItemDeleteSuccess) {
+          EasyLoading.showSuccess("Menu Item Deleted Successfully!");
+          // Clear all controllers
+          _itemNameController.clear();
+          _itemPriceController.clear();
+          _itemDescriptionController.clear();
+          _ingredientsController.clear();
+          // Clear ingredient list
+          setState(() {
+            selectedImagesPaths.clear();
+            _ingredients.clear();
+          });
+          // Navigate to allMenuPage
+          Navigator.pushReplacementNamed(context, AppRouter.allMenu);
+        } else if (state is MenuItemDeleteFailed) {
+          EasyLoading.showError("Failed to Delete Menu Item");
+        } else if (state is MenuItemUpdateLoading) {
+          EasyLoading.show(status: "Loading...");
+        } else if (state is MenuItemUpdateSuccess) {
+          EasyLoading.showSuccess("Menu Item updated Successfully!");
+          setState(() {
+            isEditModeOn = !isEditModeOn;
+          });
+        } else if (state is MenuItemUpdateFailed) {
+          EasyLoading.showError("Failed to Update Menu Item");
         }
       },
       child: Scaffold(
@@ -203,7 +230,19 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
                 InkWell(
                   onTap: () async {
                     final images = await ImagePickerHelper.pickMultipleImages();
-                    setState(() => selectedImagesPaths = images);
+                    if (images.length > 3 - existingImagesPaths.length) {
+                      if (3 - existingImagesPaths.length == 0) {
+                        EasyLoading.showError(
+                          "Maximum 3 images are allowed.\n To add new images delete existing images first.",
+                        );
+                      } else {
+                        EasyLoading.showError(
+                          "Maximum 3 images are allowed.\n You can add only ${3 - existingImagesPaths.length} images now.\nTo add new images delete existing images first.",
+                        );
+                      }
+                    } else {
+                      setState(() => selectedImagesPaths = images);
+                    }
                   },
                   child: Container(
                     width: double.infinity,
@@ -427,33 +466,38 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
                       GradientButton(
                         buttonText: "Update Item",
                         onTap: () {
-                          // context.read<MenuItemBloc>().add(
-                          //   AddMenuItem(
-                          //     AddMenuItemParams(
-                          //       name: _itemNameController.text,
-                          //       price: int.tryParse(_itemPriceController.text) ?? 0,
-                          //       description: _itemDescriptionController.text,
-                          //       ingredients: _ingredients,
-                          //       imageFilePaths: selectedImagesPaths,
-                          //     ),
-                          //   ),
-                          // );
+                          this.context.read<MenuItemBloc>().add(
+                            UpdateMenuItem(
+                              UpdateMenuItemParams(
+                                id: widget.menuItem!.id,
+                                name: _itemNameController.text,
+                                description: _itemDescriptionController.text,
+                                price:
+                                    int.tryParse(_itemPriceController.text) ??
+                                    0,
+                                availableQuantity:
+                                    int.tryParse(
+                                      _itemQuantityController.text,
+                                    ) ??
+                                    0,
+                                ingredients: _ingredients,
+                                images: [
+                                  ...existingImagesPaths,
+                                  ...selectedImagesPaths,
+                                ],
+                              ),
+                            ),
+                          );
                         },
                       ),
                       GradientButton(
                         buttonText: "Delete Item",
                         onTap: () {
-                          // context.read<MenuItemBloc>().add(
-                          //   AddMenuItem(
-                          //     AddMenuItemParams(
-                          //       name: _itemNameController.text,
-                          //       price: int.tryParse(_itemPriceController.text) ?? 0,
-                          //       description: _itemDescriptionController.text,
-                          //       ingredients: _ingredients,
-                          //       imageFilePaths: selectedImagesPaths,
-                          //     ),
-                          //   ),
-                          // );
+                          this.context.read<MenuItemBloc>().add(
+                            DeleteMenuItem(
+                              DeleteMenuItemParams(itemId: widget.menuItem!.id),
+                            ),
+                          );
                         },
                       ),
                     ],

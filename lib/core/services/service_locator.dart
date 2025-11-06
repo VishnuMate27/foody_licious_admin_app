@@ -35,6 +35,7 @@ import 'package:foody_licious_admin_app/domain/usecases/menuItem/decrease_item_q
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/increase_item_quantity_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/check_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/delete_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/remove_restaurant_profile_picture_usecase.dart';
@@ -62,16 +63,30 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> init() async {
   // Must be first
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await dotenv.load(fileName: "assets/utils/.env");
 
   //Features - Auth
   // Bloc
-  sl.registerFactory(() => AuthBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(),
-      sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory(
+    () => AuthBloc(
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+      sl(),
+    ),
+  );
   // Use cases
   sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => VerifyPhoneNumberForLoginUseCase(sl()));
@@ -98,12 +113,16 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
-        firebaseAuth: sl(), client: sl(), googleSignIn: sl(),facebookAuth:sl()),
+      firebaseAuth: sl(),
+      client: sl(),
+      googleSignIn: sl(),
+      facebookAuth: sl(),
+    ),
   );
 
   //Features - Restaurant
   // Bloc
-  sl.registerFactory(() => RestaurantBloc(sl(), sl(), sl(), sl(),sl(),sl()));
+  sl.registerFactory(() => RestaurantBloc(sl(), sl(), sl(), sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => CheckRestaurantUseCase(sl()));
   sl.registerLazySingleton(() => UpdateRestaurantLocationUseCase(sl()));
@@ -129,9 +148,10 @@ Future<void> init() async {
 
   //Features - MenuItem
   // Bloc
-  sl.registerFactory(() => MenuItemBloc(sl(), sl(), sl(), sl(),sl()));
+  sl.registerFactory(() => MenuItemBloc(sl(), sl(), sl(), sl(), sl(), sl()));
   // Use cases
   sl.registerLazySingleton(() => AddMenuItemUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateMenuItemUseCase(sl()));
   sl.registerLazySingleton(() => DeleteMenuItemUseCase(sl()));
   sl.registerLazySingleton(() => GetAllMenuItemsUseCase(sl()));
   sl.registerLazySingleton(() => IncreaseItemQuantityUseCase(sl()));
@@ -148,7 +168,6 @@ Future<void> init() async {
   sl.registerLazySingleton<MenuItemsRemoteDataSource>(
     () => MenuItemsRemoteDataSourceImpl(client: sl()),
   );
-
 
   ///***********************************************
   ///! Core
@@ -182,18 +201,19 @@ Future<void> _showWifiWarningIfNeeded() async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
         context: navigatorKey.currentContext!,
-        builder: (dialogContext) => AlertDialog(
-          title: const Text('No Wi-Fi Connection'),
-          content: const Text(
-            'Your device is not connected to Wi-Fi. Please connect to Wi-Fi before testing.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('OK'),
+        builder:
+            (dialogContext) => AlertDialog(
+              title: const Text('No Wi-Fi Connection'),
+              content: const Text(
+                'Your device is not connected to Wi-Fi. Please connect to Wi-Fi before testing.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
             ),
-          ],
-        ),
       );
     });
     return;
@@ -201,24 +221,30 @@ Future<void> _showWifiWarningIfNeeded() async {
 
   // Verify if connected via Wi-Fi or mobile data
   final interfaces = await NetworkInterface.list();
-  final wifiConnected = interfaces.any((i) => i.name.toLowerCase().contains('wlan'));
+  final wifiConnected = interfaces.any(
+    (i) => i.name.toLowerCase().contains('wlan'),
+  );
   if (!wifiConnected) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
         barrierDismissible: false,
         context: navigatorKey.currentContext!,
-        builder: (dialogContext) => AlertDialog(
-          title: const Text('Not Connected via Wi-Fi', style: TextStyle(color: kError)),
-          content: const Text(
-            'You are connected to the internet, but not through Wi-Fi.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('OK, i Will connect to Wi-Fi now.'),
+        builder:
+            (dialogContext) => AlertDialog(
+              title: const Text(
+                'Not Connected via Wi-Fi',
+                style: TextStyle(color: kError),
+              ),
+              content: const Text(
+                'You are connected to the internet, but not through Wi-Fi.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('OK, i Will connect to Wi-Fi now.'),
+                ),
+              ],
             ),
-          ],
-        ),
       );
     });
   }
