@@ -60,14 +60,26 @@ class MenuItemBloc extends Bloc<MenuItemEvent, MenuItemState> {
     Emitter<MenuItemState> emit,
   ) async {
     try {
-      emit(MenuItemUpdateLoading());
-      final result = await _updateMenuItemUsecase(event.params);
-      result.fold(
-        (failure) => emit(MenuItemUpdateFailed(failure)),
-        (menuItem) => emit(MenuItemUpdateSuccess(menuItem)),
-      );
+      final currentState = state;
+      if (currentState is FetchingAllMenuItemsSuccess) {
+        final result = await _updateMenuItemUsecase(event.params);
+        result.fold(
+          (failure) {
+            emit(MenuItemUpdateFailed(failure));
+            emit(FetchingAllMenuItemsSuccess(currentState.menuItems));
+          },
+          (updatedMenuItem) {
+            final updatedList =
+                currentState.menuItems.map((item) {
+                  return item.id == updatedMenuItem.id ? updatedMenuItem : item;
+                }).toList();
+            emit(MenuItemUpdateSuccess(updatedMenuItem));
+            emit(FetchingAllMenuItemsSuccess(updatedList));
+          },
+        );
+      }
     } catch (e) {
-      emit(MenuItemUpdateFailed(ExceptionFailure(e.toString())));
+      emit(MenuItemDeleteFailed(ExceptionFailure(e.toString())));
     }
   }
 

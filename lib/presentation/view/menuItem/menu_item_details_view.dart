@@ -113,16 +113,25 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
             _ingredients.clear();
           });
           // Navigate to allMenuPage
-          Navigator.pushReplacementNamed(context, AppRouter.allMenu);
+          Navigator.pop(context);
         } else if (state is MenuItemDeleteFailed) {
           EasyLoading.showError("Failed to Delete Menu Item");
         } else if (state is MenuItemUpdateLoading) {
           EasyLoading.show(status: "Loading...");
         } else if (state is MenuItemUpdateSuccess) {
-          EasyLoading.showSuccess("Menu Item updated Successfully!");
+          // Clear all controllers
+          _itemNameController.clear();
+          _itemPriceController.clear();
+          _itemDescriptionController.clear();
+          _ingredientsController.clear();
+          // Clear ingredient list
           setState(() {
-            isEditModeOn = !isEditModeOn;
+            selectedImagesPaths.clear();
+            _ingredients.clear();
           });
+          // Navigate to allMenuPage
+          Navigator.pop(context);
+          EasyLoading.showSuccess("Menu Item updated Successfully!");
         } else if (state is MenuItemUpdateFailed) {
           EasyLoading.showError("Failed to Update Menu Item");
         }
@@ -516,6 +525,11 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
+        title: Text(
+          widget.menuItem?.name ?? "Food Name",
+          style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 28),
+        ),
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -530,12 +544,6 @@ class _MenuItemDetailsViewState extends State<MenuItemDetailsView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Text(
-                  widget.menuItem?.name ?? "Food Name",
-                  style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 28),
-                ),
-              ),
               SizedBox(height: 26.h),
               CarouselSlider(
                 options: CarouselOptions(
