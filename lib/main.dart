@@ -10,7 +10,7 @@ import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/cubit/menuItem/menu_item_form_cubit.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
-import 'package:foody_licious_admin_app/presentation/cubit/pagination_cubit.dart';
+import 'package:foody_licious_admin_app/presentation/cubit/pagination/pagination_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

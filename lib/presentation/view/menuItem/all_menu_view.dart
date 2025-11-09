@@ -12,7 +12,7 @@ import 'package:foody_licious_admin_app/domain/usecases/menuItem/increase_item_q
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/menu_item_card.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:foody_licious_admin_app/presentation/cubit/pagination_cubit.dart';
+import 'package:foody_licious_admin_app/presentation/cubit/pagination/pagination_cubit.dart';
 
 class AllMenuView extends StatefulWidget {
   const AllMenuView({super.key});
