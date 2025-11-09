@@ -45,6 +45,7 @@ import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restau
 import 'package:foody_licious_admin_app/firebase_options.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
+import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_form_cubit.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -149,6 +150,8 @@ Future<void> init() async {
   //Features - MenuItem
   // Bloc
   sl.registerFactory(() => MenuItemBloc(sl(), sl(), sl(), sl(), sl(), sl()));
+  // MenuItem Form Cubit
+  sl.registerFactory(() => MenuItemFormCubit());
   // Use cases
   sl.registerLazySingleton(() => AddMenuItemUseCase(sl()));
   sl.registerLazySingleton(() => UpdateMenuItemUseCase(sl()));

@@ -5,7 +5,7 @@ import 'package:foody_licious_admin_app/presentation/view/menuItem/all_menu_view
 import 'package:foody_licious_admin_app/presentation/view/dashboard/dashboard.dart';
 import 'package:foody_licious_admin_app/presentation/view/delivery/delivery_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/feedback/feedback_view.dart';
-import 'package:foody_licious_admin_app/presentation/view/menuItem/menu_item_details_view.dart';
+import 'package:foody_licious_admin_app/presentation/view/menuItem/menu_item_details_and_edit_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/onboarding/onboarding_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/profile/profile_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/authentication/login_view.dart';

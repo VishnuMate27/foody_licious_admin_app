@@ -8,6 +8,7 @@ import 'package:foody_licious_admin_app/core/services/service_locator.dart'
     as di;
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
+import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_form_cubit.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 
 Future<void> main() async {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.sl<MenuItemBloc>(),
         ),
+        BlocProvider(create: (context) => di.sl<MenuItemFormCubit>(),),
         BlocProvider(
           create: (context) => di.sl<RestaurantBloc>()..add(CheckRestaurant()),
         ),
