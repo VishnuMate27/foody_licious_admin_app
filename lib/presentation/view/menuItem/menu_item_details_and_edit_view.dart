@@ -10,7 +10,7 @@ import 'package:foody_licious_admin_app/core/utils/image_picker_helper.dart';
 import 'package:foody_licious_admin_app/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
-import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_form_cubit.dart';
+import 'package:foody_licious_admin_app/presentation/cubit/menuItem/menu_item_form_cubit.dart';
 import 'package:foody_licious_admin_app/presentation/view/menuItem/widgets/menu_item_details_view.dart';
 import 'package:foody_licious_admin_app/presentation/view/menuItem/widgets/menu_item_edit_view.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dart';

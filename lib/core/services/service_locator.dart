@@ -45,8 +45,9 @@ import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restau
 import 'package:foody_licious_admin_app/firebase_options.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
-import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_form_cubit.dart';
+import 'package:foody_licious_admin_app/presentation/cubit/menuItem/menu_item_form_cubit.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
+import 'package:foody_licious_admin_app/presentation/cubit/pagination_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -177,6 +178,9 @@ Future<void> init() async {
   /// sl.registerLazySingleton(() => InputConverter());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton<LocationService>(() => LocationServiceImpl());
+
+  ///! Utility
+  sl.registerFactory(() => PaginationCubit());
 
   ///! External
   final sharedPreferences = await SharedPreferences.getInstance();

@@ -8,6 +8,7 @@ import 'package:foody_licious_admin_app/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious_admin_app/domain/repositories/menu_item_repository.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
 
 class MenuItemRepositoryImpl implements MenuItemRepository {
@@ -39,7 +40,9 @@ class MenuItemRepositoryImpl implements MenuItemRepository {
   }
 
   @override
-  Future<Either<Failure, MenuItem>> updateItemInMenu(UpdateMenuItemParams params) async {
+  Future<Either<Failure, MenuItem>> updateItemInMenu(
+    UpdateMenuItemParams params,
+  ) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
@@ -73,14 +76,17 @@ class MenuItemRepositoryImpl implements MenuItemRepository {
   }
 
   @override
-  Future<Either<Failure, List<MenuItem>>> getAllMenuItem() async {
+  Future<Either<Failure, List<MenuItem>>> getAllMenuItem(
+    GetAllMenuItemsParams params,
+  ) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
-    }    
+    }
     try {
       final restaurant = await restaurantLocalDataSource.getRestaurant();
+      params.restaurantId = restaurant.id;
       final remoteResponse = await menuItemsRemoteDataSource.getAllMenuItem(
-        restaurant.id,
+        params,
       );
       return Right(remoteResponse.menuItems);
     } on Failure catch (failure) {
@@ -92,7 +98,7 @@ class MenuItemRepositoryImpl implements MenuItemRepository {
   Future<Either<Failure, MenuItem>> increaseItemQuantity(String itemId) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
-    }    
+    }
     try {
       final remoteResponse = await menuItemsRemoteDataSource
           .increaseItemQuantity(itemId);
@@ -106,7 +112,7 @@ class MenuItemRepositoryImpl implements MenuItemRepository {
   Future<Either<Failure, MenuItem>> decreaseItemQuantity(String itemId) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure());
-    }    
+    }
     try {
       final remoteResponse = await menuItemsRemoteDataSource
           .decreaseItemQuantity(itemId);

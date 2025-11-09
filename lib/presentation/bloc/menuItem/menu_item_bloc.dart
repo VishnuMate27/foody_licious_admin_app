@@ -115,12 +115,26 @@ class MenuItemBloc extends Bloc<MenuItemEvent, MenuItemState> {
     Emitter<MenuItemState> emit,
   ) async {
     try {
-      emit(FetchingAllMenuItemsLoading());
-      final result = await _getAllMenuItemsUsecase(event);
-      result.fold(
-        (failure) => emit(FetchingAllMenuItemsFailed(failure)),
-        (menuItems) => emit(FetchingAllMenuItemsSuccess(menuItems)),
-      );
+      // Only show loading for first page
+      if (event.params.page == 1) {
+        emit(FetchingAllMenuItemsLoading());
+      }
+
+      final result = await _getAllMenuItemsUsecase(event.params);
+      result.fold((failure) => emit(FetchingAllMenuItemsFailed(failure)), (
+        newItems,
+      ) {
+        final currentState = state;
+        if (currentState is FetchingAllMenuItemsSuccess) {
+          final updatedList =
+              event.params.page == 1
+                  ? newItems
+                  : [...currentState.menuItems, ...newItems];
+          emit(FetchingAllMenuItemsSuccess(updatedList));
+        } else {
+          emit(FetchingAllMenuItemsSuccess(newItems));
+        }
+      });
     } catch (e) {
       emit(FetchingAllMenuItemsFailed(ExceptionFailure(e.toString())));
     }

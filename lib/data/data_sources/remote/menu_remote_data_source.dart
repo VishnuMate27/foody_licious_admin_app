@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/get_all_menu_items_usecase.dart';
 import 'package:path/path.dart' as p;
 import 'package:dartz/dartz.dart';
 import 'package:foody_licious_admin_app/core/constants/strings.dart';
@@ -16,7 +17,7 @@ abstract class MenuItemsRemoteDataSource {
   Future<Unit> addItemInMenu(AddMenuItemParams params);
   Future<MenuItemResponseModel> updateItemInMenu(UpdateMenuItemParams params);
   Future<Unit> deleteItemInMenu(DeleteMenuItemParams params);
-  Future<MenuItemsResponseModel> getAllMenuItem(String restaurantId);
+  Future<MenuItemsResponseModel> getAllMenuItem(GetAllMenuItemsParams params);
   Future<MenuItemResponseModel> increaseItemQuantity(String itemId);
   Future<MenuItemResponseModel> decreaseItemQuantity(String itemId);
 }
@@ -43,8 +44,8 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
   }
 
   @override
-  Future<MenuItemsResponseModel> getAllMenuItem(String restaurantId) {
-    return sendGetAllMenuItemRequest(restaurantId);
+  Future<MenuItemsResponseModel> getAllMenuItem(GetAllMenuItemsParams params) {
+    return sendGetAllMenuItemRequest(params);
   }
 
   @override
@@ -234,11 +235,11 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
   }
 
   Future<MenuItemsResponseModel> sendGetAllMenuItemRequest(
-    String restaurantId,
+    GetAllMenuItemsParams params,
   ) async {
     final response = await client.get(
       Uri.parse(
-        "$kBaseUrl/api/restaurants/menuItems/allMenuItems?restaurant_id=$restaurantId",
+        "$kBaseUrl/api/restaurants/menuItems/allMenuItems?restaurant_id=${params.restaurantId}&page=${params.page}&page_size=${params.limit}",
       ),
     );
     if (response.statusCode == 200) {

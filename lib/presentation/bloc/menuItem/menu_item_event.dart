@@ -17,7 +17,10 @@ class DeleteMenuItem extends MenuItemEvent {
   DeleteMenuItem(this.params);
 }
 
-class GetAllMenuItems extends MenuItemEvent {}
+class GetAllMenuItems extends MenuItemEvent {
+  final GetAllMenuItemsParams params;
+  GetAllMenuItems(this.params);
+}
 
 class IncreaseItemQuantity extends MenuItemEvent {
   final IncreaseItemQuantityParams params;

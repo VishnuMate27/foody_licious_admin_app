@@ -13,7 +13,7 @@ import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/constants/images.dart';
 import 'package:foody_licious_admin_app/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
-import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_form_cubit.dart';
+import 'package:foody_licious_admin_app/presentation/cubit/menuItem/menu_item_form_cubit.dart';
 
 class MenuItemEditView extends StatelessWidget {
   final MenuItem menuItem;

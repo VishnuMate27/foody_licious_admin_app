@@ -6,7 +6,7 @@ import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dar
 import 'package:google_fonts/google_fonts.dart';
 import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/constants/images.dart';
-import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_form_cubit.dart';
+import 'package:foody_licious_admin_app/presentation/cubit/menuItem/menu_item_form_cubit.dart';
 import 'package:foody_licious_admin_app/domain/entities/menuItem/menuItem.dart';
 
 class MenuItemDetailsWidget extends StatelessWidget {
