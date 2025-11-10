@@ -1,0 +1,14 @@
+{
+    "message": "Menu Item added successfully",
+    "menuItem": {
+        "id": "69121e793416112ff195409e",
+        "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+        "name": "Test Name",
+        "description": "description",
+        "price": 50,
+        "ingredients": [
+            "ingredient1",
+            "ingredient2"
+        ]
+    }
+}

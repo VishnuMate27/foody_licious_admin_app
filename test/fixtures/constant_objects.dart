@@ -5,6 +5,7 @@ import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restaurant_profile_picture_usecase.dart';
 
@@ -25,13 +26,16 @@ const tRestaurantModel = RestaurantModel(
   menuItems: [],
 );
 
-const tRestaurantResponseModel = RestaurantResponseModel(restaurant: tRestaurantModel);
+const tRestaurantResponseModel = RestaurantResponseModel(
+  restaurant: tRestaurantModel,
+);
 
 //params
 //User
-var tUploadRestaurantProfilePictureParams = UploadRestaurantProfilePictureParams(
-  imageFilePath: "path/to/image/file.jpg"
-);
+var tUploadRestaurantProfilePictureParams =
+    UploadRestaurantProfilePictureParams(
+      imageFilePath: "path/to/image/file.jpg",
+    );
 
 var tUpdateRestaurantParams = UpdateRestaurantParams(
   id: "RcrNpesIeKSd3afH67ndyDLUaMJ3",
@@ -39,20 +43,40 @@ var tUpdateRestaurantParams = UpdateRestaurantParams(
   phone: "+919876543210",
 );
 
+var tAddMenuItemParams = AddMenuItemParams(
+  itemId: "10",
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  name: "Test Item Name",
+  price: 150,
+  description: "Test Description",
+  availableQuantity: 10,
+  imageFilePaths: [],
+  ingredients: []
+);
+
 //Auth
 var tSignInWithEmailParams = SignInWithEmailParams(
-    email: "test@gmail.com", password: "testPassword", authProvider: "email");
+  email: "test@gmail.com",
+  password: "testPassword",
+  authProvider: "email",
+);
 var tSignInWithPhoneParams = SignInWithPhoneParams(
-    phone: "+9198796543210", code: "1234", authProvider: "phone");
-var tSendPasswordResetEmailParams =
-    SendPasswordResetEmailParams(email: "test@gmail.com");
+  phone: "+9198796543210",
+  code: "1234",
+  authProvider: "phone",
+);
+var tSendPasswordResetEmailParams = SendPasswordResetEmailParams(
+  email: "test@gmail.com",
+);
 var tSignUpWithEmailParams = SignUpWithEmailParams(
-    ownerName: "Test User",
-    email: "test@gmail.com",
-    password: "testPassword",
-    authProvider: "email");
+  ownerName: "Test User",
+  email: "test@gmail.com",
+  password: "testPassword",
+  authProvider: "email",
+);
 var tSignUpWithPhoneParams = SignUpWithPhoneParams(
-    ownerName: "Test User",
-    phone: "+9198796543210",
-    code: "1234",
-    authProvider: "phone");
+  ownerName: "Test User",
+  phone: "+9198796543210",
+  code: "1234",
+  authProvider: "phone",
+);

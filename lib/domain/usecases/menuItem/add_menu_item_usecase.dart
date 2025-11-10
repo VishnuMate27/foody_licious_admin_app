@@ -33,4 +33,17 @@ class AddMenuItemParams {
     this.imageFilePaths,
     this.ingredients,
   });
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    if (itemId != null) data['itemId'] = itemId;
+    if (restaurantId != null) data['restaurantId'] = restaurantId;
+    if (name != null) data['name'] = name;
+    if (price != null) data['price'] = price;
+    if (description != null) data['description'] = description;
+    if (availableQuantity != null) data['availableQuantity'] = availableQuantity;
+    if (imageFilePaths != null) data['imageFilePaths'] = imageFilePaths;
+    if (ingredients != null) data['ingredients'] = ingredients;  
+    return data;
+  }
 }
