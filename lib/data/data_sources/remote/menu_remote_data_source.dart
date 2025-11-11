@@ -104,7 +104,7 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
       }),
     );
     if (response.statusCode == 201) {
-      if (params.imageFilePaths != null || params.imageFilePaths!.isNotEmpty) {
+      if (params.imageFilePaths != null && params.imageFilePaths!.isNotEmpty) {
         params.itemId =
             menuItemResponseModelFromJson(
               response.body,

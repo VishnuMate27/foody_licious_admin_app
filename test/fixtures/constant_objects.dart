@@ -6,6 +6,8 @@ import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/get_all_menu_items_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restaurant_profile_picture_usecase.dart';
 
@@ -51,7 +53,24 @@ var tAddMenuItemParams = AddMenuItemParams(
   description: "Test Description",
   availableQuantity: 10,
   imageFilePaths: [],
-  ingredients: []
+  ingredients: ['ingredient1', 'ingredient2'],
+);
+
+var tUpdateMenuItemParams = UpdateMenuItemParams(
+  id: "10",
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  name: "Test Item Name",
+  price: 150,
+  description: "Test Description",
+  availableQuantity: 10,
+  images: [],
+  ingredients: ['ingredient1', 'ingredient2'],
+);
+
+var tGetAllMenuItemsParams = GetAllMenuItemsParams(
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  page: 1,
+  limit: 10,
 );
 
 //Auth

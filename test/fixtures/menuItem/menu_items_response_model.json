@@ -1,0 +1,102 @@
+{
+    "message": "Fetched menu items successfully",
+    "menuItems": [
+        {
+            "id": "6905ed15f3fabd415a4a54dd",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Tarri poha",
+            "description": "Nagpur's pride dish with spicy 🔥 curry tarri",
+            "price": 30,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905ed15f3fabd415a4a54dd/image_1.jpg"
+            ],
+            "availableQuantity": 1,
+            "ingredients": [
+                "Poha",
+                "Tarri",
+                "Sev",
+                "Onion"
+            ],
+            "created_at": {
+                "$date": "2025-11-01T11:20:53.927000"
+            },
+            "updated_at": {
+                "$date": "2025-11-01T14:36:42.273000"
+            }
+        },
+        {
+            "id": "6905ec93f3fabd415a4a54dc",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Puran Poli",
+            "description": "Authentic maharashtrian dish made from Gram Flour and served with desi ghee",
+            "price": 100,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905ec93f3fabd415a4a54dc/image_1.jpg"
+            ],
+            "availableQuantity": 75,
+            "ingredients": [
+                "Gram Flour",
+                "Whole wheat flour",
+                "Ghee",
+                "Sugar"
+            ],
+            "created_at": {
+                "$date": "2025-11-01T11:18:43.767000"
+            },
+            "updated_at": {
+                "$date": "2025-11-01T14:36:37.326000"
+            }
+        },
+        {
+            "id": "6905ec15f3fabd415a4a54db",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Bhakri",
+            "description": "Jowar Bhakri",
+            "price": 15,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905ec15f3fabd415a4a54db/image_1.jpg"
+            ],
+            "availableQuantity": 12,
+            "ingredients": [
+                "Jowar Aata"
+            ],
+            "created_at": {
+                "$date": "2025-11-01T11:16:37.088000"
+            },
+            "updated_at": {
+                "$date": "2025-11-01T14:30:30.444000"
+            }
+        },
+        {
+            "id": "6905eb543f1a415430e9f2b3",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "name": "Poli (Roti)",
+            "description": "Wheat Roti",
+            "price": 150,
+            "images": [
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905eb543f1a415430e9f2b3/image_1.jpg",
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905eb543f1a415430e9f2b3/1000074342.jpg",
+                "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/6905eb543f1a415430e9f2b3/1000060680.jpg"
+            ],
+            "availableQuantity": 7,
+            "ingredients": [
+                "Aata(Whole wheat)",
+                "bzbs"
+            ],
+            "created_at": {
+                "$date": "2025-11-01T11:13:24.855000"
+            },
+            "updated_at": {
+                "$date": "2025-11-09T17:14:14.834000"
+            }
+        }
+    ],
+    "pagination": {
+        "page": 2,
+        "page_size": 10,
+        "total_items": 14,
+        "total_pages": 2,
+        "has_next": false,
+        "has_prev": true
+    }
+}

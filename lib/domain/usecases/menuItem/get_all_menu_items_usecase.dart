@@ -26,4 +26,11 @@ class GetAllMenuItemsParams {
     required this.page,
     required this.limit,
   });
+    Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    if (restaurantId != null) data['restaurantId'] = restaurantId;
+    data['page'] = page;
+    data['limit'] = limit; 
+    return data;
+  }
 }
