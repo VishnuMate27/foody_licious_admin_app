@@ -247,7 +247,7 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     } else if (response.statusCode == 400) {
       throw CredentialFailure();
     } else if (response.statusCode == 404) {
-      throw ItemNotExistsFailure();
+      throw RestaurantNotExistsFailure();
     } else {
       throw ServerFailure();
     }

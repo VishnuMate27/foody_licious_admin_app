@@ -6,6 +6,7 @@ import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_usecase.dart';
@@ -71,6 +72,10 @@ var tGetAllMenuItemsParams = GetAllMenuItemsParams(
   restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
   page: 1,
   limit: 10,
+);
+
+var tDeleteMenuItemsParams = DeleteMenuItemParams(
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
 );
 
 //Auth
