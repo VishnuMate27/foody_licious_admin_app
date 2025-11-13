@@ -13,11 +13,12 @@ import '../../../fixtures/fixture_reader.dart';
 import '../../../helpers/test_loadenv.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
-
+class MockStreamedResponse extends Mock implements http.StreamedResponse {}
 class FakeBaseRequest extends Fake implements http.BaseRequest {}
 
 void main() {
   late MenuItemsRemoteDataSourceImpl dataSource;
+  late MockStreamedResponse mockStreamedResponse;
   late MockHttpClient mockHttpClient;
 
   setUpAll(() {
@@ -28,6 +29,7 @@ void main() {
   setUp(() async {
     await loadTestDotEnv();
     mockHttpClient = MockHttpClient();
+    mockStreamedResponse  = MockStreamedResponse();
     dataSource = MenuItemsRemoteDataSourceImpl(client: mockHttpClient);
   });
 
@@ -120,6 +122,8 @@ void main() {
     });
   });
 
+  /// TODO: Write Remaining test cases for updateItemInMenu
+  
   group('getAllMenuItem', () {
     var expectedUrl =
         '$kBaseUrlTest/api/restaurants/menuItems/allMenuItems?restaurant_id=${tGetAllMenuItemsParams.restaurantId}&page=${tGetAllMenuItemsParams.page}&page_size=${tGetAllMenuItemsParams.limit}';
@@ -409,6 +413,4 @@ void main() {
       );
     });
   });
-
-
 }

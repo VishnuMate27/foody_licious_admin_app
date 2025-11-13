@@ -1,3 +1,4 @@
+import 'package:foody_licious_admin_app/data/models/menuItem/menu_item_model.dart';
 import 'package:foody_licious_admin_app/data/models/restaurant/restaurant_model.dart';
 import 'package:foody_licious_admin_app/data/models/restaurant/restaurant_response_model.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/send_password_reset_email_usecase.dart';
@@ -58,7 +59,7 @@ var tAddMenuItemParams = AddMenuItemParams(
 );
 
 var tUpdateMenuItemParams = UpdateMenuItemParams(
-  id: "10",
+  id: "6905eb543f1a415430e9f2b3",
   restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
   name: "Test Item Name",
   price: 150,
@@ -76,6 +77,17 @@ var tGetAllMenuItemsParams = GetAllMenuItemsParams(
 
 var tDeleteMenuItemsParams = DeleteMenuItemParams(
   restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+);
+
+var tMenuItemModel = MenuItemModel(
+  id: "6905eb543f1a415430e9f2b3",
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  name: "Test Item Name",
+  price: 150,
+  description: "Test Description",
+  availableQuantity: 10,
+  images: [],
+  ingredients: ['ingredient1', 'ingredient2'],
 );
 
 //Auth
