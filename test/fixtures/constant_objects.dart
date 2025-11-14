@@ -1,6 +1,9 @@
 import 'package:foody_licious_admin_app/data/models/menuItem/menu_item_model.dart';
+import 'package:foody_licious_admin_app/data/models/menuItem/menu_item_response_model.dart';
+import 'package:foody_licious_admin_app/data/models/menuItem/menu_items_response_model.dart';
 import 'package:foody_licious_admin_app/data/models/restaurant/restaurant_model.dart';
 import 'package:foody_licious_admin_app/data/models/restaurant/restaurant_response_model.dart';
+import 'package:foody_licious_admin_app/domain/entities/menuItem/menuItem.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_usecase.dart';
@@ -90,6 +93,26 @@ var tMenuItemModel = MenuItemModel(
   ingredients: ['ingredient1', 'ingredient2'],
 );
 
+var tMenuItem = MenuItem(
+  id: "6905eb543f1a415430e9f2b3",
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  name: "Test Item Name",
+  price: 150,
+  description: "Test Description",
+  availableQuantity: 10,
+  images: [],
+  ingredients: ['ingredient1', 'ingredient2'],
+);
+
+var tMenuItemResponseModel = MenuItemResponseModel(
+  menuItemResponseModel: tMenuItemModel,
+);
+
+var tMenuItemList = [tMenuItem];
+
+var tMenuItemsResponseModel = MenuItemsResponseModel(
+  menuItems: [tMenuItemModel],
+);
 //Auth
 var tSignInWithEmailParams = SignInWithEmailParams(
   email: "test@gmail.com",
