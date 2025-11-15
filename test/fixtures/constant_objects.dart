@@ -10,8 +10,10 @@ import 'package:foody_licious_admin_app/domain/usecases/auth/sign_in_with_phone_
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/sign_up_with_phone_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/add_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/decrease_item_quantity_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/get_all_menu_items_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/menuItem/increase_item_quantity_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/update_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restaurant_profile_picture_usecase.dart';
@@ -91,6 +93,14 @@ var tMenuItemModel = MenuItemModel(
   availableQuantity: 10,
   images: [],
   ingredients: ['ingredient1', 'ingredient2'],
+);
+
+var tIncreaseItemQuantityParams = IncreaseItemQuantityParams(
+  itemId: "6905eb543f1a415430e9f2b3",
+);
+
+var tDecreaseItemQuantityParams = DecreaseItemQuantityParams(
+  itemId: "6905eb543f1a415430e9f2b3",
 );
 
 var tMenuItem = MenuItem(

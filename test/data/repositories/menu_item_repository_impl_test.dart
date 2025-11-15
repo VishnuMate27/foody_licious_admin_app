@@ -337,7 +337,7 @@ void main() {
 
     group('getAllMenuItem', () {
       test(
-        'should return Right(Unit) when remoteDataSource.getAllMenuItem succeeds',
+        'should return Right(MenuItemsResponseModel) when remoteDataSource.getAllMenuItem succeeds',
         () async {
           // arrange
           when(

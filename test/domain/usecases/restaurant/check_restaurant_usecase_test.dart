@@ -5,9 +5,7 @@ import 'package:foody_licious_admin_app/core/usecase/usecase.dart';
 import 'package:foody_licious_admin_app/domain/repositories/restaurant_repository.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/check_restaurant_usecase.dart';
 import 'package:mocktail/mocktail.dart';
-
 import '../../../fixtures/constant_objects.dart';
-
 
 class MockRepository extends Mock implements RestaurantRepository {}
 
