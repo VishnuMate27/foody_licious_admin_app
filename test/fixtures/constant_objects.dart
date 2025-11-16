@@ -66,12 +66,12 @@ var tAddMenuItemParams = AddMenuItemParams(
 var tUpdateMenuItemParams = UpdateMenuItemParams(
   id: "6905eb543f1a415430e9f2b3",
   restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
-  name: "Test Item Name",
+  name: "Test Item Name Edited",
   price: 150,
-  description: "Test Description",
+  description: "Test Description Edited",
   availableQuantity: 10,
   images: [],
-  ingredients: ['ingredient1', 'ingredient2'],
+  ingredients: ['ingredient1', 'ingredient2', 'ingredient3'],
 );
 
 var tGetAllMenuItemsParams = GetAllMenuItemsParams(
@@ -80,8 +80,14 @@ var tGetAllMenuItemsParams = GetAllMenuItemsParams(
   limit: 10,
 );
 
-var tDeleteMenuItemsParams = DeleteMenuItemParams(
+var tGetAllMenuItemsParams2 = GetAllMenuItemsParams(
   restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  page: 2,
+  limit: 10,
+);
+
+var tDeleteMenuItemsParams = DeleteMenuItemParams(
+  itemId: "6905eb543f1a415430e9f2b3",
 );
 
 var tMenuItemModel = MenuItemModel(
@@ -112,6 +118,50 @@ var tMenuItem = MenuItem(
   availableQuantity: 10,
   images: [],
   ingredients: ['ingredient1', 'ingredient2'],
+);
+
+var tUpdatedMenuItem = MenuItem(
+  id: "6905eb543f1a415430e9f2b3",
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  name: "Test Item Name Edited",
+  price: 150,
+  description: "Test Description Edited",
+  availableQuantity: 10,
+  images: [],
+  ingredients: ['ingredient1', 'ingredient2', 'ingredient3'],
+);
+
+var tIncreasedQuantityMenuItem = MenuItem(
+  id: "6905eb543f1a415430e9f2b3",
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  name: "Test Item Name",
+  price: 150,
+  description: "Test Description",
+  availableQuantity: 11,
+  images: [],
+  ingredients: ['ingredient1', 'ingredient2'],
+);
+
+var tDecreasedQuantityMenuItem = MenuItem(
+  id: "6905eb543f1a415430e9f2b3",
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  name: "Test Item Name",
+  price: 150,
+  description: "Test Description",
+  availableQuantity: 9,
+  images: [],
+  ingredients: ['ingredient1', 'ingredient2'],
+);
+
+var tMenuItem2 = MenuItem(
+  id: "6905ec15f3fabd415a4a54db",
+  restaurantId: "pygupNfZONbMeMmBJb2htMxzAR23",
+  name: "Test Item Name 2",
+  price: 200,
+  description: "Test Description 2",
+  availableQuantity: 11,
+  images: [],
+  ingredients: ['ingredient1', 'ingredient2', 'ingredient3'],
 );
 
 var tMenuItemResponseModel = MenuItemResponseModel(
