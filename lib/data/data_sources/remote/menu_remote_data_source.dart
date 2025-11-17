@@ -122,53 +122,30 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     }
   }
 
-  // Future<MenuItemResponseModel> sendUpdateItemInMenuRequest(
-  //   UpdateMenuItemParams params,
-  // ) async {
-  //   final response = await client.put(
-  //     Uri.parse("$kBaseUrl/api/restaurants/menuItems/updateItem"),
-  //     headers: {'Content-Type': 'application/json'},
-  //     body: json.encode({
-  //       "id": params.id,
-  //       "restaurant_id": params.restaurantId,
-  //       "name": params.name,
-  //       "description": params.description,
-  //       "price": params.price,
-  //       "availableQuantity": params.availableQuantity,
-  //       "ingredients": params.ingredients,
-  //       "images": params.images,
-  //     }),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     return menuItemResponseModelFromJson(response.body);
-  //   } else if (response.statusCode == 404) {
-  //     throw RestaurantNotExistsFailure();
-  //   } else if (response.statusCode == 409) {
-  //     throw ItemAlreadyExistsFailure();
-  //   } else {
-  //     throw ServerFailure();
-  //   }
-  // }
-
   Future<MenuItemResponseModel> sendUpdateItemInMenuRequest(
     UpdateMenuItemParams params,
   ) async {
     final uri = Uri.parse("$kBaseUrl/api/restaurants/menuItems/updateItem");
     final request = http.MultipartRequest('PUT', uri);
 
-    // 🧩 Add non-null text fields only
-    if (params.id != null) request.fields['id'] = params.id!;
-    if (params.restaurantId != null)
+    // Add non-null text fields only
+    if (params.id != null) {
+      request.fields['id'] = params.id!;
+    }
+    if (params.restaurantId != null) {
       request.fields['restaurant_id'] = params.restaurantId!;
+    }
     if (params.name != null) request.fields['name'] = params.name!;
-    if (params.description != null)
+    if (params.description != null) {
       request.fields['description'] = params.description!;
-    if (params.price != null)
+    }
+    if (params.price != null) {
       request.fields['price'] = params.price!.toString();
-    if (params.availableQuantity != null)
+    }
+    if (params.availableQuantity != null) {
       request.fields['availableQuantity'] =
           params.availableQuantity!.toString();
-
+    }
     if (params.ingredients != null) {
       request.fields['ingredients'] = jsonEncode(params.ingredients);
     }
@@ -176,7 +153,7 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     request.fields['folder'] = 'restaurants';
     request.fields['sub_folder'] = 'menu_items';
 
-    // 🖼️ Handle images (new + existing)
+    // Handle images (new + existing)
     if (params.images != null && params.images!.isNotEmpty) {
       // Separate new files and existing URLs
       final existingUrls = <String>[];
@@ -203,7 +180,7 @@ class MenuItemsRemoteDataSourceImpl extends MenuItemsRemoteDataSource {
     }
 
     // Send request
-    final response = await request.send();
+    final response = await client.send(request);
     final responseBody = await response.stream.bytesToString();
 
     if (response.statusCode == 200) {

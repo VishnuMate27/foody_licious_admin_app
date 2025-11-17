@@ -13,7 +13,9 @@ import '../../../fixtures/fixture_reader.dart';
 import '../../../helpers/test_loadenv.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
+
 class MockStreamedResponse extends Mock implements http.StreamedResponse {}
+
 class FakeBaseRequest extends Fake implements http.BaseRequest {}
 
 void main() {
@@ -29,7 +31,7 @@ void main() {
   setUp(() async {
     await loadTestDotEnv();
     mockHttpClient = MockHttpClient();
-    mockStreamedResponse  = MockStreamedResponse();
+    mockStreamedResponse = MockStreamedResponse();
     dataSource = MenuItemsRemoteDataSourceImpl(client: mockHttpClient);
   });
 
@@ -122,69 +124,114 @@ void main() {
     });
   });
 
-  /// TODO: Write Remaining test cases for updateItemInMenu
-  
-  group('getAllMenuItem', () {
-    var expectedUrl =
-        '$kBaseUrlTest/api/restaurants/menuItems/allMenuItems?restaurant_id=${tGetAllMenuItemsParams.restaurantId}&page=${tGetAllMenuItemsParams.page}&page_size=${tGetAllMenuItemsParams.limit}';
-    final fakeResponse = fixture('menuItem/menu_items_response_model.json');
+  group('updateItemInMenu', () {
+    var expectedUrl = '$kBaseUrlTest/api/restaurants/menuItems/updateItem';
+    final fakeResponse = fixture('menuItem/menu_item_response_model.json');
 
-    test('should perform a GET request to correct URL with params', () async {
-      /// Arrange
-      when(
-        () => mockHttpClient.get(any(), headers: any(named: 'headers')),
-      ).thenAnswer((_) async => http.Response(fakeResponse, 200));
+    test(
+      'should return MenuItemResponseModel on 200 with full params',
+      () async {
+        /// Arrange
+        when(() => mockStreamedResponse.statusCode).thenReturn(200);
+        when(() => mockStreamedResponse.stream).thenAnswer(
+          (_) => http.ByteStream.fromBytes(utf8.encode(fakeResponse)),
+        );
+        when(
+          () => mockHttpClient.send(any()),
+        ).thenAnswer((_) async => mockStreamedResponse);
 
-      /// Act
-      final result = await dataSource.getAllMenuItem(tGetAllMenuItemsParams);
+        /// Act
+        final result = await dataSource.sendUpdateItemInMenuRequest(
+          tUpdateMenuItemParams,
+        );
 
-      /// Assert
-      verifyNever(
-        () => mockHttpClient.get(
-          Uri.parse(expectedUrl),
-          headers: any(named: 'headers'),
-        ),
-      );
-      expect(result, isA<MenuItemsResponseModel>());
-    });
-
-    test('should throw CredentialFailure on 400', () async {
-      /// Arrange
-      when(
-        () => mockHttpClient.get(any(), headers: any(named: 'headers')),
-      ).thenAnswer((_) async => http.Response('Error', 400));
-
-      /// Act & Assert
-      expect(
-        () async => await dataSource.getAllMenuItem(tGetAllMenuItemsParams),
-        throwsA(isA<CredentialFailure>()),
-      );
-    });
+        /// Assert
+        final capturedRequest =
+            verify(() => mockHttpClient.send(captureAny())).captured.single
+                as http.MultipartRequest;
+        expect(capturedRequest.method, equals('PUT'));
+        expect(capturedRequest.url.path, contains('/menuItems/updateItem'));
+        expect(
+          capturedRequest.fields['restaurant_id'],
+          equals(tUpdateMenuItemParams.restaurantId),
+        );
+        expect(
+          capturedRequest.fields['name'],
+          equals(tUpdateMenuItemParams.name),
+        );
+        expect(result, isA<MenuItemResponseModel>());
+      },
+    );
 
     test('should throw RestaurantNotExistsFailure on 404', () async {
       /// Arrange
+      when(() => mockStreamedResponse.statusCode).thenReturn(404);
       when(
-        () => mockHttpClient.get(any(), headers: any(named: 'headers')),
-      ).thenAnswer((_) async => http.Response('Error', 404));
+        () => mockStreamedResponse.stream,
+      ).thenAnswer((_) => http.ByteStream.fromBytes(utf8.encode(fakeResponse)));
+      when(
+        () => mockHttpClient.send(any()),
+      ).thenAnswer((_) async => mockStreamedResponse);
 
       /// Act & Assert
       expect(
-        () async => await dataSource.getAllMenuItem(tGetAllMenuItemsParams),
+        () async =>
+            await dataSource.sendUpdateItemInMenuRequest(tUpdateMenuItemParams),
         throwsA(isA<RestaurantNotExistsFailure>()),
       );
     });
 
-    test('should throw ServerFailure on non-200 other than 400/401', () async {
+    test('should throw ItemAlreadyExistsFailure on 409', () async {
       /// Arrange
+      when(() => mockStreamedResponse.statusCode).thenReturn(409);
       when(
-        () => mockHttpClient.get(any(), headers: any(named: 'headers')),
-      ).thenAnswer((_) async => http.Response('Error', 500));
+        () => mockStreamedResponse.stream,
+      ).thenAnswer((_) => http.ByteStream.fromBytes(utf8.encode(fakeResponse)));
+      when(
+        () => mockHttpClient.send(any()),
+      ).thenAnswer((_) async => mockStreamedResponse);
 
       /// Act & Assert
       expect(
-        () async => await dataSource.getAllMenuItem(tGetAllMenuItemsParams),
+        () async =>
+            await dataSource.sendUpdateItemInMenuRequest(tUpdateMenuItemParams),
+        throwsA(isA<ItemAlreadyExistsFailure>()),
+      );
+    });
+
+    test('should throw ServerFailure on 500', () async {
+      /// Arrange
+      when(() => mockStreamedResponse.statusCode).thenReturn(500);
+      when(
+        () => mockStreamedResponse.stream,
+      ).thenAnswer((_) => http.ByteStream.fromBytes(utf8.encode(fakeResponse)));
+      when(
+        () => mockHttpClient.send(any()),
+      ).thenAnswer((_) async => mockStreamedResponse);
+
+      /// Act & Assert
+      expect(
+        () async =>
+            await dataSource.sendUpdateItemInMenuRequest(tUpdateMenuItemParams),
         throwsA(isA<ServerFailure>()),
       );
+    });
+
+    test('should use multipart PUT request', () async {
+      /// Arrange
+      when(() => mockStreamedResponse.statusCode).thenReturn(200);
+      when(
+        () => mockStreamedResponse.stream,
+      ).thenAnswer((_) => http.ByteStream.fromBytes(utf8.encode(fakeResponse)));
+      when(
+        () => mockHttpClient.send(any()),
+      ).thenAnswer((_) async => mockStreamedResponse);
+
+      /// Act
+      await dataSource.sendUpdateItemInMenuRequest(tUpdateMenuItemParams);
+
+      /// Assert
+      verify(() => mockHttpClient.send(any())).called(1);
     });
   });
 
@@ -273,6 +320,70 @@ void main() {
       /// Act & Assert
       expect(
         () async => await dataSource.deleteItemInMenu(tDeleteMenuItemsParams),
+        throwsA(isA<ServerFailure>()),
+      );
+    });
+  });
+  
+  group('getAllMenuItem', () {
+    var expectedUrl =
+        '$kBaseUrlTest/api/restaurants/menuItems/allMenuItems?restaurant_id=${tGetAllMenuItemsParams.restaurantId}&page=${tGetAllMenuItemsParams.page}&page_size=${tGetAllMenuItemsParams.limit}';
+    final fakeResponse = fixture('menuItem/menu_items_response_model.json');
+
+    test('should perform a GET request to correct URL with params', () async {
+      /// Arrange
+      when(
+        () => mockHttpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((_) async => http.Response(fakeResponse, 200));
+
+      /// Act
+      final result = await dataSource.getAllMenuItem(tGetAllMenuItemsParams);
+
+      /// Assert
+      verifyNever(
+        () => mockHttpClient.get(
+          Uri.parse(expectedUrl),
+          headers: any(named: 'headers'),
+        ),
+      );
+      expect(result, isA<MenuItemsResponseModel>());
+    });
+
+    test('should throw CredentialFailure on 400', () async {
+      /// Arrange
+      when(
+        () => mockHttpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((_) async => http.Response('Error', 400));
+
+      /// Act & Assert
+      expect(
+        () async => await dataSource.getAllMenuItem(tGetAllMenuItemsParams),
+        throwsA(isA<CredentialFailure>()),
+      );
+    });
+
+    test('should throw RestaurantNotExistsFailure on 404', () async {
+      /// Arrange
+      when(
+        () => mockHttpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((_) async => http.Response('Error', 404));
+
+      /// Act & Assert
+      expect(
+        () async => await dataSource.getAllMenuItem(tGetAllMenuItemsParams),
+        throwsA(isA<RestaurantNotExistsFailure>()),
+      );
+    });
+
+    test('should throw ServerFailure on non-200 other than 400/401', () async {
+      /// Arrange
+      when(
+        () => mockHttpClient.get(any(), headers: any(named: 'headers')),
+      ).thenAnswer((_) async => http.Response('Error', 500));
+
+      /// Act & Assert
+      expect(
+        () async => await dataSource.getAllMenuItem(tGetAllMenuItemsParams),
         throwsA(isA<ServerFailure>()),
       );
     });

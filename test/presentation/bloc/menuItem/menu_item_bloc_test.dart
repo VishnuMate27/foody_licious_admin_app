@@ -135,6 +135,92 @@ void main() {
     expect: () => [MenuItemAddLoading(), MenuItemAddFailed(ServerFailure())],
   );
 
+  /// UpdateItemInMenu
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [MenuItemUpdateSuccess, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
+    build: () {
+      when(
+        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
+      ).thenAnswer((_) async => Right(tUpdatedMenuItem));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
+    expect:
+        () => [
+          MenuItemUpdateSuccess(tUpdatedMenuItem),
+          FetchingAllMenuItemsSuccess([tUpdatedMenuItem, tMenuItem2]),
+        ],
+  );
+
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [MenuItemUpdateFailed, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
+    build: () {
+      when(
+        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
+      ).thenAnswer((_) async => Left(ExceptionFailure(e.toString())));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
+    expect:
+        () => [
+          MenuItemUpdateFailed(ExceptionFailure(e.toString())),
+          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+        ],
+  );
+
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [MenuItemUpdateFailed, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
+    build: () {
+      when(
+        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
+      ).thenAnswer((_) async => Left(RestaurantNotExistsFailure()));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
+    expect:
+        () => [
+          MenuItemUpdateFailed(RestaurantNotExistsFailure()),
+          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+        ],
+  );
+
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [MenuItemUpdateFailed, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
+    build: () {
+      when(
+        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
+      ).thenAnswer((_) async => Left(ItemAlreadyExistsFailure()));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
+    expect:
+        () => [
+          MenuItemUpdateFailed(ItemAlreadyExistsFailure()),
+          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+        ],
+  );
+
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [MenuItemUpdateFailed, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
+    build: () {
+      when(
+        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
+      ).thenAnswer((_) async => Left(ServerFailure()));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
+    expect:
+        () => [
+          MenuItemUpdateFailed(ServerFailure()),
+          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+        ],
+  );
+
   /// DeleteMenuItem
   blocTest<MenuItemBloc, MenuItemState>(
     'emits [MenuItemDeleteSuccess, FetchingAllMenuItemsSuccess] when deletion succeeds',
@@ -218,6 +304,92 @@ void main() {
         () => [
           MenuItemDeleteFailed(ServerFailure()),
           FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+        ],
+  );
+
+  /// GetAllItemQuantity
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsSuccess] when GetAllMenuItems succeds',
+    build: () {
+      when(
+        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
+      ).thenAnswer((_) async => Right([tMenuItem, tMenuItem2]));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
+    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
+    expect:
+        () => [
+          FetchingAllMenuItemsLoading(),
+          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
+        ],
+  );
+
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsFailed] when GetAllMenuItems succeds',
+    build: () {
+      when(
+        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
+      ).thenAnswer((_) async => Left(ExceptionFailure(e.toString())));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
+    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
+    expect:
+        () => [
+          FetchingAllMenuItemsLoading(),
+          FetchingAllMenuItemsFailed(ExceptionFailure(e.toString())),
+        ],
+  );
+
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsFailed] when GetAllMenuItems succeds',
+    build: () {
+      when(
+        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
+      ).thenAnswer((_) async => Left(CredentialFailure()));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
+    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
+    expect:
+        () => [
+          FetchingAllMenuItemsLoading(),
+          FetchingAllMenuItemsFailed(CredentialFailure()),
+        ],
+  );
+
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsFailed] when GetAllMenuItems succeds',
+    build: () {
+      when(
+        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
+      ).thenAnswer((_) async => Left(RestaurantNotExistsFailure()));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
+    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
+    expect:
+        () => [
+          FetchingAllMenuItemsLoading(),
+          FetchingAllMenuItemsFailed(RestaurantNotExistsFailure()),
+        ],
+  );
+
+  blocTest<MenuItemBloc, MenuItemState>(
+    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsFailed] when GetAllMenuItems succeds',
+    build: () {
+      when(
+        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
+      ).thenAnswer((_) async => Left(ServerFailure()));
+      return menuItemBloc;
+    },
+    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
+    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
+    expect:
+        () => [
+          FetchingAllMenuItemsLoading(),
+          FetchingAllMenuItemsFailed(ServerFailure()),
         ],
   );
 
@@ -353,178 +525,6 @@ void main() {
     expect:
         () => [
           DecreaseMenuItemQuantityFailed(ServerFailure()),
-          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-        ],
-  );
-
-  /// GetAllItemQuantity
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsSuccess] when GetAllMenuItems succeds',
-    build: () {
-      when(
-        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
-      ).thenAnswer((_) async => Right([tMenuItem, tMenuItem2]));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
-    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
-    expect:
-        () => [
-          FetchingAllMenuItemsLoading(),
-          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-        ],
-  );
-
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsFailed] when GetAllMenuItems succeds',
-    build: () {
-      when(
-        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
-      ).thenAnswer((_) async => Left(ExceptionFailure(e.toString())));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
-    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
-    expect:
-        () => [
-          FetchingAllMenuItemsLoading(),
-          FetchingAllMenuItemsFailed(ExceptionFailure(e.toString())),
-        ],
-  );
-
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsFailed] when GetAllMenuItems succeds',
-    build: () {
-      when(
-        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
-      ).thenAnswer((_) async => Left(CredentialFailure()));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
-    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
-    expect:
-        () => [
-          FetchingAllMenuItemsLoading(),
-          FetchingAllMenuItemsFailed(CredentialFailure()),
-        ],
-  );
-
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsFailed] when GetAllMenuItems succeds',
-    build: () {
-      when(
-        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
-      ).thenAnswer((_) async => Left(RestaurantNotExistsFailure()));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
-    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
-    expect:
-        () => [
-          FetchingAllMenuItemsLoading(),
-          FetchingAllMenuItemsFailed(RestaurantNotExistsFailure()),
-        ],
-  );
-
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [FetchingAllMenuItemsLoading, FetchingAllMenuItemsFailed] when GetAllMenuItems succeds',
-    build: () {
-      when(
-        () => mockGetAllMenuItemsUseCase(tGetAllMenuItemsParams),
-      ).thenAnswer((_) async => Left(ServerFailure()));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem]),
-    act: (bloc) => bloc.add(GetAllMenuItems(tGetAllMenuItemsParams)),
-    expect:
-        () => [
-          FetchingAllMenuItemsLoading(),
-          FetchingAllMenuItemsFailed(ServerFailure()),
-        ],
-  );
-
-  /// UpdateItemInMenu
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [MenuItemUpdateSuccess, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
-    build: () {
-      when(
-        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
-      ).thenAnswer((_) async => Right(tUpdatedMenuItem));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
-    expect:
-        () => [
-          MenuItemUpdateSuccess(tUpdatedMenuItem),
-          FetchingAllMenuItemsSuccess([tUpdatedMenuItem, tMenuItem2]),
-        ],
-  );
-
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [MenuItemUpdateFailed, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
-    build: () {
-      when(
-        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
-      ).thenAnswer((_) async => Left(ExceptionFailure(e.toString())));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
-    expect:
-        () => [
-          MenuItemUpdateFailed(ExceptionFailure(e.toString())),
-          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-        ],
-  );
-
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [MenuItemUpdateFailed, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
-    build: () {
-      when(
-        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
-      ).thenAnswer((_) async => Left(RestaurantNotExistsFailure()));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
-    expect:
-        () => [
-          MenuItemUpdateFailed(RestaurantNotExistsFailure()),
-          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-        ],
-  );
-
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [MenuItemUpdateFailed, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
-    build: () {
-      when(
-        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
-      ).thenAnswer((_) async => Left(ItemAlreadyExistsFailure()));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
-    expect:
-        () => [
-          MenuItemUpdateFailed(ItemAlreadyExistsFailure()),
-          FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-        ],
-  );
-
-  blocTest<MenuItemBloc, MenuItemState>(
-    'emits [MenuItemUpdateFailed, FetchingAllMenuItemsSuccess] when UpdateItemInMenu succeds',
-    build: () {
-      when(
-        () => mockUpdateMenuItemUseCase(tUpdateMenuItemParams),
-      ).thenAnswer((_) async => Left(ServerFailure()));
-      return menuItemBloc;
-    },
-    seed: () => FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
-    act: (bloc) => bloc.add(UpdateMenuItem(tUpdateMenuItemParams)),
-    expect:
-        () => [
-          MenuItemUpdateFailed(ServerFailure()),
           FetchingAllMenuItemsSuccess([tMenuItem, tMenuItem2]),
         ],
   );
