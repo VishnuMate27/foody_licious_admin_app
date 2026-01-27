@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -312,18 +313,24 @@ class MenuItemEditView extends StatelessWidget {
   Widget _buildImageItem(String imageUrl, VoidCallback onDelete) {
     return Stack(
       children: [
-        Container(
-          width: 90.w,
-          height: 90.w,
-          margin: EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            border: Border.all(color: kBorder, width: 2.0),
-            borderRadius: BorderRadius.circular(5.r),
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover,
-            ),
-          ),
+        CachedNetworkImage(
+          imageUrl: imageUrl,
+          imageBuilder:
+              (context, imageProvider) => Container(
+                width: 90.w,
+                height: 90.w,
+                margin: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: kBorder, width: 2.0),
+                  borderRadius: BorderRadius.circular(5.r),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
         ),
         Positioned(
           right: 0,

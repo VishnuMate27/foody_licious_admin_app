@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -178,7 +179,14 @@ class _MenuItemCardState extends State<MenuItemCard> {
         child: Row(
           children: [
             SizedBox(width: 10.w),
-            Image.network(widget.itemImageUrl, width: 64.h, height: 64.h),
+            CachedNetworkImage(
+              imageUrl: widget.itemImageUrl,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => const CircularProgressIndicator(),
+              errorWidget: (_, __, ___) => const Icon(Icons.broken_image),
+              width: 64.h,
+              height: 64.h,
+            ),
             SizedBox(width: 20.w),
             Column(
               children: [
@@ -286,7 +294,14 @@ class _MenuItemCardState extends State<MenuItemCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(width: 10.w),
-            Image.network(widget.itemImageUrl, width: 64.h, height: 64.h),
+            CachedNetworkImage(
+              imageUrl: widget.itemImageUrl,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => const CircularProgressIndicator(),
+              errorWidget: (_, __, ___) => const Icon(Icons.broken_image),
+              width: 64.h,
+              height: 64.h,
+            ),
             SizedBox(width: 20.w),
             Expanded(
               child: Column(
@@ -395,7 +410,14 @@ class _MenuItemCardState extends State<MenuItemCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(width: 10.w),
-            Image.network(widget.itemImageUrl, width: 64.h, height: 64.h),
+            CachedNetworkImage(
+              imageUrl: widget.itemImageUrl,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => const CircularProgressIndicator(),
+              errorWidget: (_, __, ___) => const Icon(Icons.broken_image),
+              width: 64.h,
+              height: 64.h,
+            ),
             SizedBox(width: 20.w),
             Expanded(
               child: Column(
