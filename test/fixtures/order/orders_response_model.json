@@ -1,0 +1,125 @@
+{
+    "message": "Fetched orders successfully",
+    "orders": [
+        {
+            "id": "6977a1b7db0f9a6b8f6bd515",
+            "cartId": "6977a19ddb0f9a6b8f6bd514",
+            "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+            "userId": "qK3kv062JvQ2NOZrRZYhtl8wX7v2",
+            "name": "Vishnu Email",
+            "address": "tests update address, Mumbai",
+            "phone": "9876543210",
+            "items": [
+                {
+                    "menuItemId": "695c03364b2976a391deaa78",
+                    "quantity": 1,
+                    "price": 80,
+                    "totalPrice": 80,
+                    "menuItemDetails": {
+                        "id": "695c03364b2976a391deaa78",
+                        "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+                        "name": "Sambar Vadi",
+                        "description": "Made with farmfresh coriander",
+                        "price": 80,
+                        "images": [
+                            "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/695c03364b2976a391deaa78/1000110895.jpg"
+                        ],
+                        "availableQuantity": 18,
+                        "ingredients": [
+                            "Coriander",
+                            "Peanuts",
+                            "Besan"
+                        ],
+                        "created_at": {
+                            "$date": "2026-01-05T18:30:14.858000"
+                        },
+                        "updated_at": {
+                            "$date": "2026-01-05T18:30:41.541000"
+                        }
+                    }
+                },
+                {
+                    "menuItemId": "695c02ad4b2976a391deaa77",
+                    "quantity": 1,
+                    "price": 80,
+                    "totalPrice": 80,
+                    "menuItemDetails": {
+                        "id": "695c02ad4b2976a391deaa77",
+                        "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+                        "name": "Gulachi Poli",
+                        "description": "Made with farmfresh jaggery",
+                        "price": 80,
+                        "images": [
+                            "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/695c02ad4b2976a391deaa77/1000110893.jpg"
+                        ],
+                        "availableQuantity": 17,
+                        "ingredients": [
+                            "Jaggery",
+                            "Wheat",
+                            "Ghee"
+                        ],
+                        "created_at": {
+                            "$date": "2026-01-05T18:27:57.236000"
+                        },
+                        "updated_at": {
+                            "$date": "2026-01-05T18:28:45.230000"
+                        }
+                    }
+                },
+                {
+                    "menuItemId": "690600f4f3fabd415a4a54e2",
+                    "quantity": 3,
+                    "price": 150,
+                    "totalPrice": 450,
+                    "menuItemDetails": {
+                        "id": "690600f4f3fabd415a4a54e2",
+                        "restaurantId": "pygupNfZONbMeMmBJb2htMxzAR23",
+                        "name": "Paneer Butter Masala",
+                        "description": "Paneer with Butter and masala",
+                        "price": 150,
+                        "images": [
+                            "https://foodylicious.s3.ap-south-1.amazonaws.com/restaurants/pygupNfZONbMeMmBJb2htMxzAR23/menu_items/690600f4f3fabd415a4a54e2/image_1.webp"
+                        ],
+                        "availableQuantity": 8,
+                        "ingredients": [
+                            "Paneer",
+                            "Butter",
+                            "Masala"
+                        ],
+                        "created_at": {
+                            "$date": "2025-11-01T12:45:40.601000"
+                        },
+                        "updated_at": {
+                            "$date": "2025-11-02T08:32:09.225000"
+                        }
+                    }
+                }
+            ],
+            "totalCartAmount": 610,
+            "gstCharges": 30.5,
+            "platformFees": 6.1,
+            "deliveryCharges": 40,
+            "grandTotalAmount": 686.6,
+            "status": "DISPATCHED",
+            "expireAt": {
+                "$date": "2026-01-26T17:27:43.105000"
+            },
+            "createdAt": {
+                "$date": "2026-01-26T17:17:43.105000"
+            },
+            "updatedAt": {
+                "$date": "2026-01-26T20:00:27.762000"
+            },
+            "paymentId": "6977a1b7db0f9a6b8f6bd516",
+            "paymentStatus": "SUCCESS"
+        }
+    ],
+    "pagination": {
+        "page": 1,
+        "page_size": 10,
+        "total_items": 1,
+        "total_pages": 1,
+        "has_next": false,
+        "has_prev": false
+    }
+}
