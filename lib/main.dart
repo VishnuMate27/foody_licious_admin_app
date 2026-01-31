@@ -8,6 +8,7 @@ import 'package:foody_licious_admin_app/core/services/service_locator.dart'
     as di;
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
+import 'package:foody_licious_admin_app/presentation/bloc/order/order_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/cubit/menuItem/menu_item_form_cubit.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/cubit/pagination/pagination_cubit.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
           create: (context) => di.sl<RestaurantBloc>()..add(CheckRestaurant()),
         ),
         BlocProvider(create: (context) => di.sl<AuthBloc>()..add(AuthCheck())),
+        BlocProvider(create: (context) => di.sl<OrderBloc>())
       ],
       child: ScreenUtilInit(
         designSize: const Size(360, 800),

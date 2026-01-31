@@ -7,6 +7,7 @@ import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/extension/failure_extension.dart';
 import 'package:foody_licious_admin_app/core/router/app_router.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
+import 'package:foody_licious_admin_app/presentation/view/order/manage_orders_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DashboardView extends StatefulWidget {
@@ -219,8 +220,8 @@ class _DashboardViewState extends State<DashboardView> {
               ),
               GestureDetector(
                 onTap: () {
-                  debugPrint("Out For Delivery tapped");
-                  Navigator.pushNamed(context, AppRouter.delivery);
+                  debugPrint("Manage Orders tapped");
+                  Navigator.pushNamed(context, AppRouter.manageOrders);
                 },
                 child: Container(
                   width: 150.w,
@@ -247,7 +248,89 @@ class _DashboardViewState extends State<DashboardView> {
                           color: kRedIcon,
                         ),
                         Text(
-                          "Out For Delivery",
+                          "Manage Orders",
+                          style: GoogleFonts.yeonSung(
+                            color: kTextSecondaryRed,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  debugPrint("Manage Deliveries tapped");
+                  Navigator.pushNamed(context, AppRouter.delivery);
+                },
+                child: Container(
+                  width: 150.w,
+                  height: 85.w,
+                  decoration: BoxDecoration(
+                    color: kRedTab,
+                    borderRadius: BorderRadius.circular(15.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: kGreen,
+                        // spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 1), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Icon(
+                          CupertinoIcons.person_add,
+                          size: 30.w,
+                          color: kRedIcon,
+                        ),
+                        Text(
+                          "Manage Deliveries",
+                          style: GoogleFonts.yeonSung(
+                            color: kTextSecondaryRed,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  debugPrint("Past Orders tapped");
+                  Navigator.pushNamed(context, AppRouter.pastOrders);
+                },
+                child: Container(
+                  width: 150.w,
+                  height: 85.w,
+                  decoration: BoxDecoration(
+                    color: kRedTab,
+                    borderRadius: BorderRadius.circular(15.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: kGreen,
+                        // spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 1), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Icon(
+                          CupertinoIcons.money_dollar,
+                          size: 30.w,
+                          color: kRedIcon,
+                        ),
+                        Text(
+                          "Past Orders",
                           style: GoogleFonts.yeonSung(
                             color: kTextSecondaryRed,
                             fontSize: 12.sp,
@@ -330,86 +413,6 @@ class _DashboardViewState extends State<DashboardView> {
                         ),
                         Text(
                           "Profile",
-                          style: GoogleFonts.yeonSung(
-                            color: kTextSecondaryRed,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  debugPrint("Money On Holed tapped");
-                },
-                child: Container(
-                  width: 150.w,
-                  height: 85.w,
-                  decoration: BoxDecoration(
-                    color: kRedTab,
-                    borderRadius: BorderRadius.circular(15.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: kGreen,
-                        // spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: Offset(0, 1), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Icon(
-                          CupertinoIcons.money_dollar,
-                          size: 30.w,
-                          color: kRedIcon,
-                        ),
-                        Text(
-                          "Money On Holed",
-                          style: GoogleFonts.yeonSung(
-                            color: kTextSecondaryRed,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  debugPrint("Create New User tapped");
-                },
-                child: Container(
-                  width: 150.w,
-                  height: 85.w,
-                  decoration: BoxDecoration(
-                    color: kRedTab,
-                    borderRadius: BorderRadius.circular(15.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: kGreen,
-                        // spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: Offset(0, 1), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Icon(
-                          CupertinoIcons.person_add,
-                          size: 30.w,
-                          color: kRedIcon,
-                        ),
-                        Text(
-                          "Create New User",
                           style: GoogleFonts.yeonSung(
                             color: kTextSecondaryRed,
                             fontSize: 12.sp,

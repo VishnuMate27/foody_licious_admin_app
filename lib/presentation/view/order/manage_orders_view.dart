@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:foody_licious_admin_app/core/constants/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/extension/failure_extension.dart';
 import 'package:foody_licious_admin_app/domain/entities/order/order.dart';
 import 'package:foody_licious_admin_app/domain/usecases/order/get_all_order_usecase.dart';
@@ -11,15 +10,16 @@ import 'package:foody_licious_admin_app/presentation/bloc/order/order_bloc.dart'
 import 'package:foody_licious_admin_app/presentation/cubit/pagination/pagination_cubit.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/order_card.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/tab_chip.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class DeliveryView extends StatefulWidget {
-  const DeliveryView({super.key});
+class ManageOrdersView extends StatefulWidget {
+  const ManageOrdersView({super.key});
 
   @override
-  State<DeliveryView> createState() => _DeliveryViewState();
+  State<ManageOrdersView> createState() => _ManageOrdersViewState();
 }
 
-class _DeliveryViewState extends State<DeliveryView>
+class _ManageOrdersViewState extends State<ManageOrdersView>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
@@ -37,11 +37,7 @@ class _DeliveryViewState extends State<DeliveryView>
           GetAllOrdersParams(
             page: 1,
             limit: _pageSize,
-            statuses: [
-              OrderStatus.DISPATCHED.name,
-              OrderStatus.DELIVERED.name,
-              OrderStatus.CANCELLED_BY_RESTAURANT.name,
-            ],
+            statuses: [OrderStatus.CONFIRMED.name, OrderStatus.PREPARING.name],
           ),
         ),
       );
@@ -62,9 +58,8 @@ class _DeliveryViewState extends State<DeliveryView>
                 page: _paginationCubit.state.currentPage,
                 limit: _pageSize,
                 statuses: [
-                  OrderStatus.DISPATCHED.name,
-                  OrderStatus.DELIVERED.name,
-                  OrderStatus.CANCELLED_BY_RESTAURANT.name,
+                  OrderStatus.CONFIRMED.name,
+                  OrderStatus.PREPARING.name,
                 ],
               ),
             ),
@@ -72,7 +67,7 @@ class _DeliveryViewState extends State<DeliveryView>
         }
       }
     });
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       setState(() {});
     });
@@ -105,9 +100,8 @@ class _DeliveryViewState extends State<DeliveryView>
                 page: 1,
                 limit: _pageSize,
                 statuses: [
-                  OrderStatus.DISPATCHED.name,
-                  OrderStatus.DELIVERED.name,
-                  OrderStatus.CANCELLED_BY_RESTAURANT.name,
+                  OrderStatus.CONFIRMED.name,
+                  OrderStatus.PREPARING.name,
                 ],
               ),
             ),
@@ -120,9 +114,8 @@ class _DeliveryViewState extends State<DeliveryView>
                 page: 1,
                 limit: _pageSize,
                 statuses: [
-                  OrderStatus.DISPATCHED.name,
-                  OrderStatus.DELIVERED.name,
-                  OrderStatus.CANCELLED_BY_RESTAURANT.name,
+                  OrderStatus.CONFIRMED.name,
+                  OrderStatus.PREPARING.name,
                 ],
               ),
             ),
@@ -135,6 +128,7 @@ class _DeliveryViewState extends State<DeliveryView>
           );
         }
       },
+
       buildWhen:
           (previous, current) =>
               current is GetAllOrdersByStatusLoading ||
@@ -147,7 +141,7 @@ class _DeliveryViewState extends State<DeliveryView>
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                "Manage Deliveries",
+                "Manage Orders",
                 style: GoogleFonts.yeonSung(color: kTextRed, fontSize: 40),
               ),
               leading: IconButton(
@@ -179,13 +173,13 @@ class _DeliveryViewState extends State<DeliveryView>
                       ),
                       Tab(
                         child: TabChip(
-                          tabName: "Dispatched",
+                          tabName: "Confirmed",
                           tabItemLength:
                               state.orders
                                   .where(
                                     (orderEntity) =>
                                         orderEntity.status ==
-                                        OrderStatus.DISPATCHED.name,
+                                        OrderStatus.CONFIRMED.name,
                                   )
                                   .length,
                           isTabSelected: _tabController.index == 1,
@@ -193,32 +187,16 @@ class _DeliveryViewState extends State<DeliveryView>
                       ),
                       Tab(
                         child: TabChip(
-                          tabName: "Delivered",
+                          tabName: "Preparing",
                           tabItemLength:
                               state.orders
                                   .where(
                                     (orderEntity) =>
                                         orderEntity.status ==
-                                        OrderStatus.DELIVERED.name,
+                                        OrderStatus.PREPARING.name,
                                   )
                                   .length,
                           isTabSelected: _tabController.index == 2,
-                        ),
-                      ),
-                      Tab(
-                        child: TabChip(
-                          tabName: "Cancelled",
-                          tabItemLength:
-                              state.orders
-                                  .where(
-                                    (orderEntity) =>
-                                        orderEntity.status ==
-                                        OrderStatus
-                                            .CANCELLED_BY_RESTAURANT
-                                            .name,
-                                  )
-                                  .length,
-                          isTabSelected: _tabController.index == 3,
                         ),
                       ),
                     ],
@@ -237,9 +215,8 @@ class _DeliveryViewState extends State<DeliveryView>
                           page: 1,
                           limit: _pageSize,
                           statuses: [
-                            OrderStatus.DISPATCHED.name,
-                            OrderStatus.DELIVERED.name,
-                            OrderStatus.CANCELLED_BY_RESTAURANT.name,
+                            OrderStatus.CONFIRMED.name,
+                            OrderStatus.PREPARING.name,
                           ],
                         ),
                       ),
@@ -254,7 +231,7 @@ class _DeliveryViewState extends State<DeliveryView>
                       final orderItem = state.orders[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
-                        child: OrderCard.delivery(
+                        child: OrderCard.order(
                           orderId: orderItem.id,
                           orderCreatedAt: orderItem.createdAt,
                           orderStatus: orderItem.status,
@@ -266,18 +243,18 @@ class _DeliveryViewState extends State<DeliveryView>
                           customerAddress: orderItem.address,
                           customerPhone: orderItem.phone,
                           onMoreButtonTap: () {},
-                          onMarkAsDeliveredTap: () {
-                            // Update Status to Delivered
+                          onAcceptTap: () {
+                            // Update Status to Preparing
                             context.read<OrderBloc>().add(
                               UpdateOrderStatus(
                                 UpdateOrderStatusParams(
                                   orderId: orderItem.id,
-                                  status: OrderStatus.DELIVERED.name,
+                                  status: OrderStatus.PREPARING.name,
                                 ),
                               ),
                             );
                           },
-                          onMarkAsCancelledTap: () {
+                          onRejectTap: () {
                             // Update Status to CANCELED
                             showDialog(
                               context: context,
@@ -296,7 +273,6 @@ class _DeliveryViewState extends State<DeliveryView>
                                     ),
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.of(dialogContext).pop();
                                         context.read<OrderBloc>().add(
                                           UpdateOrderStatus(
                                             UpdateOrderStatusParams(
@@ -316,8 +292,16 @@ class _DeliveryViewState extends State<DeliveryView>
                               },
                             );
                           },
-                          onPaymentAsReceivedTap: () {
-                            // TODO: Add Payment As Received Method implementation
+                          onMarkAsDispatchedTap: () {
+                            // Update Status to DISPATCHED
+                            context.read<OrderBloc>().add(
+                              UpdateOrderStatus(
+                                UpdateOrderStatusParams(
+                                  orderId: orderItem.id,
+                                  status: OrderStatus.DISPATCHED.name,
+                                ),
+                              ),
+                            );
                           },
                         ),
                       );
@@ -332,9 +316,8 @@ class _DeliveryViewState extends State<DeliveryView>
                           page: 1,
                           limit: _pageSize,
                           statuses: [
-                            OrderStatus.DISPATCHED.name,
-                            OrderStatus.DELIVERED.name,
-                            OrderStatus.CANCELLED_BY_RESTAURANT.name,
+                            OrderStatus.CONFIRMED.name,
+                            OrderStatus.PREPARING.name,
                           ],
                         ),
                       ),
@@ -347,10 +330,10 @@ class _DeliveryViewState extends State<DeliveryView>
                     padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                     itemBuilder: (context, index) {
                       final orderItem = state.orders[index];
-                      if (orderItem.status == OrderStatus.DISPATCHED.name) {
+                      if (orderItem.status == OrderStatus.CONFIRMED.name) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 12),
-                          child: OrderCard.delivery(
+                          child: OrderCard.order(
                             orderId: orderItem.id,
                             orderCreatedAt: orderItem.createdAt,
                             orderStatus: orderItem.status,
@@ -362,120 +345,18 @@ class _DeliveryViewState extends State<DeliveryView>
                             customerAddress: orderItem.address,
                             customerPhone: orderItem.phone,
                             onMoreButtonTap: () {},
-                            onMarkAsDeliveredTap: () {
-                              // Update Status to DELIVERED
-                              // TODO: check payment is success before marking delivered
-                              // Add Confirmation Dialog (Are you sure this order is delivered? Once marked delivered this cannot be revert again)
+                            onAcceptTap: () {
+                              // Update Status to PREPARING
                               context.read<OrderBloc>().add(
                                 UpdateOrderStatus(
                                   UpdateOrderStatusParams(
                                     orderId: orderItem.id,
-                                    status: OrderStatus.DELIVERED.name,
+                                    status: OrderStatus.PREPARING.name,
                                   ),
                                 ),
                               );
                             },
-                            onMarkAsCancelledTap: () {
-                              // Update Status to CANCELED
-                              context.read<OrderBloc>().add(
-                                UpdateOrderStatus(
-                                  UpdateOrderStatusParams(
-                                    orderId: orderItem.id,
-                                    status:
-                                        OrderStatus
-                                            .CANCELLED_BY_RESTAURANT
-                                            .name,
-                                  ),
-                                ),
-                              );
-                            },
-                            onPaymentAsReceivedTap: () {
-                              //TODO: Update Payment Status to RECEIVED
-                            },
-                          ),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
-                ),
-                RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<OrderBloc>().add(
-                      GetAllOrdersByStatus(
-                        GetAllOrdersParams(
-                          page: 1,
-                          limit: _pageSize,
-                          statuses: [
-                            OrderStatus.DISPATCHED.name,
-                            OrderStatus.DELIVERED.name,
-                            OrderStatus.CANCELLED_BY_RESTAURANT.name,
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    controller: _scrollController,
-                    itemCount: state.orders.length,
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                    itemBuilder: (context, index) {
-                      final orderItem = state.orders[index];
-                      if (orderItem.status == OrderStatus.DELIVERED.name) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: OrderCard.delivery(
-                            orderId: orderItem.id,
-                            orderCreatedAt: orderItem.createdAt,
-                            orderStatus: orderItem.status,
-                            items: orderItem.items,
-                            price: orderItem.grandTotalAmount.toString(),
-                            paymentMode: orderItem.paymentStatus,
-                            paymentStatus: orderItem.paymentStatus,
-                            customerName: orderItem.name,
-                            customerAddress: orderItem.address,
-                            customerPhone: orderItem.phone,
-                            onMoreButtonTap: () {},
-                            onMarkAsDeliveredTap: () {
-                              // Update Status to DELIVERED
-                              // TODO: check payment is success before marking delivered
-                              showDialog(
-                                context: context,
-                                builder: (dialogContext) {
-                                  return AlertDialog(
-                                    title: Text("Cancel Order?"),
-                                    content: Text(
-                                      "Are you sure this order is delivered? Once marked delivered this cannot be revert again!",
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(dialogContext).pop();
-                                        },
-                                        child: Text("No"),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          context.read<OrderBloc>().add(
-                                            UpdateOrderStatus(
-                                              UpdateOrderStatusParams(
-                                                orderId: orderItem.id,
-                                                status:
-                                                    OrderStatus.DELIVERED.name,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: Text("Yes"),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            onMarkAsCancelledTap: () {
+                            onRejectTap: () {
                               // Update Status to CANCELED
                               showDialog(
                                 context: context,
@@ -494,141 +375,6 @@ class _DeliveryViewState extends State<DeliveryView>
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          // Update Status to CANCELED
-                                          showDialog(
-                                            context: context,
-                                            builder: (dialogContext) {
-                                              return AlertDialog(
-                                                title: Text("Cancel Order?"),
-                                                content: Text(
-                                                  "Are you sure to cancel this order? Once marked cancelled this action cannot be reverted.",
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(
-                                                        dialogContext,
-                                                      ).pop();
-                                                    },
-                                                    child: Text("No"),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(
-                                                        dialogContext,
-                                                      ).pop();
-                                                      context.read<OrderBloc>().add(
-                                                        UpdateOrderStatus(
-                                                          UpdateOrderStatusParams(
-                                                            orderId:
-                                                                orderItem.id,
-                                                            status:
-                                                                OrderStatus
-                                                                    .CANCELLED_BY_RESTAURANT
-                                                                    .name,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: Text("Yes"),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: Text("Yes"),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            onPaymentAsReceivedTap: () {
-                              //TODO: Update Payment Status to RECEIVED
-                            },
-                          ),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
-                ),
-                RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<OrderBloc>().add(
-                      GetAllOrdersByStatus(
-                        GetAllOrdersParams(
-                          page: 1,
-                          limit: _pageSize,
-                          statuses: [
-                            OrderStatus.DISPATCHED.name,
-                            OrderStatus.DELIVERED.name,
-                            OrderStatus.CANCELLED_BY_RESTAURANT.name,
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    controller: _scrollController,
-                    itemCount: state.orders.length,
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                    itemBuilder: (context, index) {
-                      final orderItem = state.orders[index];
-                      if (orderItem.status ==
-                          OrderStatus.CANCELLED_BY_RESTAURANT.name) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: OrderCard.delivery(
-                            orderId: orderItem.id,
-                            orderCreatedAt: orderItem.createdAt,
-                            orderStatus: orderItem.status,
-                            items: orderItem.items,
-                            price: orderItem.grandTotalAmount.toString(),
-                            paymentMode: orderItem.paymentStatus,
-                            paymentStatus: orderItem.paymentStatus,
-                            customerName: orderItem.name,
-                            customerAddress: orderItem.address,
-                            customerPhone: orderItem.phone,
-                            onMoreButtonTap: () {},
-                            onMarkAsDeliveredTap: () {
-                              // Update Status to DELIVERED
-                              // TODO: check payment is success before marking delivered
-                              // Add Confirmation Dialog (Are you sure this order is delivered? Once marked delivered this cannot be revert again)
-                              context.read<OrderBloc>().add(
-                                UpdateOrderStatus(
-                                  UpdateOrderStatusParams(
-                                    orderId: orderItem.id,
-                                    status: OrderStatus.DELIVERED.name,
-                                  ),
-                                ),
-                              );
-                            },
-                            onMarkAsCancelledTap: () {
-                              // Update Status to CANCELED
-
-                              // Update Status to CANCELED
-                              showDialog(
-                                context: context,
-                                builder: (dialogContext) {
-                                  return AlertDialog(
-                                    title: Text("Cancel Order?"),
-                                    content: Text(
-                                      "Are you sure to cancel this order? Once marked cancelled this action cannot be reverted.",
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(dialogContext).pop();
-                                        },
-                                        child: Text("No"),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(dialogContext).pop();
                                           context.read<OrderBloc>().add(
                                             UpdateOrderStatus(
                                               UpdateOrderStatusParams(
@@ -648,13 +394,126 @@ class _DeliveryViewState extends State<DeliveryView>
                                 },
                               );
                             },
-                            onPaymentAsReceivedTap: () {
-                              //TODO: Update Payment Status to RECEIVED
+                            onMarkAsDispatchedTap: () {
+                              // Update Status to DISPATCHED
+                              context.read<OrderBloc>().add(
+                                UpdateOrderStatus(
+                                  UpdateOrderStatusParams(
+                                    orderId: orderItem.id,
+                                    status: OrderStatus.DISPATCHED.name,
+                                  ),
+                                ),
+                              );
                             },
                           ),
                         );
                       } else {
-                        return SizedBox.shrink();
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
+                ),
+                RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<OrderBloc>().add(
+                      GetAllOrdersByStatus(
+                        GetAllOrdersParams(
+                          page: 1,
+                          limit: _pageSize,
+                          statuses: [
+                            OrderStatus.CONFIRMED.name,
+                            OrderStatus.PREPARING.name,
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    controller: _scrollController,
+                    itemCount: state.orders.length,
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                    itemBuilder: (context, index) {
+                      final orderItem = state.orders[index];
+                      if (orderItem.status == OrderStatus.PREPARING.name) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: OrderCard.order(
+                            orderId: orderItem.id,
+                            orderCreatedAt: orderItem.createdAt,
+                            orderStatus: orderItem.status,
+                            items: orderItem.items,
+                            price: orderItem.grandTotalAmount.toString(),
+                            paymentMode: orderItem.paymentStatus,
+                            paymentStatus: orderItem.paymentStatus,
+                            customerName: orderItem.name,
+                            customerAddress: orderItem.address,
+                            customerPhone: orderItem.phone,
+                            onMoreButtonTap: () {},
+                            onAcceptTap: () {
+                              // Update Status to Preparing
+                              context.read<OrderBloc>().add(
+                                UpdateOrderStatus(
+                                  UpdateOrderStatusParams(
+                                    orderId: orderItem.id,
+                                    status: OrderStatus.PREPARING.name,
+                                  ),
+                                ),
+                              );
+                            },
+                            onRejectTap: () {
+                              // Update Status to CANCELED
+                              showDialog(
+                                context: context,
+                                builder: (dialogContext) {
+                                  return AlertDialog(
+                                    title: Text("Cancel Order?"),
+                                    content: Text(
+                                      "Are you sure to cancel this order? Once marked cancelled this action cannot be reverted.",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(dialogContext).pop();
+                                        },
+                                        child: Text("No"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          context.read<OrderBloc>().add(
+                                            UpdateOrderStatus(
+                                              UpdateOrderStatusParams(
+                                                orderId: orderItem.id,
+                                                status:
+                                                    OrderStatus
+                                                        .CANCELLED_BY_RESTAURANT
+                                                        .name,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Text("Yes"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            onMarkAsDispatchedTap: () {
+                              // Update Status to DISPATCHED
+                              context.read<OrderBloc>().add(
+                                UpdateOrderStatus(
+                                  UpdateOrderStatusParams(
+                                    orderId: orderItem.id,
+                                    status: OrderStatus.DISPATCHED.name,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
                       }
                     },
                   ),

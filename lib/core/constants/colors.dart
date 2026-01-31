@@ -17,6 +17,11 @@ const Color kWhite = Color(0xFFFFFFFF); // Full white
 const Color kBlack = Color(0xFF000000); // Full black -- Remaining
 const Color kLightGreen = Color(0xFFF1F1F1); // Light Green
 const Color kBlueGrey = Colors.blueGrey; // Blue Grey Color
+const Color kGreyBackground = Color(0xFFD9D9D9); // Grey Color
+
+/// === Chip Colors ==
+const Color kBluish = Color(0xFF6699CC); // Bluish
+const Color kGreenish = Color(0xFF28A745);
 
 /// === Status Colors ===
 const Color kError = Color(0xCCFF0000); // Error (same as textError)-Not Used

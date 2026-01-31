@@ -14,7 +14,7 @@ import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_
 import 'package:foody_licious_admin_app/presentation/widgets/gradient_button.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/image_upload_field.dart';
 import 'package:foody_licious_admin_app/presentation/widgets/input_text_form_field.dart';
-import 'package:foody_licious_admin_app/utils/constants.dart';
+import 'package:foody_licious_admin_app/presentation/utils/constants.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';

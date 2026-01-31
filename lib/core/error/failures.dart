@@ -45,3 +45,7 @@ class LocationServicesDisabledFailure extends Failure {}
 class LocationPermissionDeniedFailure extends Failure {}
 
 class LocationPermissionPermanentlyDeniedFailure extends Failure {}
+
+class OrderNotExistsFailure extends Failure {}
+
+class UnauthorizedRequestFailure extends Failure {}

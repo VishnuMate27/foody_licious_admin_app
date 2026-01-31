@@ -12,6 +12,8 @@ extension FailureMessage on Failure {
     if (this is TooManyRequestsFailure) return "Too many requests!";
     if (this is TimeOutFailure) return "Checking Time Out!";
     if (this is NetworkFailure) return "Network error. Check your connection.";
+    if (this is OrderNotExistsFailure) return "Order not exist!";
+    if (this is UnauthorizedRequestFailure) return "Unauthorized Request!";
     return defaultMessage;
   }
 }

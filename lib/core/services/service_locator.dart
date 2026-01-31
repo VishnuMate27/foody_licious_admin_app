@@ -9,12 +9,15 @@ import 'package:foody_licious_admin_app/core/constants/colors.dart';
 import 'package:foody_licious_admin_app/core/network/network_info.dart';
 import 'package:foody_licious_admin_app/data/data_sources/local/restaurant_local_data_source.dart';
 import 'package:foody_licious_admin_app/data/data_sources/remote/menu_remote_data_source.dart';
+import 'package:foody_licious_admin_app/data/data_sources/remote/order_remote_data_source.dart';
 import 'package:foody_licious_admin_app/data/data_sources/remote/restaurant_remote_data_source.dart';
 import 'package:foody_licious_admin_app/data/repositories/auth_repository_impl.dart';
 import 'package:foody_licious_admin_app/data/repositories/menu_item_repository_impl.dart';
+import 'package:foody_licious_admin_app/data/repositories/order_repository_impl.dart';
 import 'package:foody_licious_admin_app/data/repositories/restaurant_repository_impl.dart';
 import 'package:foody_licious_admin_app/data/services/location_service.dart';
 import 'package:foody_licious_admin_app/domain/repositories/menu_item_repository.dart';
+import 'package:foody_licious_admin_app/domain/repositories/order_repository.dart';
 import 'package:foody_licious_admin_app/domain/repositories/restaurant_repository.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/send_password_reset_email_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/auth/send_verification_email_usecase.dart';
@@ -36,6 +39,8 @@ import 'package:foody_licious_admin_app/domain/usecases/menuItem/delete_menu_ite
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/get_all_menu_items_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/increase_item_quantity_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/menuItem/update_menu_item_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/order/get_all_order_usecase.dart';
+import 'package:foody_licious_admin_app/domain/usecases/order/update_order_status_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/check_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/delete_restaurant_usecase.dart';
 import 'package:foody_licious_admin_app/domain/usecases/restaurant/remove_restaurant_profile_picture_usecase.dart';
@@ -45,6 +50,7 @@ import 'package:foody_licious_admin_app/domain/usecases/restaurant/upload_restau
 import 'package:foody_licious_admin_app/firebase_options.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/menuItem/menu_item_bloc.dart';
+import 'package:foody_licious_admin_app/presentation/bloc/order/order_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/cubit/menuItem/menu_item_form_cubit.dart';
 import 'package:foody_licious_admin_app/presentation/bloc/restaurant/restaurant_bloc.dart';
 import 'package:foody_licious_admin_app/presentation/cubit/pagination/pagination_cubit.dart';
@@ -168,9 +174,24 @@ Future<void> init() async {
       networkInfo: sl(),
     ),
   );
+
+  //Features - Order
+  // Bloc
+  sl.registerFactory(() => OrderBloc(sl(), sl()));
+  // Use cases
+  sl.registerLazySingleton(() => GetAllOrderUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateOrderUseCase(sl()));
+  // Repository
+  sl.registerLazySingleton<OrderRepository>(
+    () => OrderRepositoryImpl(
+      remoteDataSource: sl(),
+      restaurantLocalDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
   // Data sources
-  sl.registerLazySingleton<MenuItemsRemoteDataSource>(
-    () => MenuItemsRemoteDataSourceImpl(client: sl()),
+  sl.registerLazySingleton<OrderRemoteDataSource>(
+    () => OrderRemoteDataSourceImpl(client: sl()),
   );
 
   ///***********************************************
